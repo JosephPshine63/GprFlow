@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.pioruocco</groupId>
-	<artifactId>treading-plateform</artifactId>
+	<artifactId>gprflow</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Trading platform</name>
-	<description>Trading platform</description>
+	<name>GprFlow</name>
+	<description>GprFlow Platform</description>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>19</maven.compiler.source>
@@ -43,8 +43,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>

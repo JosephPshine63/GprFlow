@@ -1,4 +1,4 @@
-# 🚀 Backend - Trading Platform (Spring Boot)
+# 🚀 Backend - GprFlow (Spring Boot)
 
 Il backend della piattaforma di trading è una **API REST completa** costruita con **Spring Boot 3.2.4** che gestisce autenticazione, criptovalute, ordini, wallet, pagamenti e molto altro.
 
@@ -16,7 +16,8 @@ Il backend della piattaforma di trading è una **API REST completa** costruita c
 ### Prerequisiti
 - **Java 17+** (compilato con Java 19)
 - **Maven 3.6+**
-- **MySQL 8.0+** con database `trading`
+- **PostgreSQL 15+** con database `gprflow`
+- **Docker e Docker Compose**
 
 ### Installazione
 
@@ -27,13 +28,16 @@ cd backend
 # 2. Installa dipendenze
 mvn clean install
 
-# 3. Configura il database in application.properties
-# Modifica: spring.datasource.url, username, password
+# 3. Avvia il database PostgreSQL tramite Docker Compose
+docker-compose up -d
 
-# 4. Esegui il server di sviluppo
+# 4. Configura il database in application.properties
+# Modifica: spring.datasource.url, username, password se necessario
+
+# 5. Esegui il server di sviluppo
 mvn spring-boot:run
 
-# 5. Server avviato su http://localhost:5454
+# 6. Server avviato su http://localhost:5454
 ```
 
 ### Comandi Comuni
@@ -77,7 +81,7 @@ mvn clean
 └─────────────────────────────────────┘
               ↓ ↓ ↓
 ┌─────────────────────────────────────┐
-│      MySQL Database                 │  (Persistenza Dati)
+│      PostgreSQL Database            │  (Persistenza Dati)
 └─────────────────────────────────────┘
 ```
 
@@ -180,7 +184,7 @@ src/main/java/dev/pioruocco/
 │   ├── DataInitializationComponent  # Init data
 │   └── [utility classes]
 │
-└── TreadingPlateformApplication.java  # Main App
+└── GprFlowApplication.java  # Main App
 ```
 
 ## 📡 API Endpoints
@@ -406,16 +410,15 @@ ForgotPasswordToken (id, email, token, expiryAt)
 server.port=5454
 server.servlet.context-path=/
 
-# Database MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/trading?useSSL=false&serverTimezone=UTC
-spring.datasource.username=root
-spring.datasource.password=your_password
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# Database PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/gprflow
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.datasource.driver-class-name=org.postgresql.Driver
 
 # JPA Hibernate
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
 # JWT
 app.jwt.secret=your_jwt_secret_key_at_least_32_chars
@@ -571,7 +574,7 @@ GET http://localhost:5454/actuator/health
 
 | Problema | Soluzione |
 |----------|-----------|
-| **Connection refused (MySQL)** | Verifica MySQL running, credenziali in application.properties |
+| **Connection refused (PostgreSQL)** | Verifica PostgreSQL running (docker-compose up -d), credenziali in application.properties |
 | **Porta 5454 occupata** | Cambia porta in `server.port=5455` |
 | **JWT secret too short** | Usa stringa con almeno 32 caratteri |
 | **CORS error** | Aggiungi origin in `app.allowed-origins` |
@@ -592,12 +595,12 @@ GET http://localhost:5454/actuator/health
 - [Spring Security](https://spring.io/projects/spring-security)
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 - [JWT Guide](https://jwt.io/)
-- [MySQL Docs](https://dev.mysql.com/doc/)
+- [PostgreSQL Docs](https://www.postgresql.org/docs/)
 
 ## 🎯 Next Steps
 
 1. Configura `application.properties` con le tue credenziali
-2. Crea database MySQL: `CREATE DATABASE trading;`
+2. Avvia il container database: `docker-compose up -d`
 3. Esegui `mvn spring-boot:run`
 4. Testa endpoints con Postman/Insomnia
 5. Integra con il frontend
@@ -605,3 +608,4 @@ GET http://localhost:5454/actuator/health
 ---
 
 **Versione**: Spring Boot 3.2.4 | **Java**: 17+ | **Ultimo Aggiornamento**: 2024
+
