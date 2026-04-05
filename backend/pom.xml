@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>dev.pioruocco</groupId>
 	<artifactId>gprflow</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<name>GprFlow</name>
 	<description>GprFlow Platform</description>
     <properties>
