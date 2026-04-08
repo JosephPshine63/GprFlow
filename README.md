@@ -1,4 +1,4 @@
-"# 🚀 GprFlow - Piattaforma di Trading Cripto Full-Stack
+🚀 GprFlow - Piattaforma di Trading Cripto Full-Stack
 
 Una **piattaforma di trading di criptovalute completa** costruita con **Spring Boot + React** che consente agli utenti di acquistare/vendere criptovalute, gestire portafogli, effettuare pagamenti e tracciare il loro portfolio in tempo reale.
 
