@@ -11,7 +11,7 @@ public interface TwoFactorOtpService {
 
     TwoFactorOTP findById(String id);
 
-    boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp, String otp);
+    boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp, String otp) throws Exception;
 
     void deleteTwoFactorOtp(TwoFactorOTP twoFactorOTP);
 

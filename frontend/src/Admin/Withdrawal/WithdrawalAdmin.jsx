@@ -32,12 +32,12 @@ const WithdrawalAdmin = () => {
   const { withdrawal } = useSelector((store) => store);
 
   useEffect(() => {
-    dispatch(getAllWithdrawalRequest(localStorage.getItem("jwt")));
+    dispatch(getAllWithdrawalRequest());
   }, []);
 
   const handleProccedWithdrawal = (id, accept) => {
     dispatch(
-      proceedWithdrawal({ jwt: localStorage.getItem("jwt"), id, accept })
+      proceedWithdrawal({ id, accept })
     );
   };
 

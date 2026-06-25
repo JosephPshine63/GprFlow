@@ -10,7 +10,7 @@ const PaymentSuccess = () => {
   const { wallet } = useSelector((store) => store);
 
   const handleFetchUserWallet = () => {
-    dispatch(getUserWallet(localStorage.getItem("jwt")));
+    dispatch(getUserWallet());
   };
   return (
     <div className='flex flex-col justify-center items-center h-screen'>

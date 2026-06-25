@@ -53,20 +53,6 @@ public class WalletController {
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @PutMapping("/api/wallet/deposit/amount/{amount}")
-    public ResponseEntity<PaymentResponse> depositMoney(@RequestHeader("Authorization") String jwt,
-                                                        @PathVariable Long amount) throws Exception {
-        User user = userService.findUserProfileByJwt(jwt);
-        Wallet wallet = walleteService.getUserWallet(user);
-//        PaymentResponse res = walleteService.depositFunds(user,amount);
-        PaymentResponse res = new PaymentResponse();
-        res.setPayment_url("deposite success");
-        walleteService.addBalanceToWallet(wallet, amount);
-
-        return new ResponseEntity<>(res, HttpStatus.OK);
-
-    }
-
     @PutMapping("/api/wallet/deposit")
     public ResponseEntity<Wallet> addMoneyToWallet(
             @RequestHeader("Authorization") String jwt,
@@ -126,7 +112,6 @@ public class WalletController {
     public ResponseEntity<Wallet> payOrderPayment(@PathVariable Long orderId,
                                                   @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
-        System.out.println("-------- " + orderId);
         Order order = orderService.getOrderById(orderId);
 
         Wallet wallet = walleteService.payOrderPayment(order, user);

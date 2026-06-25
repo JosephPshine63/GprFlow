@@ -8,6 +8,7 @@ import dev.pioruocco.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -43,7 +44,11 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
-    public Boolean VerifyOtp(String opt, VerificationCode verificationCode) {
+    public Boolean VerifyOtp(String opt, VerificationCode verificationCode) throws Exception {
+        if (verificationCode.getExpiresAt().isBefore(LocalDateTime.now())) {
+            verificationRepository.delete(verificationCode);
+            throw new Exception("OTP has expired. Please request a new verification code.");
+        }
         return opt.equals(verificationCode.getOtp());
     }
 

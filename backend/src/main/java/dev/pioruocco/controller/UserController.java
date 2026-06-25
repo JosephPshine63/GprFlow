@@ -1,5 +1,6 @@
 package dev.pioruocco.controller;
 
+import dev.pioruocco.domain.USER_ROLE;
 import dev.pioruocco.domain.VerificationType;
 import dev.pioruocco.exception.UserException;
 import dev.pioruocco.model.ForgotPasswordToken;
@@ -9,6 +10,7 @@ import dev.pioruocco.request.ResetPasswordRequest;
 import dev.pioruocco.request.UpdatePasswordRequest;
 import dev.pioruocco.response.ApiResponse;
 import dev.pioruocco.response.AuthResponse;
+import dev.pioruocco.response.UserSummaryDTO;
 import dev.pioruocco.service.EmailService;
 import dev.pioruocco.service.ForgotPasswordService;
 import dev.pioruocco.service.UserService;
@@ -49,24 +51,21 @@ public class UserController {
     }
 
     @GetMapping("/api/users/{userId}")
-    public ResponseEntity<User> findUserById(
+    public ResponseEntity<UserSummaryDTO> findUserById(
             @PathVariable Long userId,
             @RequestHeader("Authorization") String jwt) throws UserException {
 
         User user = userService.findUserById(userId);
-        user.setPassword(null);
-
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new UserSummaryDTO(user.getId(), user.getFullName()), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/api/users/email/{email}")
-    public ResponseEntity<User> findUserByEmail(
+    public ResponseEntity<UserSummaryDTO> findUserByEmail(
             @PathVariable String email,
             @RequestHeader("Authorization") String jwt) throws UserException {
 
         User user = userService.findUserByEmail(email);
-
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new UserSummaryDTO(user.getId(), user.getFullName()), HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/api/users/enable-two-factor/verify-otp/{otp}")

@@ -24,7 +24,7 @@ const WithdrawForm = () => {
   };
 
   const handleSubmit = () => {
-    dispatch(withdrawalRequest({ jwt: localStorage.getItem("jwt"), amount }));
+    dispatch(withdrawalRequest({ amount }));
   };
 
   if (!withdrawal.paymentDetails) {

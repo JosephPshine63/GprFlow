@@ -6,6 +6,7 @@ import dev.pioruocco.model.User;
 import dev.pioruocco.service.AssetService;
 import dev.pioruocco.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,14 @@ public class AssetController {
     }
 
     @GetMapping("/{assetId}")
-    public ResponseEntity<Asset> getAssetById(@PathVariable Long assetId) {
+    public ResponseEntity<Asset> getAssetById(
+            @PathVariable Long assetId,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserProfileByJwt(jwt);
         Asset asset = assetService.getAssetById(assetId);
+        if (!asset.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok().body(asset);
     }
 

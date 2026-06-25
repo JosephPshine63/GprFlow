@@ -29,7 +29,7 @@ const Withdrawal = () => {
   const { withdrawal } = useSelector((store) => store);
 
   useEffect(() => {
-    dispatch(getWithdrawalHistory(localStorage.getItem("jwt")));
+    dispatch(getWithdrawalHistory());
   }, []);
 
   return (

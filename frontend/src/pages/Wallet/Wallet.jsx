@@ -49,7 +49,6 @@ const Wallet = () => {
     if (orderId || order_id ) {
       dispatch(
         depositMoney({
-          jwt: localStorage.getItem("jwt"),
           orderId: orderId || order_id,
           paymentId: razorpayPaymentId || "AuedkfeuUe",
           navigate,
@@ -62,15 +61,15 @@ const Wallet = () => {
   useEffect(() => {
     handleFetchUserWallet();
     hanldeFetchWalletTransactions();
-    dispatch(getPaymentDetails({ jwt: localStorage.getItem("jwt") }));
+    dispatch(getPaymentDetails());
   }, []);
 
   const handleFetchUserWallet = () => {
-    dispatch(getUserWallet(localStorage.getItem("jwt")));
+    dispatch(getUserWallet());
   };
 
   const hanldeFetchWalletTransactions = () => {
-    dispatch(getWalletTransactions({ jwt: localStorage.getItem("jwt") }));
+    dispatch(getWalletTransactions());
   };
 
   function copyToClipboard(text) {

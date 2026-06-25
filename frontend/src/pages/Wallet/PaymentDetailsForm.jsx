@@ -45,10 +45,7 @@ const PaymentDetailsForm = () => {
   });
   const onSubmit = (data) => {
     dispatch(
-      addPaymentDetails({
-        paymentDetails: data,
-        jwt: localStorage.getItem("jwt"),
-      })
+      addPaymentDetails({ paymentDetails: data })
     );
     console.log("payment details form", data);
   };

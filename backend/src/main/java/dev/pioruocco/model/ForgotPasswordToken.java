@@ -1,10 +1,13 @@
 package dev.pioruocco.model;
 
 import dev.pioruocco.domain.VerificationType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "forgot_password_token")
@@ -21,5 +24,8 @@ public class ForgotPasswordToken {
     private VerificationType verificationType;
 
     private String sendTo;
+
+    @Column(nullable = false)
+    private LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
 }
 

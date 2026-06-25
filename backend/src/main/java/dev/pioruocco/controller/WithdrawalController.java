@@ -1,5 +1,6 @@
 package dev.pioruocco.controller;
 
+import dev.pioruocco.domain.USER_ROLE;
 import dev.pioruocco.domain.WalletTransactionType;
 import dev.pioruocco.model.User;
 import dev.pioruocco.model.Wallet;
@@ -31,17 +32,30 @@ public class WithdrawalController {
     @Autowired
     private WalletTransactionService walletTransactionService;
 
+    private void requireAdmin(User user) throws Exception {
+        if (user.getRole() != USER_ROLE.ROLE_ADMIN) {
+            throw new Exception("Access denied");
+        }
+    }
+
     @PostMapping("/api/withdrawal/{amount}")
     public ResponseEntity<?> withdrawalRequest(
             @PathVariable Long amount,
             @RequestHeader("Authorization") String jwt) throws Exception {
+        if (amount == null || amount <= 0) {
+            return ResponseEntity.badRequest().body("Amount must be positive");
+        }
         User user = userService.findUserProfileByJwt(jwt);
         Wallet userWallet = walletService.getUserWallet(user);
+
+        if (userWallet.getBalance().longValue() < amount) {
+            return ResponseEntity.badRequest().body("Insufficient balance");
+        }
 
         Withdrawal withdrawal = withdrawalService.requestWithdrawal(amount, user);
         walletService.addBalanceToWallet(userWallet, -withdrawal.getAmount());
 
-        WalletTransaction walletTransaction = walletTransactionService.createTransaction(
+        walletTransactionService.createTransaction(
                 userWallet,
                 WalletTransactionType.WITHDRAWAL, null,
                 "bank account withdrawal",
@@ -56,13 +70,14 @@ public class WithdrawalController {
             @PathVariable Long id,
             @PathVariable boolean accept,
             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserProfileByJwt(jwt);
+        User admin = userService.findUserProfileByJwt(jwt);
+        requireAdmin(admin);
 
         Withdrawal withdrawal = withdrawalService.procedWithdrawal(id, accept);
 
-        Wallet userWallet = walletService.getUserWallet(user);
         if (!accept) {
-            walletService.addBalanceToWallet(userWallet, withdrawal.getAmount());
+            Wallet requestorWallet = walletService.getUserWallet(withdrawal.getUser());
+            walletService.addBalanceToWallet(requestorWallet, withdrawal.getAmount());
         }
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
@@ -70,23 +85,18 @@ public class WithdrawalController {
 
     @GetMapping("/api/withdrawal")
     public ResponseEntity<List<Withdrawal>> getWithdrawalHistory(
-
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
-
         List<Withdrawal> withdrawal = withdrawalService.getUsersWithdrawalHistory(user);
-
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }
 
     @GetMapping("/api/admin/withdrawal")
     public ResponseEntity<List<Withdrawal>> getAllWithdrawalRequest(
-
             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserProfileByJwt(jwt);
-
+        User admin = userService.findUserProfileByJwt(jwt);
+        requireAdmin(admin);
         List<Withdrawal> withdrawal = withdrawalService.getAllWithdrawalRequest();
-
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }
 }

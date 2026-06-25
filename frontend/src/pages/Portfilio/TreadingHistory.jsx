@@ -32,15 +32,14 @@ const TreadingHistory = () => {
   // const [activeTab, setActiveTab] = useState("portfolio");
 
   useEffect(() => {
-    dispatch(getUserAssets(localStorage.getItem("jwt")));
-    dispatch(getAllOrdersForUser({ jwt: localStorage.getItem("jwt") }));
+    dispatch(getUserAssets());
+    dispatch(getAllOrdersForUser());
   }, []);
 
   const handleTabChange = (value) => {
     setCurrentTab(value);
   };
 
-  console.log("currentTab-----", currentTab);
   return (
     <div className="">
       <Table className="px-5  relative">

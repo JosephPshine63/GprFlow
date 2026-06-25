@@ -7,6 +7,7 @@ import dev.pioruocco.repository.ForgotPasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -50,7 +51,11 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public boolean verifyToken(ForgotPasswordToken token, String otp) {
+    public boolean verifyToken(ForgotPasswordToken token, String otp) throws Exception {
+        if (token.getExpiresAt().isBefore(LocalDateTime.now())) {
+            forgotPasswordRepository.delete(token);
+            throw new Exception("OTP has expired. Please request a new password reset.");
+        }
         return token.getOtp().equals(otp);
     }
 }

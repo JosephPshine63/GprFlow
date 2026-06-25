@@ -1,8 +1,17 @@
 package dev.pioruocco.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class JwtConstant {
 
-    public static final String SECRET_KEY = "wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe";
+    @Value("${jwt.secret}")
+    private String secretKey;
+
     public static final String JWT_HEADER = "Authorization";
 
+    public String getSecretKey() {
+        return secretKey;
+    }
 }

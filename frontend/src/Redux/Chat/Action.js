@@ -6,25 +6,19 @@ import {
   CHAT_BOT_SUCCESS,
 } from "./ActionTypes";
 
-export const sendMessage = ({prompt,jwt}) => async (dispatch) => {
+export const sendMessage = ({ prompt }) => async (dispatch) => {
   dispatch({
     type: CHAT_BOT_REQUEST,
-    payload:{prompt,role:"user"}
+    payload: { prompt, role: "user" },
   });
 
   try {
-    const { data } = await api.post("/chat/bot/coin", {prompt},{
-      headers:{
-        Authorization:`Bearer ${jwt}`
-      }
-    });
+    const { data } = await api.post("/chat/bot/coin", { prompt });
     dispatch({
       type: CHAT_BOT_SUCCESS,
-      payload: {ans:data.message,role:"model"},
+      payload: { ans: data.message, role: "model" },
     });
-    console.log("get success ans",data)
   } catch (error) {
     dispatch({ type: CHAT_BOT_FAILURE, payload: error });
-    console.log(error);
   }
 };

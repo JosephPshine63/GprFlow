@@ -4,6 +4,8 @@ import dev.pioruocco.domain.VerificationType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "verification_code")
 @Data
@@ -23,6 +25,9 @@ public class VerificationCode {
     private String mobile;
 
     private VerificationType verificationType;
+
+    @Column(nullable = false)
+    private LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
 
 }
 

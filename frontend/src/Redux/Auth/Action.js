@@ -1,21 +1,17 @@
-import axios from "axios";
 import * as actionTypes from "./ActionTypes";
 import api, { API_BASE_URL } from "@/Api/api";
 
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.REGISTER_REQUEST });
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/signup`, userData);
-    const user = response.data;
-    if (user.jwt) localStorage.setItem("jwt", user.jwt);
-    console.log("registerr :- ", user);
+    await api.post(`${API_BASE_URL}/auth/signup`, userData);
+    await dispatch(getUser());
     userData.navigate("/");
-    dispatch({ type: actionTypes.REGISTER_SUCCESS, payload: user.jwt });
+    dispatch({ type: actionTypes.REGISTER_SUCCESS });
   } catch (error) {
-    console.log("error ", error);
     dispatch({
       type: actionTypes.REGISTER_FAILURE,
-      payload: error.response?.data ? error.response.data : error,
+      payload: error.response?.data ?? error,
     });
   }
 };
@@ -23,22 +19,20 @@ export const register = (userData) => async (dispatch) => {
 export const login = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.LOGIN_REQUEST });
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/signin`, userData);
+    const response = await api.post(`${API_BASE_URL}/auth/signin`, userData);
     const user = response.data;
     if (user.twoFactorAuthEnabled) {
       userData.navigate(`/two-factor-auth/${user.session}`);
+      dispatch({ type: actionTypes.LOGIN_SUCCESS });
+      return;
     }
-    if (user.jwt) {
-      localStorage.setItem("jwt", user.jwt);
-      console.log("login ", user);
-      userData.navigate("/");
-    }
-    dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: user.jwt });
+    await dispatch(getUser());
+    userData.navigate("/");
+    dispatch({ type: actionTypes.LOGIN_SUCCESS });
   } catch (error) {
-    console.log("catch error", error);
     dispatch({
       type: actionTypes.LOGIN_FAILURE,
-      payload: error.response?.data ? error.response.data : error,
+      payload: error.response?.data ?? error,
     });
   }
 };
@@ -48,148 +42,95 @@ export const twoStepVerification =
   async (dispatch) => {
     dispatch({ type: actionTypes.LOGIN_TWO_STEP_REQUEST });
     try {
-      const response = await axios.post(
+      await api.post(
         `${API_BASE_URL}/auth/two-factor/otp/${otp}`,
         {},
-        {
-          params: { id: session },
-        }
+        { params: { id: session } }
       );
-      const user = response.data;
-
-      if (user.jwt) {
-        localStorage.setItem("jwt", user.jwt);
-        console.log("login ", user);
-        navigate("/");
-      }
-      dispatch({ type: actionTypes.LOGIN_TWO_STEP_SUCCESS, payload: user.jwt });
+      await dispatch(getUser());
+      navigate("/");
+      dispatch({ type: actionTypes.LOGIN_TWO_STEP_SUCCESS });
     } catch (error) {
-      console.log("catch error", error);
       dispatch({
         type: actionTypes.LOGIN_TWO_STEP_FAILURE,
-        payload: error.response?.data ? error.response.data : error,
+        payload: error.response?.data ?? error,
       });
     }
   };
 
-//  get user from token
-export const getUser = (token) => {
+export const getUser = () => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.GET_USER_REQUEST });
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const user = response.data;
-      dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: user });
-      console.log("req User ", user);
+      const response = await api.get(`/api/users/profile`);
+      dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: response.data });
     } catch (error) {
-      const errorMessage = null;
-      dispatch({ type: actionTypes.GET_USER_FAILURE, payload: errorMessage });
+      dispatch({ type: actionTypes.GET_USER_FAILURE, payload: null });
     }
   };
 };
 
-export const sendVerificationOtp = ({ jwt, verificationType }) => {
+export const sendVerificationOtp = ({ verificationType }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.SEND_VERIFICATION_OTP_REQUEST });
     try {
       const response = await api.post(
-        `/api/users/verification/${verificationType}/send-otp`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
+        `/api/users/verification/${verificationType}/send-otp`
       );
-      const user = response.data;
       dispatch({
         type: actionTypes.SEND_VERIFICATION_OTP_SUCCESS,
-        payload: user,
+        payload: response.data,
       });
-      console.log("send otp ", user);
     } catch (error) {
-      console.log("error ", error);
-      const errorMessage = error.message;
       dispatch({
         type: actionTypes.SEND_VERIFICATION_OTP_FAILURE,
-        payload: errorMessage,
+        payload: error.message,
       });
     }
   };
 };
 
-export const verifyOtp = ({ jwt, otp }) => {
-  console.log("jwt", jwt);
+export const verifyOtp = ({ otp }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.VERIFY_OTP_REQUEST });
     try {
       const response = await api.patch(
-        `/api/users/verification/verify-otp/${otp}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
+        `/api/users/verification/verify-otp/${otp}`
       );
-      const user = response.data;
-      dispatch({ type: actionTypes.VERIFY_OTP_SUCCESS, payload: user });
-      console.log("verify otp ", user);
+      dispatch({ type: actionTypes.VERIFY_OTP_SUCCESS, payload: response.data });
     } catch (error) {
-      console.log("error ", error);
-      const errorMessage = error.message;
-      dispatch({ type: actionTypes.VERIFY_OTP_FAILURE, payload: errorMessage });
+      dispatch({ type: actionTypes.VERIFY_OTP_FAILURE, payload: error.message });
     }
   };
 };
 
-export const enableTwoStepAuthentication = ({ jwt, otp }) => {
-  console.log("jwt", jwt);
+export const enableTwoStepAuthentication = ({ otp }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.ENABLE_TWO_STEP_AUTHENTICATION_REQUEST });
     try {
       const response = await api.patch(
-        `/api/users/enable-two-factor/verify-otp/${otp}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
+        `/api/users/enable-two-factor/verify-otp/${otp}`
       );
-      const user = response.data;
       dispatch({
         type: actionTypes.ENABLE_TWO_STEP_AUTHENTICATION_SUCCESS,
-        payload: user,
+        payload: response.data,
       });
-      console.log("enable two step authentication ", user);
     } catch (error) {
-      console.log("error ", error);
-      const errorMessage = error.message;
       dispatch({
         type: actionTypes.ENABLE_TWO_STEP_AUTHENTICATION_FAILURE,
-        payload: errorMessage,
+        payload: error.message,
       });
     }
   };
 };
 
-export const sendResetPassowrdOTP = ({
-  sendTo,
-  verificationType,
-  navigate,
-}) => {
-  console.log("send otp ", sendTo);
+export const sendResetPassowrdOTP = ({ sendTo, verificationType, navigate }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.SEND_RESET_PASSWORD_OTP_REQUEST });
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/auth/users/reset-password/send-otp`,
-        {
-          sendTo,
-          verificationType,
-        }
+      const response = await api.post(
+        `/auth/users/reset-password/send-otp`,
+        { sendTo, verificationType }
       );
       const user = response.data;
       navigate(`/reset-password/${user.session}`);
@@ -197,52 +138,33 @@ export const sendResetPassowrdOTP = ({
         type: actionTypes.SEND_RESET_PASSWORD_OTP_SUCCESS,
         payload: user,
       });
-      console.log("otp sent successfully ", user);
     } catch (error) {
-      console.log("error ", error);
-      const errorMessage = error.message;
       dispatch({
         type: actionTypes.SEND_RESET_PASSWORD_OTP_FAILURE,
-        payload: errorMessage,
+        payload: error.message,
       });
     }
   };
 };
 
-export const verifyResetPassowrdOTP = ({
-  otp,
-  password,
-  session,
-  navigate,
-}) => {
+export const verifyResetPassowrdOTP = ({ otp, password, session, navigate }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.VERIFY_RESET_PASSWORD_OTP_REQUEST });
     try {
-      const response = await axios.patch(
-        `${API_BASE_URL}/auth/users/reset-password/verify-otp`,
-        {
-          otp,
-          password,
-        },
-        {
-          params: {
-            id: session,
-          },
-        }
+      const response = await api.patch(
+        `/auth/users/reset-password/verify-otp`,
+        { otp, password },
+        { params: { id: session } }
       );
-      const user = response.data;
       dispatch({
         type: actionTypes.VERIFY_RESET_PASSWORD_OTP_SUCCESS,
-        payload: user,
+        payload: response.data,
       });
       navigate("/password-update-successfully");
-      console.log("VERIFY otp successfully ", user);
     } catch (error) {
-      console.log("error ", error);
-      const errorMessage = error.message;
       dispatch({
         type: actionTypes.VERIFY_RESET_PASSWORD_OTP_FAILURE,
-        payload: errorMessage,
+        payload: error.message,
       });
     }
   };
@@ -250,7 +172,11 @@ export const verifyResetPassowrdOTP = ({
 
 export const logout = () => {
   return async (dispatch) => {
+    try {
+      await api.post(`/auth/logout`);
+    } catch (_) {
+      // ignore network errors on logout
+    }
     dispatch({ type: actionTypes.LOGOUT });
-    localStorage.clear();
   };
 };

@@ -51,10 +51,7 @@ const Home = () => {
   }, [page]);
 
   useEffect(() => {
-    dispatch(fetchCoinDetails({
-      coinId: "bitcoin",
-      jwt: auth.jwt || localStorage.getItem("jwt"),
-    }))
+    dispatch(fetchCoinDetails({ coinId: "bitcoin" }))
     
   }, []);
 
@@ -77,12 +74,7 @@ const Home = () => {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       console.log("Enter key pressed:", inputValue);
-      dispatch(
-        sendMessage({
-          prompt: inputValue,
-          jwt: auth.jwt || localStorage.getItem("jwt"),
-        })
-      );
+      dispatch(sendMessage({ prompt: inputValue }));
       setInputValue("");
     }
   };

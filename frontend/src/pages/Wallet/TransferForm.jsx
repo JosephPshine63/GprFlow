@@ -24,7 +24,6 @@ const TransferForm = () => {
   const handleSubmit = () => {
     dispatch(
       transferMoney({
-        jwt: localStorage.getItem("jwt"),
         walletId: formData.walletId,
         reqData: {
           amount: formData.amount,

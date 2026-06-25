@@ -48,7 +48,7 @@ const StockChart = ({ coinId }) => {
   const [stockData, setStockData] = useState(null);
   const [activeType, setActiveType] = useState(timeSeries[0]);
   const [loading, setLoading] = useState(false);
-  const { coin,auth } = useSelector((store) => store);
+  const { coin } = useSelector((store) => store);
   const dispatch = useDispatch();
   const series = [
     {
@@ -117,7 +117,7 @@ const StockChart = ({ coinId }) => {
     // };
     // fetchStockData();
     if (coinId) {
-      dispatch(fetchMarketChart({ coinId, days: activeType.value,jwt:localStorage.getItem("jwt") || auth.jwt }));
+      dispatch(fetchMarketChart({ coinId, days: activeType.value }));
     }
   }, [coinId,activeType.value]);
 
@@ -128,8 +128,6 @@ const StockChart = ({ coinId }) => {
       </div>
     );
   }
-
-  console.log("coin reducer", coin);
 
   return (
     <div>

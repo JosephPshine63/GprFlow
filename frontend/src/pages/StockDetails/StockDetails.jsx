@@ -35,16 +35,13 @@ const StockDetails = () => {
 
   useEffect(() => {
     dispatch(
-      fetchCoinDetails({
-        coinId: id,
-        jwt: auth.jwt || localStorage.getItem("jwt"),
-      })
+      fetchCoinDetails({ coinId: id })
     );
   }, [id]);
 
   useEffect(() => {
     dispatch(getUserWatchlist());
-    dispatch(getUserWallet(localStorage.getItem("jwt")));
+    dispatch(getUserWallet());
   }, []);
 
   const handleAddToWatchlist = () => {

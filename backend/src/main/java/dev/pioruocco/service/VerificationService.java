@@ -11,7 +11,7 @@ public interface VerificationService {
 
     VerificationCode findUsersVerification(User user) throws Exception;
 
-    Boolean VerifyOtp(String opt, VerificationCode verificationCode);
+    Boolean VerifyOtp(String opt, VerificationCode verificationCode) throws Exception;
 
     void deleteVerification(VerificationCode verificationCode);
 }

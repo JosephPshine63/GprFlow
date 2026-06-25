@@ -94,11 +94,9 @@ public class WalleteServiceImplementation implements WalletService {
             walletTransaction.setAmount(-order.getPrice().longValue());
             BigDecimal newBalance = wallet.getBalance().subtract(order.getPrice());
 
-            if (newBalance.compareTo(order.getPrice()) < 0) {
-                System.out.println("inside");
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
                 throw new WalletException("Insufficient funds for this transaction.");
             }
-            System.out.println("outside---------- ");
             wallet.setBalance(newBalance);
         } else if (order.getOrderType().equals(OrderType.SELL)) {
 //            walletTransaction.setType(WalletTransactionType.SELL_ASSET);
@@ -108,7 +106,6 @@ public class WalleteServiceImplementation implements WalletService {
         }
 
 
-//        System.out.println("wallet balance "+wallet+"-------"+order.getPrice());
         walletTransactionRepository.save(walletTransaction);
         walletRepository.save(wallet);
         return wallet;
@@ -120,15 +117,13 @@ public class WalleteServiceImplementation implements WalletService {
 
         BigDecimal newBalance = wallet.getBalance().add(BigDecimal.valueOf(money));
 
-//        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-//            throw new Exception("Insufficient funds for this transaction.");
-//        }
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new WalletException("Insufficient funds for this transaction.");
+        }
 
-
-        wallet.setBalance(wallet.getBalance().add(BigDecimal.valueOf(money)));
+        wallet.setBalance(newBalance);
 
         walletRepository.save(wallet);
-        System.out.println("updated wallet - " + wallet);
         return wallet;
     }
 

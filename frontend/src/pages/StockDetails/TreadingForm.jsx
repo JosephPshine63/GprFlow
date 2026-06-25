@@ -38,7 +38,6 @@ const TreadingForm = () => {
   const handleBuyCrypto = () => {
     dispatch(
       payOrder({
-        jwt: localStorage.getItem("jwt"),
         amount,
         orderData: {
           coinId: coin.coinDetails?.id,
@@ -50,7 +49,7 @@ const TreadingForm = () => {
   };
 
   useEffect(()=>{
-    dispatch(getAssetDetails({coinId:coin.coinDetails.id,jwt:localStorage.getItem("jwt")}))
+    dispatch(getAssetDetails({coinId:coin.coinDetails.id}))
 
   },[])
 

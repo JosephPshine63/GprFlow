@@ -24,7 +24,7 @@ const PaymentDetails = () => {
   const { withdrawal } = useSelector((store) => store);
 
   useEffect(() => {
-    dispatch(getPaymentDetails({ jwt: localStorage.getItem("jwt") }));
+    dispatch(getPaymentDetails());
   }, []);
 
   return (

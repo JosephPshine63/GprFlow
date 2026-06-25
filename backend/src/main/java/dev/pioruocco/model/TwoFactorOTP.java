@@ -1,10 +1,13 @@
 package dev.pioruocco.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -22,6 +25,8 @@ public class TwoFactorOTP {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String jwt;
 
+    @Column(nullable = false)
+    private LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
 
 }
 

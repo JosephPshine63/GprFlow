@@ -31,10 +31,7 @@ const AccountVarificationForm = ({handleSubmit}) => {
 
   const handleSendOtp = (verificationType) => {
     dispatch(
-      sendVerificationOtp({
-        verificationType,
-        jwt: localStorage.getItem("jwt"),
-      })
+      sendVerificationOtp({ verificationType })
     );
   };
 

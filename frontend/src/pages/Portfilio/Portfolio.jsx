@@ -33,7 +33,7 @@ const Portfolio = () => {
   // const [activeTab, setActiveTab] = useState("portfolio");
 
   useEffect(() => {
-    dispatch(getUserAssets(localStorage.getItem("jwt")));
+    dispatch(getUserAssets());
   }, []);
 
   const handleTabChange = (value) => {

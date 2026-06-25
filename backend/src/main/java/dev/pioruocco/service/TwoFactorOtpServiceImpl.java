@@ -6,6 +6,7 @@ import dev.pioruocco.repository.TwoFactorOtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +42,11 @@ public class TwoFactorOtpServiceImpl implements TwoFactorOtpService {
     }
 
     @Override
-    public boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp, String otp) {
+    public boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp, String otp) throws Exception {
+        if (twoFactorOtp.getExpiresAt().isBefore(LocalDateTime.now())) {
+            twoFactorOtpRepository.delete(twoFactorOtp);
+            throw new Exception("OTP has expired. Please sign in again to request a new one.");
+        }
         return twoFactorOtp.getOtp().equals(otp);
     }
 

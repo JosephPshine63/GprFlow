@@ -44,8 +44,8 @@ function App() {
   const dispatch=useDispatch();
 
   useEffect(()=>{
-dispatch(getUser(localStorage.getItem("jwt")))
-  },[auth.jwt])
+    dispatch(getUser())
+  },[])
 
   const showNavbar=!auth.user?false:shouldShowNavbar(location.pathname,routes,auth.user?.role)
 

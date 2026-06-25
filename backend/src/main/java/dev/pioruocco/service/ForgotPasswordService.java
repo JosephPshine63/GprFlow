@@ -15,5 +15,5 @@ public interface ForgotPasswordService {
 
     void deleteToken(ForgotPasswordToken token);
 
-    boolean verifyToken(ForgotPasswordToken token, String otp);
+    boolean verifyToken(ForgotPasswordToken token, String otp) throws Exception;
 }

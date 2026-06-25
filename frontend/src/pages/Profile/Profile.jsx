@@ -19,12 +19,12 @@ const Profile = () => {
 
   const handleEnableTwoStepVerification =(otp)=>{
     console.log("EnableTwoStepVerification",otp)
-    dispatch(enableTwoStepAuthentication({jwt:localStorage.getItem("jwt"),otp}))
+    dispatch(enableTwoStepAuthentication({otp}))
   }
 
   const handleVerifyOtp=(otp)=>{
     console.log("otp  - ",otp)
-    dispatch(verifyOtp({jwt:localStorage.getItem("jwt"),otp}))
+    dispatch(verifyOtp({otp}))
   }
   return (
     <div className="flex flex-col items-center mb-5">
