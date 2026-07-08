@@ -4,11 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-GprFlow is a full-stack cryptocurrency trading platform. The backend is a Spring Boot REST API; the frontend is a React/Vite SPA. They are developed independently under `backend/` and `frontend/`.
+GprFlow is a full-stack cryptocurrency trading platform. The backend is being incrementally split from a Spring Boot monolith into microservices (in progress); the frontend is a React/Vite SPA under `frontend/`. Backend Maven modules live under `backend/`, each an independent Spring Boot project (no reactor/aggregator `pom.xml`) with its own Dockerfile:
+
+- `backend/monolith/` — the original Spring Boot REST API. Still owns most domains (Auth, User, Wallet, Order, Payment, Withdrawal, Watchlist, Asset); domains are being extracted out one at a time (see `dev.pioruocco` package under it for what currently lives here).
 
 ## Commands
 
-### Backend (`cd backend`)
+### Backend monolith (`cd backend/monolith`)
 
 ```bash
 # Start dev server (hot reload via Spring Boot DevTools)
@@ -28,7 +30,7 @@ mvn clean package
 mvn clean package -DskipTests
 ```
 
-Local dev (`mvn spring-boot:run`) needs only PostgreSQL running: `docker compose up -d db` from the repo root. App env vars fall back to sane localhost defaults; copy `backend/.env.example` to `backend/.env` and `source` it only if you need non-default values (real API keys, etc.).
+Local dev (`mvn spring-boot:run`) needs only PostgreSQL running: `docker compose up -d db` from the repo root. App env vars fall back to sane localhost defaults; copy `backend/monolith/.env.example` to `backend/monolith/.env` and `source` it only if you need non-default values (real API keys, etc.).
 
 Backend runs on `http://localhost:5454`.
 
@@ -86,11 +88,11 @@ Main package: `dev.pioruocco`
 
 **Security:** Stateless JWT. The `JwtTokenValidator` filter runs before `BasicAuthenticationFilter` and populates `SecurityContext` from the `Authorization: Bearer <token>` header. All `/api/**` routes require authentication. JWT expiration is `${JWT_EXPIRATION_MS:86400000}` (24h default). The secret lives in `JwtConstant` via `${JWT_SECRET:...}` — has a working default for local dev, but **must** be overridden via env var for any non-local deployment.
 
-**External integrations:** CoinGecko (market data), Gemini AI (chatbot), Stripe & Razorpay (payments), Gmail SMTP (OTP/email), Google OAuth2 (social login). All API keys are `${VAR:default}`-driven in `application.properties`; see `backend/.env.example` for the full list. Real values go in `backend/.env` (gitignored) for local dev, or the root `.env` for Docker Compose.
+**External integrations:** CoinGecko (market data), Gemini AI (chatbot), Stripe & Razorpay (payments), Gmail SMTP (OTP/email), Google OAuth2 (social login). All API keys are `${VAR:default}`-driven in `application.properties`; see `backend/monolith/.env.example` for the full list. Real values go in `backend/monolith/.env` (gitignored) for local dev, or the root `.env` for Docker Compose.
 
-**Database migrations:** A Liquibase changelog master file exists at `backend/src/main/resources/db/changelog/db.changelog-master.xml`, but `liquibase-core` is not currently a `pom.xml` dependency, so it's not actually on the classpath or wired up. JPA `ddl-auto` is `validate` by default (`application.properties`) and `update` under the `dev` profile (`application-dev.properties`, also the profile Docker Compose activates for the `app` service) — schema creation currently relies entirely on Hibernate's `dev`-profile `ddl-auto=update`, not Liquibase.
+**Database migrations:** A Liquibase changelog master file exists at `backend/monolith/src/main/resources/db/changelog/db.changelog-master.xml`, but `liquibase-core` is not currently a `pom.xml` dependency, so it's not actually on the classpath or wired up. JPA `ddl-auto` is `validate` by default (`application.properties`) and `update` under the `dev` profile (`application-dev.properties`, also the profile Docker Compose activates for the `app` service) — schema creation currently relies entirely on Hibernate's `dev`-profile `ddl-auto=update`, not Liquibase.
 
-**Test coverage:** Currently minimal — `backend/src/test` only contains the default Spring Boot context-load test. There is no frontend test suite (only `npm run lint`).
+**Test coverage:** Currently minimal — `backend/monolith/src/test` only contains the default Spring Boot context-load test. There is no frontend test suite (only `npm run lint`).
 
 ### Frontend
 
@@ -126,13 +128,13 @@ Never add any reference to Claude/AI authorship anywhere that ends up committed 
 
 | File | Purpose |
 |------|---------|
-| `backend/src/main/resources/application.properties` | DB URL, SMTP, API keys, server port — all `${VAR:default}` |
-| `backend/.env.example` / `backend/.env` | Backend secrets for local `mvn spring-boot:run` (`.env` gitignored) |
-| `backend/Dockerfile` | Multi-stage build (`maven:3.9-eclipse-temurin-17` → `eclipse-temurin:17-jre`) |
+| `backend/monolith/src/main/resources/application.properties` | DB URL, SMTP, API keys, server port — all `${VAR:default}` |
+| `backend/monolith/.env.example` / `backend/monolith/.env` | Backend secrets for local `mvn spring-boot:run` (`.env` gitignored) |
+| `backend/monolith/Dockerfile` | Multi-stage build (`maven:3.9-eclipse-temurin-17` → `eclipse-temurin:17-jre`) |
 | `docker-compose.yml` (repo root) | Orchestrates `db` + `app` + `frontend` containers |
 | `.env.example` / `.env` (repo root) | Secrets/config for `docker compose up` (`.env` gitignored) |
-| `backend/src/main/java/dev/pioruocco/config/AppConfig.java` | Spring Security filter chain, CORS origins, password encoder |
-| `backend/src/main/java/dev/pioruocco/config/JwtConstant.java` | JWT secret key, expiration, and header name |
+| `backend/monolith/src/main/java/dev/pioruocco/config/AppConfig.java` | Spring Security filter chain, CORS origins, password encoder |
+| `backend/monolith/src/main/java/dev/pioruocco/config/JwtConstant.java` | JWT secret key, expiration, and header name |
 | `frontend/src/Api/api.js` | Axios instance, resolves `baseURL` from runtime config or Vite env |
 | `frontend/Dockerfile` | Multi-stage build (`node:20-alpine` → `nginx:alpine`) |
 | `frontend/nginx.conf` | SPA fallback routing (`try_files $uri /index.html`) |

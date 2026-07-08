@@ -19,7 +19,7 @@ services:
 
   app:
     build:
-      context: ./backend
+      context: ./backend/monolith
     container_name: gprflow-app
     restart: always
     depends_on:
