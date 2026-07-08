@@ -10,6 +10,7 @@ import dev.pioruocco.service.UserService;
 import dev.pioruocco.service.WalletService;
 import dev.pioruocco.service.WalletTransactionService;
 import dev.pioruocco.service.WithdrawalService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class WithdrawalController {
     }
 
     @PostMapping("/api/withdrawal/{amount}")
+    @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<?> withdrawalRequest(
             @PathVariable Long amount,
             @RequestHeader("Authorization") String jwt) throws Exception {
@@ -66,6 +68,7 @@ public class WithdrawalController {
     }
 
     @PatchMapping("/api/admin/withdrawal/{id}/proceed/{accept}")
+    @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<?> proceedWithdrawal(
             @PathVariable Long id,
             @PathVariable boolean accept,

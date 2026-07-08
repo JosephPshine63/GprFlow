@@ -9,6 +9,7 @@ import dev.pioruocco.model.Wallet;
 import dev.pioruocco.model.WalletTransaction;
 import dev.pioruocco.repository.WalletRepository;
 import dev.pioruocco.repository.WalletTransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,7 @@ public class WalleteServiceImplementation implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Wallet walletToWalletTransfer(User sender, Wallet receiverWallet, Long amount) throws WalletException {
         Wallet senderWallet = getUserWallet(sender);
 
@@ -78,6 +80,7 @@ public class WalleteServiceImplementation implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Wallet payOrderPayment(Order order, User user) throws WalletException {
         Wallet wallet = getUserWallet(user);
 
@@ -112,6 +115,7 @@ public class WalleteServiceImplementation implements WalletService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Wallet addBalanceToWallet(Wallet wallet, Long money) throws WalletException {
 
 

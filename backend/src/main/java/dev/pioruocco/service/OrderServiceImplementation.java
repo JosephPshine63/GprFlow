@@ -105,7 +105,7 @@ public class OrderServiceImplementation implements OrderService {
         return orderItemRepository.save(orderItem);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public Order buyAsset(Coin coin, double quantity, User user) throws Exception {
         if (quantity < 0) throw new Exception("quantity should be > 0");
         double buyPrice = coin.getCurrentPrice();
@@ -143,7 +143,7 @@ public class OrderServiceImplementation implements OrderService {
         return savedOrder;
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public Order sellAsset(Coin coin, double quantity, User user) throws Exception {
         double sellPrice = coin.getCurrentPrice();
 
@@ -186,7 +186,7 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public Order processOrder(Coin coin, double quantity, OrderType orderType, User user) throws Exception {
 
         if (orderType == OrderType.BUY) {

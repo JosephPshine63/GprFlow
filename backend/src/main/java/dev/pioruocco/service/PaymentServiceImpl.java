@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${razorpay.api.secret}")
     private String apiSecret;
 
-    @Value("${app.frontend.url:" + frontendUrl + "}")
+    @Value("${app.frontend.url}")
     private String frontendUrl;
 
     @Autowired
@@ -80,7 +80,7 @@ public class PaymentServiceImpl implements PaymentService {
                 Stripe.apiKey = stripeSecretKey;
                 com.stripe.model.checkout.Session session =
                     com.stripe.model.checkout.Session.retrieve(paymentId);
-                if ("complete".equals(session.getStatus()) && "paid".equals(session.getPaymentStatus())) {
+                if ("paid".equals(session.getPaymentStatus())) {
                     paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
                     paymentOrderRepository.save(paymentOrder);
                     return true;

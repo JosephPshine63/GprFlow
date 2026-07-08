@@ -4,6 +4,7 @@ import dev.pioruocco.domain.WalletTransactionType;
 import dev.pioruocco.model.*;
 import dev.pioruocco.response.PaymentResponse;
 import dev.pioruocco.service.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,7 @@ public class WalletController {
     }
 
     @PutMapping("/api/wallet/deposit")
+    @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<Wallet> addMoneyToWallet(
             @RequestHeader("Authorization") String jwt,
             @RequestParam(name = "order_id") Long orderId,

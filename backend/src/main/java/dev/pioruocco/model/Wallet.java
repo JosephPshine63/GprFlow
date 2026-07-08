@@ -23,4 +23,7 @@ public class Wallet {
 
 
     private BigDecimal balance = BigDecimal.ZERO;
+
+    @Version
+    private Long version;
 }

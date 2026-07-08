@@ -20,22 +20,11 @@ public class JwtProvider {
     @Autowired
     private JwtConstant jwtConstant;
 
-    private static JwtProvider instance;
-
-    @Autowired
-    private void setInstance(JwtProvider self) {
-        instance = self;
-    }
-
-    private SecretKey getKey() {
+    public SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtConstant.getSecretKey().getBytes());
     }
 
-    public static String generateToken(Authentication auth) {
-        return instance.generate(auth);
-    }
-
-    private String generate(Authentication auth) {
+    public String generateToken(Authentication auth) {
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         String roles = populateAuthorities(authorities);
 
@@ -44,22 +33,14 @@ public class JwtProvider {
                 .setExpiration(new Date(new Date().getTime() + 86400000))
                 .claim("email", auth.getName())
                 .claim("authorities", roles)
-                .signWith(getKey())
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    public static String getEmailFromJwtToken(String jwt) {
-        return instance.extractEmail(jwt);
-    }
-
-    private String extractEmail(String jwt) {
+    public String getEmailFromJwtToken(String jwt) {
         jwt = jwt.substring(7);
-        Claims claims = Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(jwt).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(jwt).getBody();
         return String.valueOf(claims.get("email"));
-    }
-
-    public static SecretKey getSigningKey() {
-        return instance.getKey();
     }
 
     private static String populateAuthorities(Collection<? extends GrantedAuthority> collection) {

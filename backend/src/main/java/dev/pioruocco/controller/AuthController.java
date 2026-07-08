@@ -37,6 +37,8 @@ public class AuthController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Autowired
     private CustomeUserServiceImplementation customUserDetails;
@@ -97,7 +99,7 @@ public class AuthController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = JwtProvider.generateToken(authentication);
+        String token = jwtProvider.generateToken(authentication);
         setJwtCookie(response, token);
 
         AuthResponse authResponse = new AuthResponse();
@@ -120,7 +122,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = JwtProvider.generateToken(authentication);
+        String token = jwtProvider.generateToken(authentication);
 
         if (user.getTwoFactorAuth().isEnabled()) {
             AuthResponse authResponse = new AuthResponse();

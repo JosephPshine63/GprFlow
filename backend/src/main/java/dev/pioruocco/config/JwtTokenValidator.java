@@ -19,6 +19,12 @@ import java.util.List;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
 
+    private final JwtProvider jwtProvider;
+
+    public JwtTokenValidator(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -43,7 +49,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
             try {
                 Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(JwtProvider.getSigningKey())
+                        .setSigningKey(jwtProvider.getSigningKey())
                         .build()
                         .parseClaimsJws(jwt)
                         .getBody();

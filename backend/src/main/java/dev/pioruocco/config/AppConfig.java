@@ -24,6 +24,9 @@ public class AppConfig {
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -39,7 +42,7 @@ public class AppConfig {
                             authorization.baseUri("/login/oauth2/authorization"));
                     oauth.successHandler(oAuth2LoginSuccessHandler);
                 })
-                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenValidator(jwtProvider), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 

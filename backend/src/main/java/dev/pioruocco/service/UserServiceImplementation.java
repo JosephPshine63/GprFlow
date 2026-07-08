@@ -22,10 +22,13 @@ public class UserServiceImplementation implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
 
     @Override
     public User findUserProfileByJwt(String jwt) throws UserException {
-        String email = JwtProvider.getEmailFromJwtToken(jwt);
+        String email = jwtProvider.getEmailFromJwtToken(jwt);
 
 
         User user = userRepository.findByEmail(email);
