@@ -105,17 +105,6 @@ const StockChart = ({ coinId }) => {
   });
 
   useEffect(() => {
-    // const fetchStockData = async () => {
-    //   setLoading(true);
-    //   setStockData(null)
-    //   const data = await fetchData(activeType.keyword, coinId );
-    //   console.log("stock data ", data);
-    //   const chartData = convertToUnixTimestamp(data[activeType.key]);
-    //   console.log("chartData ", chartData);
-    //   setStockData(chartData);
-    //   setLoading(false);
-    // };
-    // fetchStockData();
     if (coinId) {
       dispatch(fetchMarketChart({ coinId, days: activeType.value }));
     }

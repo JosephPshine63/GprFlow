@@ -1,10 +1,10 @@
 import * as actionTypes from "./ActionTypes";
-import api, { API_BASE_URL } from "@/Api/api";
+import api from "@/Api/api";
 
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.REGISTER_REQUEST });
   try {
-    await api.post(`${API_BASE_URL}/auth/signup`, userData);
+    await api.post(`/auth/signup`, userData);
     await dispatch(getUser());
     userData.navigate("/");
     dispatch({ type: actionTypes.REGISTER_SUCCESS });
@@ -19,7 +19,7 @@ export const register = (userData) => async (dispatch) => {
 export const login = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.LOGIN_REQUEST });
   try {
-    const response = await api.post(`${API_BASE_URL}/auth/signin`, userData);
+    const response = await api.post(`/auth/signin`, userData);
     const user = response.data;
     if (user.twoFactorAuthEnabled) {
       userData.navigate(`/two-factor-auth/${user.session}`);
@@ -43,7 +43,7 @@ export const twoStepVerification =
     dispatch({ type: actionTypes.LOGIN_TWO_STEP_REQUEST });
     try {
       await api.post(
-        `${API_BASE_URL}/auth/two-factor/otp/${otp}`,
+        `/auth/two-factor/otp/${otp}`,
         {},
         { params: { id: session } }
       );

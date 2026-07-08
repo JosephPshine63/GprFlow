@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:15
+    container_name: gprflow-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-gprflow}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-gprflow}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ./backend
+    container_name: gprflow-app
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Schema is created via ddl-auto=update (dev profile) since Liquibase
+      # isn't wired up yet (see CLAUDE.md). Revisit once migrations exist.
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      MAIL_USERNAME: ${MAIL_USERNAME:-your email}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-your app password}
+      STRIPE_API_KEY: ${STRIPE_API_KEY:-your key}
+      RAZORPAY_API_KEY: ${RAZORPAY_API_KEY:-your razorpay key}
+      RAZORPAY_API_SECRET: ${RAZORPAY_API_SECRET:-your razorpay secret}
+      COINGECKO_API_KEY: ${COINGECKO_API_KEY:-your coin gecko api key}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-your gemini api key}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
+    ports:
+      - "5454:5454"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: gprflow-frontend
+    restart: always
+    depends_on:
+      - app
+    environment:
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:5454}
+    ports:
+      - "5173:80"
+
+volumes:
+  postgres-data:
