@@ -19,7 +19,11 @@ public class OrderItem {
 
     private double quantity;
 
-    @ManyToOne
+    private String coinId;
+    private String coinSymbol;
+
+    // Populated at read time from coin-service via CoinClient, never persisted.
+    @Transient
     private Coin coin;
 
     private double buyPrice;

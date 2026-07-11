@@ -25,7 +25,7 @@ public class AssetServiceImplementation implements AssetService {
 
         asset.setQuantity(quantity);
         asset.setBuyPrice(coin.getCurrentPrice());
-        asset.setCoin(coin);
+        asset.setCoinId(coin.getId());
         asset.setUser(user);
 
         return assetRepository.save(asset);

@@ -4,7 +4,7 @@ import dev.pioruocco.model.Coin;
 import dev.pioruocco.model.Order;
 import dev.pioruocco.model.User;
 import dev.pioruocco.request.CreateOrderRequest;
-import dev.pioruocco.service.CoinService;
+import dev.pioruocco.service.CoinClient;
 import dev.pioruocco.service.OrderService;
 import dev.pioruocco.service.UserService;
 import dev.pioruocco.service.WalletTransactionService;
@@ -23,7 +23,7 @@ public class OrderController {
     private final UserService userSerivce;
 
     @Autowired
-    private CoinService coinService;
+    private CoinClient coinClient;
 
     @Autowired
     private WalletTransactionService walletTransactionService;
@@ -43,10 +43,11 @@ public class OrderController {
 
     ) throws Exception {
         User user = userSerivce.findUserProfileByJwt(jwt);
-        Coin coin = coinService.findById(req.getCoinId());
+        Coin coin = coinClient.findById(req.getCoinId(), jwt);
 
 
         Order order = orderService.processOrder(coin, req.getQuantity(), req.getOrderType(), user);
+        order.getOrderItem().setCoin(coin);
 
         return ResponseEntity.ok(order);
 
@@ -65,6 +66,7 @@ public class OrderController {
 
         Order order = orderService.getOrderById(orderId);
         if (order.getUser().getId().equals(user.getId())) {
+            order.getOrderItem().setCoin(coinClient.findById(order.getOrderItem().getCoinId(), jwtToken));
             return ResponseEntity.ok(order);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -84,6 +86,9 @@ public class OrderController {
         Long userId = userSerivce.findUserProfileByJwt(jwtToken).getId();
 
         List<Order> userOrders = orderService.getAllOrdersForUser(userId, order_type, asset_symbol);
+        for (Order order : userOrders) {
+            order.getOrderItem().setCoin(coinClient.findById(order.getOrderItem().getCoinId(), jwtToken));
+        }
         return ResponseEntity.ok(userOrders);
     }
 

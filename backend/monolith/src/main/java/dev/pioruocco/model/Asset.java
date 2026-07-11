@@ -19,9 +19,11 @@ public class Asset {
     private double quantity;
     private double buyPrice;
 
-    @ManyToOne
-    private Coin coin;
+    private String coinId;
 
+    // Populated at read time from coin-service via CoinClient, never persisted.
+    @Transient
+    private Coin coin;
 
     @ManyToOne
     private User user;

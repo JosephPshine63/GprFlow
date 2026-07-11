@@ -4,13 +4,16 @@ import dev.pioruocco.exception.UserException;
 import dev.pioruocco.model.Coin;
 import dev.pioruocco.model.User;
 import dev.pioruocco.model.Watchlist;
-import dev.pioruocco.service.CoinService;
+import dev.pioruocco.service.CoinClient;
 import dev.pioruocco.service.UserService;
 import dev.pioruocco.service.WatchlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/watchlist")
@@ -19,7 +22,7 @@ public class WatchlistController {
     private final UserService userService;
 
     @Autowired
-    private CoinService coinService;
+    private CoinClient coinClient;
 
     @Autowired
     public WatchlistController(WatchlistService watchlistService,
@@ -34,6 +37,7 @@ public class WatchlistController {
 
         User user = userService.findUserProfileByJwt(jwt);
         Watchlist watchlist = watchlistService.findUserWatchlist(user.getId());
+        enrichWithCoins(watchlist, jwt);
         return ResponseEntity.ok(watchlist);
 
     }
@@ -48,9 +52,11 @@ public class WatchlistController {
 
     @GetMapping("/{watchlistId}")
     public ResponseEntity<Watchlist> getWatchlistById(
+            @RequestHeader("Authorization") String jwt,
             @PathVariable Long watchlistId) throws Exception {
 
         Watchlist watchlist = watchlistService.findById(watchlistId);
+        enrichWithCoins(watchlist, jwt);
         return ResponseEntity.ok(watchlist);
 
     }
@@ -62,9 +68,17 @@ public class WatchlistController {
 
 
         User user = userService.findUserProfileByJwt(jwt);
-        Coin coin = coinService.findById(coinId);
+        Coin coin = coinClient.findById(coinId, jwt);
         Coin addedCoin = watchlistService.addItemToWatchlist(coin, user);
         return ResponseEntity.ok(addedCoin);
 
+    }
+
+    private void enrichWithCoins(Watchlist watchlist, String jwt) throws Exception {
+        List<Coin> coins = new ArrayList<>();
+        for (String coinId : watchlist.getCoinIds()) {
+            coins.add(coinClient.findById(coinId, jwt));
+        }
+        watchlist.setCoins(coins);
     }
 }

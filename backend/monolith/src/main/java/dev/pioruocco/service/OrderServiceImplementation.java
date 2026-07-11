@@ -35,8 +35,8 @@ public class OrderServiceImplementation implements OrderService {
     @Transactional
     public Order createOrder(User user, OrderItem orderItem, OrderType orderType) {
 
-
-        double price = orderItem.getCoin().getCurrentPrice() * orderItem.getQuantity();
+        double unitPrice = orderType == OrderType.BUY ? orderItem.getBuyPrice() : orderItem.getSellPrice();
+        double price = unitPrice * orderItem.getQuantity();
 
         Order order = new Order();
         order.setUser(user);
@@ -69,7 +69,7 @@ public class OrderServiceImplementation implements OrderService {
 
         if (assetSymbol != null && !assetSymbol.isEmpty()) {
             allUserOrders = allUserOrders.stream()
-                    .filter(order -> order.getOrderItem().getCoin().getSymbol().equals(assetSymbol))
+                    .filter(order -> order.getOrderItem().getCoinSymbol().equals(assetSymbol))
                     .collect(Collectors.toList());
         }
 
@@ -95,7 +95,8 @@ public class OrderServiceImplementation implements OrderService {
         OrderItem orderItem = new OrderItem();
 
 
-        orderItem.setCoin(coin);
+        orderItem.setCoinId(coin.getId());
+        orderItem.setCoinSymbol(coin.getSymbol());
         orderItem.setQuantity(quantity);
         orderItem.setBuyPrice(coin.getCurrentPrice());
         orderItem.setBuyPrice(buyPrice);
@@ -126,12 +127,12 @@ public class OrderServiceImplementation implements OrderService {
 
         Asset oldAsset = assetService.findAssetByUserIdAndCoinId(
                 order.getUser().getId(),
-                order.getOrderItem().getCoin().getId()
+                order.getOrderItem().getCoinId()
         );
 
         if (oldAsset == null) {
             assetService.createAsset(
-                    user, orderItem.getCoin(),
+                    user, coin,
                     orderItem.getQuantity()
             );
         } else {

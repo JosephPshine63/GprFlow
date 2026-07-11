@@ -22,7 +22,11 @@ public class Watchlist {
     @OneToOne
     private User user;
 
-    @ManyToMany
+    @ElementCollection
+    private List<String> coinIds = new ArrayList<>();
+
+    // Populated at read time from coin-service via CoinClient, never persisted.
+    @Transient
     private List<Coin> coins = new ArrayList<>();
 }
 

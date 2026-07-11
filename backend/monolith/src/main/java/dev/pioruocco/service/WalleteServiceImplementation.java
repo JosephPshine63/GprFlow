@@ -86,10 +86,10 @@ public class WalleteServiceImplementation implements WalletService {
 
         WalletTransaction walletTransaction = new WalletTransaction();
         walletTransaction.setWallet(wallet);
-        walletTransaction.setPurpose(order.getOrderType() + " " + order.getOrderItem().getCoin().getId());
+        walletTransaction.setPurpose(order.getOrderType() + " " + order.getOrderItem().getCoinId());
 
         walletTransaction.setDate(LocalDate.now());
-        walletTransaction.setTransferId(order.getOrderItem().getCoin().getSymbol());
+        walletTransaction.setTransferId(order.getOrderItem().getCoinSymbol());
 
 
         if (order.getOrderType().equals(OrderType.BUY)) {
