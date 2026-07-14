@@ -9,7 +9,6 @@ import dev.pioruocco.model.Coin;
 import dev.pioruocco.model.Order;
 import dev.pioruocco.model.User;
 import dev.pioruocco.model.Wallet;
-import dev.pioruocco.repository.CoinRepository;
 import dev.pioruocco.repository.UserRepository;
 import dev.pioruocco.repository.WalletRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,9 +36,6 @@ class WalletTradingFlowIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private WalletRepository walletRepository;
 
-    @Autowired
-    private CoinRepository coinRepository;
-
     private User user;
     private Coin coin;
 
@@ -62,7 +58,6 @@ class WalletTradingFlowIntegrationTest extends AbstractIntegrationTest {
         coin.setSymbol("btc");
         coin.setName("Bitcoin");
         coin.setCurrentPrice(100.0);
-        coin = coinRepository.save(coin);
     }
 
     @Test
