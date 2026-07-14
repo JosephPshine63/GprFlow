@@ -28,6 +28,10 @@ spring:
           uri: ${COIN_SERVICE_URL:http://coin-service:5455}
           predicates:
             - Path=/api/coins/**
+        - id: chatbot-service
+          uri: ${CHATBOT_SERVICE_URL:http://chatbot-service:5456}
+          predicates:
+            - Path=/chat/**
         - id: monolith
           uri: ${MONOLITH_URL:http://app:5454}
           predicates:
