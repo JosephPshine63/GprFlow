@@ -41,12 +41,57 @@ services:
       STRIPE_API_KEY: ${STRIPE_API_KEY:-your key}
       RAZORPAY_API_KEY: ${RAZORPAY_API_KEY:-your razorpay key}
       RAZORPAY_API_SECRET: ${RAZORPAY_API_SECRET:-your razorpay secret}
-      COINGECKO_API_KEY: ${COINGECKO_API_KEY:-your coin gecko api key}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-your gemini api key}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
+      # Coin domain lives in coin-service now (Fase 4); kept published on
+      # 5454 for direct debug access, but Coin/ChatBot calls go through it.
+      COIN_SERVICE_URL: http://coin-service:5455
     ports:
       - "5454:5454"
+
+  coin-service:
+    build:
+      context: ./backend/coin-service
+    container_name: gprflow-coin-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}?currentSchema=coin
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      COINGECKO_API_KEY: ${COINGECKO_API_KEY:-your coin gecko api key}
+    # No published port: reachable only via the gateway or the internal
+    # Compose network (CoinClient in the monolith calls it by DNS name).
+
+  chatbot-service:
+    build:
+      context: ./backend/chatbot-service
+    container_name: gprflow-chatbot-service
+    restart: always
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-your gemini api key}
+    # No published port: reachable only via the gateway.
+
+  gateway:
+    build:
+      context: ./backend/gateway
+    container_name: gprflow-gateway
+    restart: always
+    depends_on:
+      - app
+      - coin-service
+      - chatbot-service
+    environment:
+      MONOLITH_URL: http://app:5454
+      COIN_SERVICE_URL: http://coin-service:5455
+      CHATBOT_SERVICE_URL: http://chatbot-service:5456
+    ports:
+      - "8080:8080"
 
   frontend:
     build:
@@ -54,9 +99,9 @@ services:
     container_name: gprflow-frontend
     restart: always
     depends_on:
-      - app
+      - gateway
     environment:
-      API_BASE_URL: ${API_BASE_URL:-http://localhost:5454}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:8080}
     ports:
       - "5173:80"
 
