@@ -18,8 +18,10 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Spring Boot 3.2.4's managed Testcontainers 1.19.7 negotiates a Docker API
-             version too old for current Docker Engine releases; pin a newer one. -->
-        <testcontainers.version>1.20.4</testcontainers.version>
+             version too old for current Docker Engine releases; pin a newer one. Bumped
+             again to 1.21.4: even 1.20.4 still negotiated API 1.32 against Docker Engine
+             29.6.1 (min supported 1.40), verified by running against a real Docker daemon. -->
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 	<dependencies>
 		<dependency>
