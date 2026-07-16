@@ -1,5 +1,6 @@
 package dev.pioruocco.config;
 
+import dev.pioruocco.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,15 +25,19 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(jwtConstant.getSecretKey().getBytes());
     }
 
-    public String generateToken(Authentication auth) {
+    // userId/fullName/email are sourced from the User entity, not the Authentication,
+    // so the gateway can forward identity as trusted headers without a DB lookup (Fase 6).
+    public String generateToken(Authentication auth, User user) {
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         String roles = populateAuthorities(authorities);
 
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtConstant.getJwtExpirationMs()))
-                .claim("email", auth.getName())
+                .claim("email", user.getEmail())
                 .claim("authorities", roles)
+                .claim("userId", user.getId())
+                .claim("fullName", user.getFullName())
                 .signWith(getSigningKey())
                 .compact();
     }

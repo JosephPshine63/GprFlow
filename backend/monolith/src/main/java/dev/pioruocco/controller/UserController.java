@@ -15,6 +15,7 @@ import dev.pioruocco.service.EmailService;
 import dev.pioruocco.service.ForgotPasswordService;
 import dev.pioruocco.service.UserService;
 import dev.pioruocco.service.VerificationService;
+import dev.pioruocco.util.AuthHeaderResolver;
 import dev.pioruocco.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,8 +43,10 @@ public class UserController {
 
     @GetMapping("/api/users/profile")
     public ResponseEntity<User> getUserProfileHandler(
-            @RequestHeader("Authorization") String jwt) throws UserException {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie) throws UserException {
 
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
         user.setPassword(null);
 
@@ -53,7 +56,8 @@ public class UserController {
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<UserSummaryDTO> findUserById(
             @PathVariable Long userId,
-            @RequestHeader("Authorization") String jwt) throws UserException {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie) throws UserException {
 
         User user = userService.findUserById(userId);
         return new ResponseEntity<>(new UserSummaryDTO(user.getId(), user.getFullName()), HttpStatus.ACCEPTED);
@@ -62,7 +66,8 @@ public class UserController {
     @GetMapping("/api/users/email/{email}")
     public ResponseEntity<UserSummaryDTO> findUserByEmail(
             @PathVariable String email,
-            @RequestHeader("Authorization") String jwt) throws UserException {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie) throws UserException {
 
         User user = userService.findUserByEmail(email);
         return new ResponseEntity<>(new UserSummaryDTO(user.getId(), user.getFullName()), HttpStatus.ACCEPTED);
@@ -70,11 +75,12 @@ public class UserController {
 
     @PatchMapping("/api/users/enable-two-factor/verify-otp/{otp}")
     public ResponseEntity<User> enabledTwoFactorAuthentication(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie,
             @PathVariable String otp
     ) throws Exception {
 
-
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
 
 
@@ -151,11 +157,12 @@ public class UserController {
 
     @PatchMapping("/api/users/verification/verify-otp/{otp}")
     public ResponseEntity<User> verifyOTP(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie,
             @PathVariable String otp
     ) throws Exception {
 
-
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
 
 
@@ -176,9 +183,11 @@ public class UserController {
     @PostMapping("/api/users/verification/{verificationType}/send-otp")
     public ResponseEntity<String> sendVerificationOTP(
             @PathVariable VerificationType verificationType,
-            @RequestHeader("Authorization") String jwt)
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie)
             throws Exception {
 
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
 
         VerificationCode verificationCode = verificationService.findUsersVerification(user);

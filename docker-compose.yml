@@ -38,9 +38,6 @@ services:
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       MAIL_USERNAME: ${MAIL_USERNAME:-your email}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-your app password}
-      STRIPE_API_KEY: ${STRIPE_API_KEY:-your key}
-      RAZORPAY_API_KEY: ${RAZORPAY_API_KEY:-your razorpay key}
-      RAZORPAY_API_SECRET: ${RAZORPAY_API_SECRET:-your razorpay secret}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
       # Coin domain lives in coin-service now (Fase 4); kept published on
@@ -77,6 +74,27 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-your gemini api key}
     # No published port: reachable only via the gateway.
 
+  ledger-service:
+    build:
+      context: ./backend/ledger-service
+    container_name: gprflow-ledger-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}?currentSchema=ledger
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      # No JWT_SECRET: ledger-service never parses a JWT, it trusts the gateway's headers.
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      STRIPE_API_KEY: ${STRIPE_API_KEY:-your key}
+      RAZORPAY_API_KEY: ${RAZORPAY_API_KEY:-your razorpay key}
+      RAZORPAY_API_SECRET: ${RAZORPAY_API_SECRET:-your razorpay secret}
+      COIN_SERVICE_URL: http://coin-service:5455
+    # No published port: reachable only via the gateway.
+
   gateway:
     build:
       context: ./backend/gateway
@@ -86,10 +104,13 @@ services:
       - app
       - coin-service
       - chatbot-service
+      - ledger-service
     environment:
       MONOLITH_URL: http://app:5454
       COIN_SERVICE_URL: http://coin-service:5455
       CHATBOT_SERVICE_URL: http://chatbot-service:5456
+      LEDGER_SERVICE_URL: http://ledger-service:5457
+      JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
     ports:
       - "8080:8080"
 

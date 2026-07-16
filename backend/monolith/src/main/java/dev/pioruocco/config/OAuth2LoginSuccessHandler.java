@@ -57,7 +57,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(email, null,
                         AuthorityUtils.createAuthorityList(user.getRole().name()));
-        String jwt = jwtProvider.generateToken(authToken);
+        String jwt = jwtProvider.generateToken(authToken, user);
 
         int maxAge = 7 * 24 * 60 * 60;
         response.addHeader("Set-Cookie",

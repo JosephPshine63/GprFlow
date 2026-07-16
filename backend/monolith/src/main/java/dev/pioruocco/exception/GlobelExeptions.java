@@ -21,18 +21,6 @@ public class GlobelExeptions {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(WalletException.class)
-    public ResponseEntity<ErrorDetails> walletExceptionHandler(WalletException we, WebRequest req) {
-        ErrorDetails error = new ErrorDetails(we.getMessage(), req.getDescription(false), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(OrderException.class)
-    public ResponseEntity<ErrorDetails> orderExceptionHandler(OrderException oe, WebRequest req) {
-        ErrorDetails error = new ErrorDetails(oe.getMessage(), req.getDescription(false), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorDetails> handleRuntimeException(RuntimeException ex, WebRequest request) {
         log.error("RuntimeException on {}: {}", request.getDescription(false), ex.getMessage(), ex);

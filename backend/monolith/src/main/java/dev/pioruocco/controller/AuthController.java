@@ -50,9 +50,6 @@ public class AuthController {
     private WatchlistService watchlistService;
 
     @Autowired
-    private WalletService walletService;
-
-    @Autowired
     private VerificationService verificationService;
 
     @Autowired
@@ -99,7 +96,7 @@ public class AuthController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtProvider.generateToken(authentication);
+        String token = jwtProvider.generateToken(authentication, savedUser);
         setJwtCookie(response, token);
 
         AuthResponse authResponse = new AuthResponse();
@@ -122,7 +119,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtProvider.generateToken(authentication);
+        String token = jwtProvider.generateToken(authentication, user);
 
         if (user.getTwoFactorAuth().isEnabled()) {
             AuthResponse authResponse = new AuthResponse();

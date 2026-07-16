@@ -1,6 +1,11 @@
 server:
   port: ${SERVER_PORT:8080}
 
+jwt:
+  # Must match the monolith's JWT_SECRET — this is the first time the gateway itself
+  # parses a JWT (JwtAuthGlobalFilter), previously it was a pure proxy.
+  secret: ${JWT_SECRET:wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
+
 spring:
   application:
     name: gateway
@@ -32,6 +37,10 @@ spring:
           uri: ${CHATBOT_SERVICE_URL:http://chatbot-service:5456}
           predicates:
             - Path=/chat/**
+        - id: ledger-service
+          uri: ${LEDGER_SERVICE_URL:http://ledger-service:5457}
+          predicates:
+            - Path=/api/wallet/**,/api/orders/**,/api/payment/**,/api/withdrawal/**,/api/admin/withdrawal/**,/api/assets/**
         - id: monolith
           uri: ${MONOLITH_URL:http://app:5454}
           predicates:

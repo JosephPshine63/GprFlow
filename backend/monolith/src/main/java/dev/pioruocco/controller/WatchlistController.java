@@ -7,6 +7,7 @@ import dev.pioruocco.model.Watchlist;
 import dev.pioruocco.service.CoinClient;
 import dev.pioruocco.service.UserService;
 import dev.pioruocco.service.WatchlistService;
+import dev.pioruocco.util.AuthHeaderResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,10 @@ public class WatchlistController {
 
     @GetMapping("/user")
     public ResponseEntity<Watchlist> getUserWatchlist(
-            @RequestHeader("Authorization") String jwt) throws Exception {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie) throws Exception {
 
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
         Watchlist watchlist = watchlistService.findUserWatchlist(user.getId());
         enrichWithCoins(watchlist, jwt);
@@ -44,7 +47,9 @@ public class WatchlistController {
 
     @PostMapping("/create")
     public ResponseEntity<Watchlist> createWatchlist(
-            @RequestHeader("Authorization") String jwt) throws UserException {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie) throws UserException {
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
         Watchlist createdWatchlist = watchlistService.createWatchList(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWatchlist);
@@ -52,9 +57,11 @@ public class WatchlistController {
 
     @GetMapping("/{watchlistId}")
     public ResponseEntity<Watchlist> getWatchlistById(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie,
             @PathVariable Long watchlistId) throws Exception {
 
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         Watchlist watchlist = watchlistService.findById(watchlistId);
         enrichWithCoins(watchlist, jwt);
         return ResponseEntity.ok(watchlist);
@@ -63,10 +70,11 @@ public class WatchlistController {
 
     @PatchMapping("/add/coin/{coinId}")
     public ResponseEntity<Coin> addItemToWatchlist(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @CookieValue(value = "jwt", required = false) String jwtCookie,
             @PathVariable String coinId) throws Exception {
 
-
+        String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         User user = userService.findUserProfileByJwt(jwt);
         Coin coin = coinClient.findById(coinId, jwt);
         Coin addedCoin = watchlistService.addItemToWatchlist(coin, user);
