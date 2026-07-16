@@ -124,6 +124,10 @@ When asked to generate a prompt to hand back in plan mode, or to produce content
 
 Never add any reference to Claude/AI authorship anywhere that ends up committed or pushed — no `Co-Authored-By: Claude`, no "Generated with Claude Code" trailers, no mentions in commit messages, PR titles/descriptions, code comments, or committed docs. This overrides the default Claude Code commit template.
 
+### Unanswered clarifying questions
+
+If a clarifying question (via `AskUserQuestion` or otherwise) goes unanswered for more than 7 minutes, stop waiting: pick whichever option was recommended (or, absent an explicit recommendation, the most reasonable/lowest-risk one) and proceed on that basis. State clearly in the following response which choice was made and why, so it's easy to override later.
+
 ## Key Configuration Files
 
 | File | Purpose |
