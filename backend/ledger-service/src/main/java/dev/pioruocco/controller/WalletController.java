@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -71,10 +72,14 @@ public class WalletController {
     }
 
     @PutMapping("/api/wallet/{walletId}/transfer")
-    public ResponseEntity<Wallet> walletToWalletTransfer(@RequestHeader("X-User-Id") Long senderId,
+    public ResponseEntity<?> walletToWalletTransfer(@RequestHeader("X-User-Id") Long senderId,
                                                          @PathVariable Long walletId,
                                                          @RequestBody WalletTransaction req
     ) throws Exception {
+        if (req.getAmount() == null || req.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            return ResponseEntity.badRequest().body("Amount must be positive");
+        }
+
         Wallet reciverWallet = walleteService.findWalletById(walletId);
 
         Long transferAmount = req.getAmount().longValueExact();

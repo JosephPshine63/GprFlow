@@ -58,6 +58,10 @@ public class WalleteServiceImplementation implements WalletService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Wallet walletToWalletTransfer(Long senderId, Wallet receiverWallet, Long amount) throws WalletException {
+        if (amount == null || amount <= 0) {
+            throw new WalletException("Transfer amount must be positive");
+        }
+
         Wallet senderWallet = getUserWallet(senderId);
 
 
