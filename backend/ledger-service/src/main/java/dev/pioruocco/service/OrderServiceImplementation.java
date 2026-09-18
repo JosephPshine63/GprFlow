@@ -161,11 +161,12 @@ public class OrderServiceImplementation implements OrderService {
 
             orderItem.setOrder(order);
 
-            Order savedOrder = orderRepository.save(order);
-
             if (assetToSell.getQuantity() >= quantity) {
 
                 walletService.payOrderPayment(order, userId);
+
+                order.setStatus(OrderStatus.SUCCESS);
+                Order savedOrder = orderRepository.save(order);
 
                 Asset updatedAsset = assetService.updateAsset(
                         assetToSell.getId(),

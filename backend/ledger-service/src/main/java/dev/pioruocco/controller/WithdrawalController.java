@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class WithdrawalController {
                 userWallet,
                 WalletTransactionType.WITHDRAWAL, null,
                 "bank account withdrawal",
-                withdrawal.getAmount()
+                BigDecimal.valueOf(withdrawal.getAmount())
         );
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);

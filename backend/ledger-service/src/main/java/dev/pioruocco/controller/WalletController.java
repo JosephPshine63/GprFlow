@@ -77,12 +77,13 @@ public class WalletController {
     ) throws Exception {
         Wallet reciverWallet = walleteService.findWalletById(walletId);
 
-        Wallet wallet = walleteService.walletToWalletTransfer(senderId, reciverWallet, req.getAmount());
+        Long transferAmount = req.getAmount().longValueExact();
+        Wallet wallet = walleteService.walletToWalletTransfer(senderId, reciverWallet, transferAmount);
         WalletTransaction walletTransaction = walletTransactionService.createTransaction(
                 wallet,
                 WalletTransactionType.WALLET_TRANSFER, reciverWallet.getId().toString(),
                 req.getPurpose(),
-                -req.getAmount()
+                req.getAmount().negate()
         );
 
         return new ResponseEntity<>(wallet, HttpStatus.OK);

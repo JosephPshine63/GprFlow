@@ -4,6 +4,7 @@ import dev.pioruocco.domain.WalletTransactionType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -26,7 +27,7 @@ public class WalletTransaction {
 
     private String purpose;
 
-    private Long amount;
+    private BigDecimal amount;
 
 
 }

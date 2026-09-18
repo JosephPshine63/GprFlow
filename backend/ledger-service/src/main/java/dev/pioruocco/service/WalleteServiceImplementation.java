@@ -93,7 +93,7 @@ public class WalleteServiceImplementation implements WalletService {
 
         if (order.getOrderType().equals(OrderType.BUY)) {
 //            walletTransaction.setType(WalletTransactionType.BUY_ASSET);
-            walletTransaction.setAmount(-order.getPrice().longValue());
+            walletTransaction.setAmount(order.getPrice().negate());
             BigDecimal newBalance = wallet.getBalance().subtract(order.getPrice());
 
             if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
@@ -102,7 +102,7 @@ public class WalleteServiceImplementation implements WalletService {
             wallet.setBalance(newBalance);
         } else if (order.getOrderType().equals(OrderType.SELL)) {
 //            walletTransaction.setType(WalletTransactionType.SELL_ASSET);
-            walletTransaction.setAmount(order.getPrice().longValue());
+            walletTransaction.setAmount(order.getPrice());
             BigDecimal newBalance = wallet.getBalance().add(order.getPrice());
             wallet.setBalance(newBalance);
         }

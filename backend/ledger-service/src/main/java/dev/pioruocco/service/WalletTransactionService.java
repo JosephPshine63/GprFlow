@@ -4,6 +4,7 @@ import dev.pioruocco.domain.WalletTransactionType;
 import dev.pioruocco.model.Wallet;
 import dev.pioruocco.model.WalletTransaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WalletTransactionService {
@@ -11,7 +12,7 @@ public interface WalletTransactionService {
                                         WalletTransactionType type,
                                         String transferId,
                                         String purpose,
-                                        Long amount
+                                        BigDecimal amount
     );
 
     List<WalletTransaction> getTransactions(Wallet wallet, WalletTransactionType type);
