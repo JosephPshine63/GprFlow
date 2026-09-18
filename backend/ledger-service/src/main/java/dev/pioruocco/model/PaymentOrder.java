@@ -25,5 +25,9 @@ public class PaymentOrder {
     private PaymentMethod paymentMethod;
 
     private Long userId;
+
+    // Gateway payment/session id that fulfilled this order, set once on success —
+    // lets us reject a paymentId already spent against a different PaymentOrder.
+    private String paymentId;
 }
 

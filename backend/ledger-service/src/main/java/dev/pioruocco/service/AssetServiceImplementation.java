@@ -6,6 +6,7 @@ import dev.pioruocco.model.Coin;
 import dev.pioruocco.repository.AssetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class AssetServiceImplementation implements AssetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Asset createAsset(Long userId, Coin coin, double quantity) {
         Asset asset = new Asset();
 
@@ -47,6 +49,7 @@ public class AssetServiceImplementation implements AssetService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Asset updateAsset(Long assetId, double quantity) throws Exception {
 
         Asset oldAsset = getAssetById(assetId);

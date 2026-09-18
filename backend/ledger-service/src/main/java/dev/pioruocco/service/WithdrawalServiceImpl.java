@@ -5,6 +5,7 @@ import dev.pioruocco.model.Withdrawal;
 import dev.pioruocco.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +18,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Withdrawal requestWithdrawal(Long amount, Long userId) {
         Withdrawal withdrawal = new Withdrawal();
         withdrawal.setAmount(amount);
@@ -27,6 +29,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Withdrawal procedWithdrawal(Long withdrawalId, boolean accept) throws Exception {
         Optional<Withdrawal> withdrawalOptional = withdrawalRepository.findById(withdrawalId);
 

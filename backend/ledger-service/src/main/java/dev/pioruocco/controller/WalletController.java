@@ -19,10 +19,6 @@ public class WalletController {
     @Autowired
     private WalletService walleteService;
 
-
-    @Autowired
-    private OrderService orderService;
-
     @Autowired
     private WalletTransactionService walletTransactionService;
 
@@ -56,8 +52,11 @@ public class WalletController {
     ) throws Exception {
         Wallet wallet = walleteService.getUserWallet(userId);
 
-
         PaymentOrder order = paymentService.getPaymentOrderById(orderId);
+        if (!order.getUserId().equals(userId)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         Boolean status = paymentService.ProccedPaymentOrder(order, paymentId);
         PaymentResponse res = new PaymentResponse();
         res.setPayment_url("deposite success");
@@ -85,18 +84,6 @@ public class WalletController {
                 req.getPurpose(),
                 -req.getAmount()
         );
-
-        return new ResponseEntity<>(wallet, HttpStatus.OK);
-
-    }
-
-
-    @PutMapping("/api/wallet/order/{orderId}/pay")
-    public ResponseEntity<Wallet> payOrderPayment(@PathVariable Long orderId,
-                                                  @RequestHeader("X-User-Id") Long userId) throws Exception {
-        Order order = orderService.getOrderById(orderId);
-
-        Wallet wallet = walleteService.payOrderPayment(order, userId);
 
         return new ResponseEntity<>(wallet, HttpStatus.OK);
 

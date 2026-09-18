@@ -61,35 +61,52 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean ProccedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException, StripeException {
-        if (paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)) {
+        if (!paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)) {
+            return false;
+        }
 
-            if (paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)) {
-                RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecret);
-                Payment payment = razorpay.payments.fetch(paymentId);
+        // Same gateway paymentId cannot fulfill two different PaymentOrder rows —
+        // without this a single real payment could be replayed to credit any
+        // number of pending orders of the same amount.
+        if (paymentOrderRepository.existsByPaymentIdAndStatus(paymentId, PaymentOrderStatus.SUCCESS)) {
+            paymentOrder.setStatus(PaymentOrderStatus.FAILED);
+            paymentOrderRepository.save(paymentOrder);
+            return false;
+        }
 
-                Integer amount = payment.get("amount");
-                String status = payment.get("status");
-                if (status.equals("captured")) {
-                    paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
-                    paymentOrderRepository.save(paymentOrder);
-                    return true;
-                }
-                paymentOrder.setStatus(PaymentOrderStatus.FAILED);
+        // Gateway amounts are in the smallest currency unit (paise/cents); paymentOrder.amount
+        // is whole units, matching how the payment link was created (amount * 100 below).
+        long expectedMinorUnits = paymentOrder.getAmount() * 100;
+
+        if (paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)) {
+            RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecret);
+            Payment payment = razorpay.payments.fetch(paymentId);
+
+            Integer amount = payment.get("amount");
+            String status = payment.get("status");
+            if (status.equals("captured") && amount != null && amount == expectedMinorUnits) {
+                paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
+                paymentOrder.setPaymentId(paymentId);
                 paymentOrderRepository.save(paymentOrder);
-                return false;
-            } else if (paymentOrder.getPaymentMethod().equals(PaymentMethod.STRIPE)) {
-                Stripe.apiKey = stripeSecretKey;
-                com.stripe.model.checkout.Session session =
-                    com.stripe.model.checkout.Session.retrieve(paymentId);
-                if ("paid".equals(session.getPaymentStatus())) {
-                    paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
-                    paymentOrderRepository.save(paymentOrder);
-                    return true;
-                }
-                paymentOrder.setStatus(PaymentOrderStatus.FAILED);
-                paymentOrderRepository.save(paymentOrder);
-                return false;
+                return true;
             }
+            paymentOrder.setStatus(PaymentOrderStatus.FAILED);
+            paymentOrderRepository.save(paymentOrder);
+            return false;
+        } else if (paymentOrder.getPaymentMethod().equals(PaymentMethod.STRIPE)) {
+            Stripe.apiKey = stripeSecretKey;
+            com.stripe.model.checkout.Session session =
+                com.stripe.model.checkout.Session.retrieve(paymentId);
+            Long amountTotal = session.getAmountTotal();
+            if ("paid".equals(session.getPaymentStatus()) && amountTotal != null && amountTotal == expectedMinorUnits) {
+                paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
+                paymentOrder.setPaymentId(paymentId);
+                paymentOrderRepository.save(paymentOrder);
+                return true;
+            }
+            paymentOrder.setStatus(PaymentOrderStatus.FAILED);
+            paymentOrderRepository.save(paymentOrder);
+            return false;
         }
 
         return false;

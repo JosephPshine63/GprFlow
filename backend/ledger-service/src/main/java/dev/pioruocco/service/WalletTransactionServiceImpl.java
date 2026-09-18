@@ -6,6 +6,7 @@ import dev.pioruocco.model.WalletTransaction;
 import dev.pioruocco.repository.WalletTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,7 @@ public class WalletTransactionServiceImpl implements WalletTransactionService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WalletTransaction createTransaction(Wallet wallet,
                                                WalletTransactionType type,
                                                String transferId,
