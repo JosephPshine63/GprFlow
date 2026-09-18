@@ -44,12 +44,16 @@ public class WatchlistController {
 
     @GetMapping("/{watchlistId}")
     public ResponseEntity<Watchlist> getWatchlistById(
+            @RequestHeader("X-User-Id") Long userId,
             @RequestHeader(value = "Authorization", required = false) String authHeader,
             @CookieValue(value = "jwt", required = false) String jwtCookie,
             @PathVariable Long watchlistId) throws Exception {
 
         String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
         Watchlist watchlist = watchlistService.findById(watchlistId);
+        if (!watchlist.getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         enrichWithCoins(watchlist, jwt);
         return ResponseEntity.ok(watchlist);
 
