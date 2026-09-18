@@ -29,7 +29,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 | | |
 |---|---|
 | Language | Java 17+ |
-| Framework | Spring Boot 3.2.4 |
+| Framework | Spring Boot 3.2.4, Spring Cloud Gateway |
 | Security | Spring Security, JWT (jjwt 0.11), OAuth2 (Google) |
 | ORM | Spring Data JPA / Hibernate |
 | Database | PostgreSQL 15 |
@@ -53,92 +53,94 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 
 ---
 
-## Prerequisites
+## Architecture
 
-- **Java 17+** and **Maven 3.6+**
-- **Node.js 18+** and **npm**
-- **Docker + Docker Compose** (for the PostgreSQL container) or a local PostgreSQL 15 instance
+The backend is being split, one domain at a time, from a Spring Boot monolith into
+independent services. Today the stack is five Spring Boot processes plus the frontend,
+all fronted by a single API gateway:
+
+| Service | Port | Owns |
+|---|---|---|
+| `gateway` | `8080` | Single entry point for the frontend. Routes by path prefix to the service below that owns it. |
+| `monolith` | `5454` | Auth, User, PaymentDetails (saved payment methods), Verification (email OTP), Watchlist. Everything not yet extracted. |
+| `coin-service` | `5455` | Coin/market-data domain (CoinGecko integration). |
+| `chatbot-service` | `5456` | Gemini AI chatbot. Stateless, no database. |
+| `ledger-service` | `5457` | Wallet, Order, Asset, Payment, Withdrawal. |
+
+**Routing:** the gateway forwards `/api/coins/**` → coin-service, `/chat/**` → chatbot-service,
+`/api/wallet/**`, `/api/orders/**`, `/api/payment/**`, `/api/withdrawal/**`,
+`/api/admin/withdrawal/**`, `/api/assets/**` → ledger-service, and everything else through to
+the monolith. For the paths above, the gateway validates the JWT itself once and forwards the
+caller's identity to the downstream service as `X-User-Id` / `X-User-Role` / `X-User-Email` /
+`X-User-Full-Name` headers instead of the raw token — `ledger-service` in particular has no
+JWT-validation logic of its own and fully trusts those headers, so it must never be reached
+except through the gateway (it doesn't publish a port in Docker Compose, so this is already
+enforced there).
+
+**Database:** one PostgreSQL 15 instance shared by all services, split by schema —
+`public` (monolith), `coin` (coin-service), `ledger` (ledger-service). `chatbot-service` has no
+database. Schema creation currently relies on Hibernate's `ddl-auto=update` under the `dev`
+profile (see [Production readiness checklist](#production-readiness-checklist)).
 
 ---
 
-## Installation
+## Prerequisites
 
-### 1. Clone
+- **Docker + Docker Compose** — the only requirement to run the full stack (recommended path).
+- For service-by-service local development with hot reload instead: **Java 17+ and Maven 3.6+**
+  per backend service, and **Node.js 18+ and npm** for the frontend.
+
+---
+
+## Local development
+
+### Quick start (Docker Compose — runs everything)
 
 ```bash
 git clone <repo-url>
 cd GprFlow
+cp .env.example .env   # defaults work out of the box for local dev
+docker compose up --build
 ```
 
-### 2. Start the database
+This builds and starts Postgres, all five backend services, and the frontend. Open
+`http://localhost:5173` — the frontend talks to the gateway at `http://localhost:8080`, which
+routes to whichever service owns the request.
+
+### Service-by-service (hot reload)
+
+Useful when working on a single service without rebuilding everything:
 
 ```bash
-cd backend
-docker-compose up -d
+# 1. Start just the database
+docker compose up -d db
+
+# 2. Run the service(s) you're working on, each in its own terminal
+cd backend/monolith && mvn spring-boot:run          # http://localhost:5454
+cd backend/coin-service && mvn spring-boot:run       # http://localhost:5455
+cd backend/chatbot-service && mvn spring-boot:run    # http://localhost:5456
+cd backend/ledger-service && mvn spring-boot:run     # http://localhost:5457
+cd backend/gateway && mvn spring-boot:run            # http://localhost:8080
+
+# 3. Run the frontend
+cd frontend && npm install && npm run dev            # http://localhost:5173
 ```
 
-This starts a PostgreSQL 15 container on port 5432 with database `gprflow`, user `postgres`, password `postgres`.
-
-### 3. Configure the backend
-
-Edit `backend/src/main/resources/application.properties` and fill in the placeholder values:
-
-```properties
-spring.mail.username=<gmail address>
-spring.mail.password=<gmail app password>
-stripe.api.key=<stripe secret key>
-razorpay.api.key=<razorpay key id>
-razorpay.api.secret=<razorpay key secret>
-coingecko.api.key=<coingecko api key>
-gemini.api.key=<google gemini api key>
-spring.security.oauth2.client.registration.google.client-id=<google client id>
-spring.security.oauth2.client.registration.google.client-secret=<google client secret>
-```
-
-The database connection is pre-configured to match the Docker Compose defaults. Change it here if you use a different PostgreSQL instance:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/gprflow
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-```
-
-### 4. Install frontend dependencies
+`ledger-service` and `coin-service` need the `dev` Spring profile active locally (it switches
+`ddl-auto` from `validate` to `update` so Hibernate creates their schema), e.g.:
 
 ```bash
-cd frontend
-npm install
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
 ```
 
----
+By default `frontend/.env.example` (`VITE_API_BASE_URL`) points the frontend straight at the
+monolith (`5454`), bypassing the gateway. That's fine for monolith-only routes; point it at the
+gateway (`8080`) instead if you're testing wallet/order/payment/withdrawal/asset/coin/chat
+routes without running the full Compose stack.
 
-## Usage
-
-Run backend and frontend in separate terminals.
-
-**Terminal 1 — backend:**
-
-```bash
-cd backend
-mvn spring-boot:run
-# Listening on http://localhost:5454
-```
-
-**Terminal 2 — frontend:**
-
-```bash
-cd frontend
-npm run dev
-# Listening on http://localhost:5173
-```
-
-Open `http://localhost:5173` in a browser.
-
-To point the frontend at the deployed backend instead of localhost, change `API_BASE_URL` in `frontend/src/Api/api.js`:
-
-```js
-export const API_BASE_URL = 'https://e-commerce-server-production-0873.up.railway.app'
-```
+Backend secrets for local `mvn spring-boot:run` go in `backend/monolith/.env.example` →
+`backend/monolith/.env` (gitignored); the other services take their env vars directly, with
+working localhost defaults.
 
 ---
 
@@ -146,29 +148,26 @@ export const API_BASE_URL = 'https://e-commerce-server-production-0873.up.railwa
 
 ```
 GprFlow/
-├── backend/                         # Spring Boot application
-│   ├── docker-compose.yml           # PostgreSQL container
-│   ├── pom.xml
-│   └── src/main/java/dev/pioruocco/
-│       ├── config/                  # Security, JWT, CORS
-│       ├── controller/              # REST endpoints
-│       ├── service/                 # Business logic (interface + impl pairs)
-│       ├── repository/              # Spring Data JPA repositories
-│       ├── model/                   # JPA entities
-│       ├── domain/                  # Enums (OrderType, UserRole, etc.)
-│       ├── request/                 # Request DTOs
-│       ├── response/                # Response DTOs
-│       └── exception/               # Global exception handler + domain exceptions
+├── docker-compose.yml                       # Orchestrates db + all backend services + frontend
+├── db/init/01-schemas.sql                   # Creates the coin/ledger Postgres schemas (fresh volume only)
+│
+├── backend/
+│   ├── monolith/          # Auth, User, PaymentDetails, Verification, Watchlist
+│   ├── coin-service/      # Coin / market-data domain
+│   ├── chatbot-service/   # Gemini AI chatbot
+│   ├── ledger-service/    # Wallet, Order, Asset, Payment, Withdrawal
+│   └── gateway/           # Spring Cloud Gateway — single entry point, JWT validation
+│       └── (each service is an independent Maven project with its own Dockerfile,
+│            following controller/ → service/ → repository/ → model/ under dev.pioruocco)
 │
 └── frontend/                        # React + Vite SPA
     └── src/
-        ├── Api/api.js               # Axios instance (base URL config)
+        ├── Api/api.js               # Axios instance (base URL from runtime config / env)
         ├── Redux/                   # Store + per-domain slices (Auth, Coin, Wallet, …)
         ├── pages/                   # Route-level components
         ├── components/
         │   ├── ui/                  # shadcn/ui primitives (Radix + Tailwind)
         │   └── custome/             # App-specific reusable components
-        ├── Admin/                   # Admin-only views
         ├── Util/                    # Pure utility functions
         └── App.jsx                  # Router + auth gate
 ```
@@ -177,27 +176,170 @@ GprFlow/
 
 ## Configuration Reference
 
-| Variable / Property | Location | Description |
-|---|---|---|
-| `server.port` | `application.properties` | Backend port (default: 5454) |
-| `spring.datasource.*` | `application.properties` | PostgreSQL connection |
-| `stripe.api.key` | `application.properties` | Stripe secret key |
-| `razorpay.api.*` | `application.properties` | Razorpay key + secret |
-| `coingecko.api.key` | `application.properties` | CoinGecko API key |
-| `gemini.api.key` | `application.properties` | Google Gemini AI key |
-| `spring.mail.*` | `application.properties` | Gmail SMTP credentials |
-| `spring.security.oauth2.*` | `application.properties` | Google OAuth2 client |
-| `API_BASE_URL` | `frontend/src/Api/api.js` | Backend URL for frontend |
+Every service is configured via environment variables (`${VAR:default}` in each
+`application.properties`/`application.yml`), not by hand-editing config files. Start from the
+example files and fill in real values:
 
-> **Note:** `JwtConstant.SECRET_KEY` is hardcoded in `backend/src/main/java/dev/pioruocco/config/JwtConstant.java`. Replace it with an environment variable before deploying to production.
+| File | Used by |
+|---|---|
+| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, SMTP, Stripe/Razorpay/CoinGecko/Gemini keys, Google OAuth2 |
+| `backend/monolith/.env.example` | Bare `mvn spring-boot:run` for the monolith |
+| `frontend/.env.example` | `VITE_API_BASE_URL` for `npm run dev` |
+
+Copy each to its `.env` counterpart (gitignored) and edit; never commit the real `.env` files.
+
+---
+
+## Production deployment (self-hosted on Ubuntu, behind a Cloudflare Tunnel)
+
+This walks through putting the stack on a home Ubuntu server and exposing it on a domain
+managed by Cloudflare, using **Cloudflare Tunnel** instead of router port-forwarding — no open
+inbound ports are needed, and it keeps working even if your ISP gives you a dynamic IP or puts
+you behind CGNAT (both common on residential connections).
+
+### 1. Prerequisites
+
+- Ubuntu server with Docker Engine + the Docker Compose plugin installed.
+- The domain already added to a Cloudflare account (DNS managed by Cloudflare).
+- A free Cloudflare Zero Trust account (needed to create a Tunnel).
+
+### 2. Configure the app for your domain
+
+```bash
+git clone <repo-url>
+cd GprFlow
+cp .env.example .env
+```
+
+Edit `.env` and set **real, strong values** — the defaults in `.env.example` are placeholders
+meant for local dev only, not production:
+
+```bash
+JWT_SECRET=$(openssl rand -base64 48)   # generate and paste this in, don't reuse the sample value
+FRONTEND_URL=https://app.yourdomain.com
+API_BASE_URL=https://api.yourdomain.com
+```
+
+Also fill in your real SMTP, Stripe, Razorpay, CoinGecko, Gemini, and Google OAuth2 credentials.
+
+You'll typically want **two public hostnames** — one for the frontend, one for the API — because
+the frontend calls `API_BASE_URL` as an absolute URL and the bundled nginx doesn't do
+path-based routing to the gateway:
+
+- `app.yourdomain.com` → the `frontend` container (nginx, internal port 80)
+- `api.yourdomain.com` → the `gateway` container (internal port 8080)
+
+### 3. Mandatory: allow your domain in CORS before starting
+
+CORS-allowed origins are currently **hardcoded** in two places, not read from an environment
+variable — you must edit both and rebuild, or the browser will reject every request with a CORS
+error the moment you point the frontend at your real domain:
+
+- `backend/monolith/src/main/java/dev/pioruocco/config/AppConfig.java` — add
+  `"https://app.yourdomain.com"` to the `allowedOrigins` list in `corsConfigurationSource()`.
+- `backend/gateway/src/main/resources/application.yml` — add the same origin under
+  `spring.cloud.gateway.globalcors.cors-configurations.'[/**]'.allowedOrigins`.
+
+This is a one-time step per domain, not something you need to repeat on every deploy — but it
+must happen before the first production build.
+
+### 4. Set up the Cloudflare Tunnel
+
+```bash
+cloudflared tunnel login
+cloudflared tunnel create gprflow
+cloudflared tunnel route dns gprflow app.yourdomain.com
+cloudflared tunnel route dns gprflow api.yourdomain.com
+```
+
+Then run `cloudflared` itself. Two options:
+
+- **As a container in the same Compose stack** (recommended, keeps everything in one place):
+  add a `cloudflared` service to `docker-compose.yml` using the `cloudflared/cloudflared` image,
+  pass it the tunnel token via `.env`, and give it an `ingress` config that routes
+  `app.yourdomain.com` → `http://frontend:80` and `api.yourdomain.com` → `http://gateway:8080`
+  (the Compose service names, reachable over the internal Compose network — no host ports needed
+  for either).
+- **As a systemd service on the host** — install `cloudflared` directly on Ubuntu and point its
+  ingress config at `http://localhost:5173` and `http://localhost:8080` instead. Simpler to set
+  up standalone, but one more thing to manage outside of `docker compose`.
+
+### 5. Update third-party redirect URLs
+
+Google OAuth2 (Google Cloud Console) and any Stripe/Razorpay webhook or redirect URLs need to be
+updated to point at your new public domain — they were previously configured for `localhost`.
+
+### 6. Build and start
+
+```bash
+docker compose up -d --build
+docker compose ps
+docker compose logs -f
+```
+
+### 7. Backups
+
+Nothing backs up the database automatically. A simple daily cron job:
+
+```bash
+docker compose exec -T db pg_dump -U postgres gprflow > /path/outside/repo/gprflow-$(date +%F).sql
+```
+
+### 8. Updating
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+---
+
+## Production readiness checklist
+
+Beyond the CORS step above (which is mandatory to get working at all), the following were found
+during a review of the codebase and are worth addressing before treating this as a real
+production deployment with real user data. None of these are fixed automatically by the steps
+above — they're listed here to track, not already resolved:
+
+- **Hardcoded JWT fallback secret in `docker-compose.yml`.** The `JWT_SECRET` environment
+  defaults (e.g. `${JWT_SECRET:-wpembytr...}`) fall back to the same fixed string, visible to
+  anyone reading the public repo. Setting a real `JWT_SECRET` in `.env` (step 2 above) covers
+  this, but it's easy to forget since the app runs fine either way.
+- **CORS origins are hardcoded Java/YAML lists, not environment-driven.** Every future domain
+  change means editing source and rebuilding, as done manually in step 3. Worth migrating to a
+  `${CORS_ALLOWED_ORIGINS:...}` environment variable read by both the monolith and the gateway.
+- **Postgres publishes `5432:5432` to the host** in `docker-compose.yml`, which isn't needed —
+  every service already reaches it over the internal Compose network by the `db` hostname.
+  Recommend removing the host port mapping, or at minimum blocking it with `ufw deny 5432`, since
+  a Cloudflare-Tunnel-only deployment never needs to reach Postgres from outside the box.
+  Nothing in this setup port-forwards it publicly, but it's still an unnecessary exposed surface
+  on the host.
+- **Schema is created by Hibernate `ddl-auto=update`, not migrations.** A Liquibase changelog
+  exists (`backend/monolith/src/main/resources/db/changelog/db.changelog-master.xml`) but
+  `liquibase-core` isn't even a Maven dependency, so it's inert. Fine for a hobby project, but
+  risky for schema changes against real data long-term — wiring up Liquibase properly is worth
+  doing before this holds anything you can't afford to lose.
+- **No automated backups** for the `postgres-data` volume — see the cron job in step 7; it isn't
+  set up by default.
+- **Inconsistent JWT trust model across services.** The monolith and coin-service each validate
+  JWTs independently with their own copy of the filter/secret; ledger-service has no JWT
+  validation of its own at all and fully trusts the gateway's `X-User-*` headers; chatbot-service
+  has no auth. This isn't urgent for personal use, but it means `ledger-service`,
+  `coin-service`, and `chatbot-service` must never be reachable except through the gateway —
+  true today because they publish no host ports in Compose, but worth re-checking any time the
+  Compose file changes.
+- **No health checks beyond `db`.** Other services use `depends_on` without
+  `condition: service_healthy`, so a cold `docker compose up` can show transient connection
+  errors for a few seconds until every Spring service finishes starting. Not a functional
+  problem — everything comes up on its own — just noise to expect on first boot or restart.
 
 ---
 
 ## Testing
 
 ```bash
-# Backend unit + integration tests
-cd backend
+# Any backend service
+cd backend/<service>   # monolith, coin-service, chatbot-service, ledger-service, or gateway
 mvn test
 
 # Frontend lint
@@ -205,16 +347,19 @@ cd frontend
 npm run lint
 ```
 
-No frontend test suite is currently configured.
+`ledger-service` additionally has Testcontainers-backed integration tests covering the wallet
+trading flow, wallet concurrency, and withdrawal flow (`src/test/java/dev/pioruocco/**/*IntegrationTest.java`).
+Other backend modules currently only have the default Spring Boot context-load test. There is no
+frontend test suite (only `npm run lint`).
 
 ---
 
 ## Contributing
 
 1. Fork the repository and create a feature branch off `main`.
-2. Keep backend and frontend changes in separate commits when possible.
+2. Keep changes to different backend services (or the frontend) in separate commits when possible.
 3. All `/api/**` endpoints require JWT — test with a valid token.
-4. Run `mvn test` and `npm run lint` before opening a pull request.
+4. Run `mvn test` for any service you touched, and `npm run lint` for frontend changes, before opening a pull request.
 
 ---
 

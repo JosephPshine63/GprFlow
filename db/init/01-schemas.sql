@@ -4,3 +4,5 @@
 -- manually once via `docker compose exec db psql -U postgres -d gprflow -c "..."`.
 CREATE SCHEMA IF NOT EXISTS coin;
 CREATE SCHEMA IF NOT EXISTS ledger;
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS users;

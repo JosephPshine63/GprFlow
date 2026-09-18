@@ -41,6 +41,14 @@ spring:
           uri: ${LEDGER_SERVICE_URL:http://ledger-service:5457}
           predicates:
             - Path=/api/wallet/**,/api/orders/**,/api/payment/**,/api/withdrawal/**,/api/admin/withdrawal/**,/api/assets/**
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://auth-service:5458}
+          predicates:
+            - Path=/auth/**,/login/oauth2/**,/api/users/profile,/api/users/enable-two-factor/**,/api/users/verification/**
+        - id: user-service
+          uri: ${USER_SERVICE_URL:http://user-service:5459}
+          predicates:
+            - Path=/api/users/{id},/api/users/email/{email},/api/watchlist/**,/api/payment-details
         - id: monolith
           uri: ${MONOLITH_URL:http://app:5454}
           predicates:

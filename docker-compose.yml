@@ -23,26 +23,9 @@ services:
       context: ./backend/monolith
     container_name: gprflow-app
     restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      # Schema is created via ddl-auto=update (dev profile) since Liquibase
-      # isn't wired up yet (see CLAUDE.md). Revisit once migrations exist.
-      SPRING_PROFILES_ACTIVE: dev
-      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}
-      DB_USERNAME: ${DB_USERNAME:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
-      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
-      MAIL_USERNAME: ${MAIL_USERNAME:-your email}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-your app password}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
-      # Coin domain lives in coin-service now (Fase 4); kept published on
-      # 5454 for direct debug access, but Coin/ChatBot calls go through it.
-      COIN_SERVICE_URL: http://coin-service:5455
+    # Kept published on 5454 for direct debug access. Auth/User/Verification/
+    # Watchlist/PaymentDetails all live in auth-service/user-service now (Fase 7-8);
+    # HomeController is the only thing left here, no DB needed.
     ports:
       - "5454:5454"
 
@@ -95,6 +78,46 @@ services:
       COIN_SERVICE_URL: http://coin-service:5455
     # No published port: reachable only via the gateway.
 
+  auth-service:
+    build:
+      context: ./backend/auth-service
+    container_name: gprflow-auth-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}?currentSchema=auth
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      MAIL_USERNAME: ${MAIL_USERNAME:-your email}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-your app password}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
+      USER_SERVICE_URL: http://user-service:5459
+    # No published port: reachable only via the gateway.
+
+  user-service:
+    build:
+      context: ./backend/user-service
+    container_name: gprflow-user-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-gprflow}?currentSchema=users
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      # No JWT_SECRET: user-service never parses a JWT, it trusts the gateway's headers.
+      COIN_SERVICE_URL: http://coin-service:5455
+    # No published port: reachable only via the gateway.
+
   gateway:
     build:
       context: ./backend/gateway
@@ -105,11 +128,15 @@ services:
       - coin-service
       - chatbot-service
       - ledger-service
+      - auth-service
+      - user-service
     environment:
       MONOLITH_URL: http://app:5454
       COIN_SERVICE_URL: http://coin-service:5455
       CHATBOT_SERVICE_URL: http://chatbot-service:5456
       LEDGER_SERVICE_URL: http://ledger-service:5457
+      AUTH_SERVICE_URL: http://auth-service:5458
+      USER_SERVICE_URL: http://user-service:5459
       JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
     ports:
       - "8080:8080"

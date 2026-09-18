@@ -36,7 +36,10 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
             "/api/payment",
             "/api/admin/withdrawal",
             "/api/withdrawal",
-            "/api/assets"
+            "/api/assets",
+            "/api/users",
+            "/api/watchlist",
+            "/api/payment-details"
     );
 
     @Value("${jwt.secret}")
