@@ -22,6 +22,9 @@ const TransferForm = () => {
   };
 
   const handleSubmit = () => {
+    if (!formData.amount || Number(formData.amount) <= 0) {
+      return;
+    }
     dispatch(
       transferMoney({
         walletId: formData.walletId,
@@ -31,13 +34,15 @@ const TransferForm = () => {
         },
       })
     );
-    console.log(formData);
   };
   return (
     <div className="pt-10 space-y-5">
       <div>
         <h1 className="pb-1">Enter Amount</h1>
         <Input
+          type="number"
+          min="0.01"
+          step="0.01"
           name="amount"
           onChange={handleChange}
           value={formData.amount}
