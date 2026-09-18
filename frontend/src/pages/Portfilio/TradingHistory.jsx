@@ -25,7 +25,7 @@ import { getAllOrdersForUser } from "@/Redux/Order/Action";
 import { calculateProfite } from "@/Util/calculateProfite";
 import { readableDate } from "@/Util/readableDate";
 
-const TreadingHistory = () => {
+const TradingHistory = () => {
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState("portfolio");
   const { asset, order } = useSelector((store) => store);
@@ -46,7 +46,7 @@ const TreadingHistory = () => {
         <TableHeader className="py-9">
           <TableRow className="sticky top-0 left-0 right-0 bg-background ">
             <TableHead className="py-3">Date & Time</TableHead>
-            <TableHead>Treading Pair</TableHead>
+            <TableHead>Trading Pair</TableHead>
             <TableHead>Buy Price</TableHead>
             <TableHead>Selling Price</TableHead>
             <TableHead>Order Type</TableHead>
@@ -94,4 +94,4 @@ const TreadingHistory = () => {
   );
 };
 
-export default TreadingHistory;
+export default TradingHistory;

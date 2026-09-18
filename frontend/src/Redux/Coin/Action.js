@@ -21,7 +21,7 @@ export const fetchCoinList = (page) => async (dispatch) => {
     }
   };
 
-  export const fetchTreadingCoinList = () => async (dispatch) => {
+  export const fetchTradingCoinList = () => async (dispatch) => {
     dispatch({ type: FETCH_TRADING_COINS_REQUEST });
     try {
       const response = await api.get(`/api/coins/trading`);

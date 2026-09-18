@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import TreadingForm from "./TreadingForm";
+import TradingForm from "./TradingForm";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -121,7 +121,7 @@ const StockDetails = () => {
                       how much do you want to spend?
                     </DialogTitle>
                   </DialogHeader>
-                  <TreadingForm />
+                  <TradingForm />
                 </DialogContent>
               </Dialog>
             </div>

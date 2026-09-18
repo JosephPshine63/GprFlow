@@ -66,7 +66,7 @@ const Navbar = () => {
             onClick={() => navigate("/")}
             className="text-sm lg:text-base cursor-pointer"
           >
-            dev.pioruocco Treading
+            dev.pioruocco Trading
           </p>
           <div className="p-0 ml-9">
             <Button

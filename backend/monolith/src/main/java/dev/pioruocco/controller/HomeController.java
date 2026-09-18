@@ -15,7 +15,7 @@ public class HomeController {
 
 
         ApiResponse res = new ApiResponse(
-                "welcome to crypto treading platform working fine",
+                "welcome to crypto trading platform working fine",
                 true
         );
         return new ResponseEntity<ApiResponse>(res, HttpStatus.ACCEPTED);

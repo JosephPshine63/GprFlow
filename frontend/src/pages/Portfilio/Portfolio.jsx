@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserAssets } from "@/Redux/Assets/Action";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import TreadingHistory from "./TreadingHistory";
+import TradingHistory from "./TradingHistory";
 import { useNavigate } from "react-router-dom";
 
 const tab = ["portfolio", "history"];
@@ -128,7 +128,7 @@ const Portfolio = () => {
             </TableBody>
           </Table>
         ) : (
-          <TreadingHistory />
+          <TradingHistory />
         )
         // <div className="flex items-center justify-center h-[70vh]">
         //   <h1 className="text-3xl font-semibold">No History Available</h1>

@@ -4,6 +4,7 @@ import dev.pioruocco.domain.USER_ROLE;
 import dev.pioruocco.model.User;
 import dev.pioruocco.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,15 @@ public class DataInitializationComponent implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     private final UserServiceClient userServiceClient;
+
+    @Value("${admin.seed.email}")
+    private String adminEmail;
+
+    @Value("${admin.seed.password}")
+    private String adminPassword;
+
+    @Value("${admin.seed.full-name}")
+    private String adminFullName;
 
     @Autowired
     public DataInitializationComponent(UserRepository userRepository,
@@ -34,19 +44,16 @@ public class DataInitializationComponent implements CommandLineRunner {
     }
 
     private void initializeAdminUser() {
-        String adminUsername = "codewithzosh@gmail.com";
-        String adminFullName = "Code With Zosh";
-
-        if (userRepository.findByEmail(adminUsername) == null) {
+        if (userRepository.findByEmail(adminEmail) == null) {
             User adminUser = new User();
 
-            adminUser.setPassword(passwordEncoder.encode("codewithzosh"));
+            adminUser.setPassword(passwordEncoder.encode(adminPassword));
             adminUser.setFullName(adminFullName);
-            adminUser.setEmail(adminUsername);
+            adminUser.setEmail(adminEmail);
             adminUser.setRole(USER_ROLE.ROLE_ADMIN);
             User admin = userRepository.save(adminUser);
 
-            userServiceClient.createProfile(admin.getId(), adminFullName, adminUsername);
+            userServiceClient.createProfile(admin.getId(), adminFullName, adminEmail);
         }
     }
 

@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCoinDetails,
   fetchCoinList,
-  fetchTreadingCoinList,
+  fetchTradingCoinList,
   getTop50CoinList,
 } from "@/Redux/Coin/Action";
 import {
@@ -59,7 +59,7 @@ const Home = () => {
     if (category == "top50") {
       dispatch(getTop50CoinList());
     }else if( category == "trading"){
-      dispatch(fetchTreadingCoinList())
+      dispatch(fetchTradingCoinList())
     }
   }, [category]);
 

@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: ${DB_NAME:-gprflow}
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d:ro
@@ -99,6 +97,9 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
       USER_SERVICE_URL: http://user-service:5459
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@gprflow.trade}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change-me-before-first-boot}
+      ADMIN_FULL_NAME: ${ADMIN_FULL_NAME:-GprFlow Admin}
     # No published port: reachable only via the gateway.
 
   user-service:
@@ -139,7 +140,7 @@ services:
       USER_SERVICE_URL: http://user-service:5459
       JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
     ports:
-      - "8080:8080"
+      - "8087:8080"
 
   frontend:
     build:
