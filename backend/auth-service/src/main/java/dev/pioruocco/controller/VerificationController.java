@@ -83,6 +83,7 @@ public class VerificationController {
         if (isVerified) {
 
             userService.updatePassword(forgotPasswordToken.getUser(), req.getPassword());
+            forgotPasswordService.deleteToken(forgotPasswordToken);
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.setMessage("password updated successfully");
             return ResponseEntity.ok(apiResponse);

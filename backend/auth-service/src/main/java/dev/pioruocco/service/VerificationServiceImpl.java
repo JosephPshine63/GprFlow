@@ -14,6 +14,8 @@ import java.util.Optional;
 @Service
 public class VerificationServiceImpl implements VerificationService {
 
+    private static final int MAX_ATTEMPTS = 5;
+
     @Autowired
     private VerificationRepository verificationRepository;
 
@@ -49,7 +51,16 @@ public class VerificationServiceImpl implements VerificationService {
             verificationRepository.delete(verificationCode);
             throw new Exception("OTP has expired. Please request a new verification code.");
         }
-        return opt.equals(verificationCode.getOtp());
+        if (opt.equals(verificationCode.getOtp())) {
+            return true;
+        }
+        verificationCode.setAttempts(verificationCode.getAttempts() + 1);
+        if (verificationCode.getAttempts() >= MAX_ATTEMPTS) {
+            verificationRepository.delete(verificationCode);
+            throw new Exception("Too many failed attempts. Please request a new verification code.");
+        }
+        verificationRepository.save(verificationCode);
+        return false;
     }
 
     @Override

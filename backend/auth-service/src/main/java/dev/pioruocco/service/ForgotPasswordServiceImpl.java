@@ -12,6 +12,9 @@ import java.util.Optional;
 
 @Service
 public class ForgotPasswordServiceImpl implements ForgotPasswordService {
+
+    private static final int MAX_ATTEMPTS = 5;
+
     @Autowired
     private ForgotPasswordRepository forgotPasswordRepository;
 
@@ -56,6 +59,15 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
             forgotPasswordRepository.delete(token);
             throw new Exception("OTP has expired. Please request a new password reset.");
         }
-        return token.getOtp().equals(otp);
+        if (token.getOtp().equals(otp)) {
+            return true;
+        }
+        token.setAttempts(token.getAttempts() + 1);
+        if (token.getAttempts() >= MAX_ATTEMPTS) {
+            forgotPasswordRepository.delete(token);
+            throw new Exception("Too many failed attempts. Please request a new password reset.");
+        }
+        forgotPasswordRepository.save(token);
+        return false;
     }
 }

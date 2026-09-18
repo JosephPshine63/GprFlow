@@ -29,4 +29,6 @@ public class VerificationCode {
     @Column(nullable = false)
     private LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
 
+    private int attempts = 0;
+
 }

@@ -177,6 +177,7 @@ public class AuthController {
 
         if (twoFactorOtpService.verifyTwoFactorOtp(twoFactorOTP, otp)) {
             setJwtCookie(response, twoFactorOTP.getJwt());
+            twoFactorOtpService.deleteTwoFactorOtp(twoFactorOTP);
             AuthResponse authResponse = new AuthResponse();
             authResponse.setMessage("Two factor authentication verified");
             authResponse.setTwoFactorAuthEnabled(true);

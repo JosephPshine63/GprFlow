@@ -13,6 +13,8 @@ import java.util.UUID;
 @Service
 public class TwoFactorOtpServiceImpl implements TwoFactorOtpService {
 
+    private static final int MAX_ATTEMPTS = 5;
+
     @Autowired
     private TwoFactorOtpRepository twoFactorOtpRepository;
 
@@ -47,7 +49,16 @@ public class TwoFactorOtpServiceImpl implements TwoFactorOtpService {
             twoFactorOtpRepository.delete(twoFactorOtp);
             throw new Exception("OTP has expired. Please sign in again to request a new one.");
         }
-        return twoFactorOtp.getOtp().equals(otp);
+        if (twoFactorOtp.getOtp().equals(otp)) {
+            return true;
+        }
+        twoFactorOtp.setAttempts(twoFactorOtp.getAttempts() + 1);
+        if (twoFactorOtp.getAttempts() >= MAX_ATTEMPTS) {
+            twoFactorOtpRepository.delete(twoFactorOtp);
+            throw new Exception("Too many failed attempts. Please sign in again to request a new one.");
+        }
+        twoFactorOtpRepository.save(twoFactorOtp);
+        return false;
     }
 
     @Override
