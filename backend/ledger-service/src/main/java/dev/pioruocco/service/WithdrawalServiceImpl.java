@@ -20,6 +20,9 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Withdrawal requestWithdrawal(Long amount, Long userId) {
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
         Withdrawal withdrawal = new Withdrawal();
         withdrawal.setAmount(amount);
         withdrawal.setStatus(WithdrawalStatus.PENDING);

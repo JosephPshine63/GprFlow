@@ -29,6 +29,10 @@ public class PaymentController {
             @RequestHeader("X-User-Full-Name") String fullName,
             @RequestHeader("X-User-Email") String email) throws RazorpayException, StripeException {
 
+        if (amount == null || amount <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
         PaymentResponse paymentResponse;
 
         PaymentOrder order = paymentService.createOrder(userId, amount, paymentMethod);
