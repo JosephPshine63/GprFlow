@@ -106,6 +106,9 @@ public class WalleteServiceImplementation implements WalletService {
             wallet.setBalance(newBalance);
         } else if (order.getOrderType().equals(OrderType.SELL)) {
 //            walletTransaction.setType(WalletTransactionType.SELL_ASSET);
+            if (order.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+                throw new WalletException("Sell order price must be positive.");
+            }
             walletTransaction.setAmount(order.getPrice());
             BigDecimal newBalance = wallet.getBalance().add(order.getPrice());
             wallet.setBalance(newBalance);

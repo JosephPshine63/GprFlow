@@ -108,7 +108,7 @@ public class OrderServiceImplementation implements OrderService {
 
     @Transactional(rollbackOn = Exception.class)
     public Order buyAsset(Coin coin, double quantity, Long userId) throws Exception {
-        if (quantity < 0) throw new Exception("quantity should be > 0");
+        if (quantity <= 0) throw new Exception("quantity should be > 0");
         double buyPrice = coin.getCurrentPrice();
 
         OrderItem orderItem = createOrderItem(coin, quantity, buyPrice, 0);
@@ -146,6 +146,7 @@ public class OrderServiceImplementation implements OrderService {
 
     @Transactional(rollbackOn = Exception.class)
     public Order sellAsset(Coin coin, double quantity, Long userId) throws Exception {
+        if (quantity <= 0) throw new Exception("quantity should be > 0");
         double sellPrice = coin.getCurrentPrice();
 
         Asset assetToSell = assetService.findAssetByUserIdAndCoinId(
@@ -190,6 +191,7 @@ public class OrderServiceImplementation implements OrderService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Order processOrder(Coin coin, double quantity, OrderType orderType, Long userId) throws Exception {
+        if (quantity <= 0) throw new Exception("quantity should be > 0");
 
         if (orderType == OrderType.BUY) {
             return buyAsset(coin, quantity, userId);
