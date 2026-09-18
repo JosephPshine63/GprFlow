@@ -320,11 +320,11 @@ above — they're listed here to track, not already resolved:
 - **CORS origins are a hardcoded YAML list, not environment-driven.** Every future domain change
   means editing `application.yml` and rebuilding the gateway, as done manually in step 3. Worth
   migrating to a `${CORS_ALLOWED_ORIGINS:...}` environment variable.
-- **Postgres publishes `5434:5432` to the host** in `docker-compose.yml`, for direct debug access
+- **Postgres publishes `5441:5432` to the host** in `docker-compose.yml`, for direct debug access
   (psql, DBeaver) — every service actually reaches it over the internal Compose network by the
   `db` hostname, so this isn't required for the app to function. A Cloudflare-Tunnel-only
   deployment never proxies it publicly, but if the host has any other public interface, block it
-  with `ufw deny 5434` unless you're actively using the direct-access debug path.
+  with `ufw deny 5441` unless you're actively using the direct-access debug path.
 - **Schema is created by Hibernate `ddl-auto=update`, not migrations.** A Liquibase changelog
   exists (`backend/monolith/src/main/resources/db/changelog/db.changelog-master.xml`) but
   `liquibase-core` isn't even a Maven dependency, so it's inert. Fine for a hobby project, but
