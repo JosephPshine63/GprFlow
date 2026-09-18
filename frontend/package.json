@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint": "node scripts/check-no-emoji.mjs && eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "lint:emoji": "node scripts/check-no-emoji.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
