@@ -104,7 +104,7 @@ docker compose up --build
 ```
 
 This builds and starts Postgres, all five backend services, and the frontend. Open
-`http://localhost:5173` — the frontend talks to the gateway at `http://localhost:8080`, which
+`http://localhost:5173` — the frontend talks to the gateway at `http://localhost:8087`, which
 routes to whichever service owns the request.
 
 ### Service-by-service (hot reload)
