@@ -1,107 +1,158 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --foreground: 240 37% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
- 
+    --card: 240 50% 97%;
+    --card-foreground: 240 37% 12%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
- 
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
- 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
- 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
- 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
- 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
+    --popover-foreground: 240 37% 12%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
- 
-    --radius: 0.5rem;
+    --primary: 239 52% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 33% 96%;
+    --secondary-foreground: 240 37% 12%;
+
+    --muted: 240 33% 96%;
+    --muted-foreground: 240 17% 43%;
+
+    --accent: 240 32% 93%;
+    --accent-foreground: 240 37% 12%;
+
+    --destructive: 1 77% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 20% 90%;
+    --input: 240 20% 90%;
+    --ring: 239 52% 38%;
+
+    --subtle: 240 23% 68%;
+    --up: 142 76% 36%;
+    --down: 1 77% 55%;
+    --warning: 36 71% 42%;
+
+    --grad-start: 239 52% 38%;
+    --grad-end: 238 65% 65%;
+
+    --radius: 0.75rem;
   }
- 
+
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
- 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
- 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
- 
-    --primary: 210 20% 98%;
-    --primary-foreground: 220.9 39.3% 11%;
- 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
- 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
- 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
- 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
+    --background: 240 44% 7%;
+    --foreground: 240 39% 94%;
+
+    --card: 240 40% 12%;
+    --card-foreground: 240 39% 94%;
+
+    --popover: 240 40% 12%;
+    --popover-foreground: 240 39% 94%;
+
+    --primary: 238 65% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 38% 17%;
+    --secondary-foreground: 240 39% 94%;
+
+    --muted: 240 38% 17%;
+    --muted-foreground: 240 23% 68%;
+
+    --accent: 240 38% 19%;
+    --accent-foreground: 240 39% 94%;
+
+    --destructive: 0 91% 71%;
+    --destructive-foreground: 240 44% 7%;
+
+    --border: 240 19% 17%;
+    --input: 240 19% 17%;
+    --ring: 238 65% 65%;
+
+    --subtle: 240 16% 43%;
+    --up: 145 63% 49%;
+    --down: 0 91% 71%;
+    --warning: 44 92% 51%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
   body {
-    @apply dark bg-background text-foreground overflow-x-hidden;
+    @apply bg-background font-sans text-foreground antialiased overflow-x-hidden;
+  }
+  h1,
+  h2 {
+    @apply font-heading tracking-tight;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
 
-/* Styles for the scrollable container */
-.scroll-container {
-  overflow-y: auto;
+@layer components {
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-40;
+  }
+  .surface {
+    @apply rounded-2xl border bg-card;
+  }
+  .surface-glass {
+    @apply rounded-2xl border bg-primary/5 backdrop-blur-md;
+  }
+  .text-gradient {
+    @apply bg-brand bg-clip-text text-transparent;
+  }
+  .brand-mark {
+    aspect-ratio: 371 / 221;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--grad-start)),
+      hsl(var(--grad-end))
+    );
+    -webkit-mask: url("/brand/logo-mark.png") center / contain no-repeat;
+    mask: url("/brand/logo-mark.png") center / contain no-repeat;
+  }
+  .thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .thin-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .thin-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 2px;
+  }
 }
 
-/* Custom scrollbar styles for Webkit browsers (Chrome, Safari) */
-.scroll-container::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-  background: transparent;
-}
-
-.scroll-container::-webkit-scrollbar-track {
-  background: transparent; /* Background of the scrollbar track */
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background:#1e293b; /* Color of the scrollbar thumb */
-  border-radius: 5rem;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color of the scrollbar thumb on hover */
-}
-
-
-
-/* Optional: Ensure custom scrollbars work in Internet Explorer and Edge */
-.scroll-container {
-  -ms-overflow-style: -ms-autohiding-scrollbar;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
