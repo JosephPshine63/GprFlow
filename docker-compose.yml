@@ -92,8 +92,8 @@ services:
       JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
-      MAIL_USERNAME: ${MAIL_USERNAME:-your email}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-your app password}
+      RESEND_API_KEY: ${RESEND_API_KEY:-your resend api key}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-GprFlow <noreply@gprflow.trade>}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
       USER_SERVICE_URL: http://user-service:5459

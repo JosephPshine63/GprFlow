@@ -1,37 +1,49 @@
 package dev.pioruocco.service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mail.MailSendException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    @Value("${resend.api.key}")
+    private String resendApiKey;
 
+    @Value("${resend.from.email}")
+    private String fromEmail;
 
-    public void sendVerificationOtpEmail(String userEmail, String otp) throws MessagingException, MailSendException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+    private static final String RESEND_API_URL = "https://api.resend.com/emails";
 
+    private final RestTemplate restTemplate = new RestTemplate();
 
+    public void sendVerificationOtpEmail(String userEmail, String otp) throws MailSendException {
         String subject = "Account verification";
-        String text = "your account verification code is : " + otp;
+        String html = "<p>Your account verification code is: <strong>" + otp + "</strong></p>";
 
-        helper.setSubject(subject);
-        helper.setText(text, true);
-        helper.setTo(userEmail);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(resendApiKey);
+
+        Map<String, Object> body = Map.of(
+                "from", fromEmail,
+                "to", List.of(userEmail),
+                "subject", subject,
+                "html", html
+        );
 
         try {
-            javaMailSender.send(mimeMessage);
-        } catch (MailException e) {
-            throw new MailSendException("Failed to send email");
+            restTemplate.postForEntity(RESEND_API_URL, new HttpEntity<>(body, headers), Void.class);
+        } catch (RestClientException e) {
+            throw new MailSendException("Failed to send email", e);
         }
     }
 }

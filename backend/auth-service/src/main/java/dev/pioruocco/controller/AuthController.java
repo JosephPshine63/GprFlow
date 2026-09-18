@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import dev.pioruocco.response.AuthResponse;
 import dev.pioruocco.service.*;
 import dev.pioruocco.utils.OtpUtils;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +104,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signing(
             @RequestBody LoginRequest loginRequest,
-            HttpServletResponse response) throws UserException, MessagingException {
+            HttpServletResponse response) throws UserException {
 
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
