@@ -231,14 +231,12 @@ path-based routing to the gateway:
 
 ### 3. Mandatory: allow your domain in CORS before starting
 
-CORS-allowed origins are currently **hardcoded** in two places, not read from an environment
-variable — you must edit both and rebuild, or the browser will reject every request with a CORS
-error the moment you point the frontend at your real domain:
-
-- `backend/monolith/src/main/java/dev/pioruocco/config/AppConfig.java` — add
-  `"https://app.yourdomain.com"` to the `allowedOrigins` list in `corsConfigurationSource()`.
-- `backend/gateway/src/main/resources/application.yml` — add the same origin under
-  `spring.cloud.gateway.globalcors.cors-configurations.'[/**]'.allowedOrigins`.
+CORS-allowed origins are **hardcoded** in `backend/gateway/src/main/resources/application.yml`
+(under `spring.cloud.gateway.globalcors.cors-configurations.'[/**]'.allowedOrigins`), not read
+from an environment variable — the gateway is the only service that terminates CORS, since every
+other backend service is reached exclusively through it. Add your frontend origin (e.g.
+`"https://app.yourdomain.com"`) to that list and rebuild the gateway, or the browser will reject
+every request with a CORS error the moment you point the frontend at your real domain.
 
 This is a one-time step per domain, not something you need to repeat on every deploy — but it
 must happen before the first production build.
@@ -252,17 +250,21 @@ cloudflared tunnel route dns gprflow app.yourdomain.com
 cloudflared tunnel route dns gprflow api.yourdomain.com
 ```
 
-Then run `cloudflared` itself. Two options:
+The last two commands auto-create the proxied DNS records for both hostnames — no manual
+dashboard editing needed.
 
-- **As a container in the same Compose stack** (recommended, keeps everything in one place):
-  add a `cloudflared` service to `docker-compose.yml` using the `cloudflared/cloudflared` image,
-  pass it the tunnel token via `.env`, and give it an `ingress` config that routes
-  `app.yourdomain.com` → `http://frontend:80` and `api.yourdomain.com` → `http://gateway:8080`
-  (the Compose service names, reachable over the internal Compose network — no host ports needed
-  for either).
-- **As a systemd service on the host** — install `cloudflared` directly on Ubuntu and point its
-  ingress config at `http://localhost:5173` and `http://localhost:8080` instead. Simpler to set
-  up standalone, but one more thing to manage outside of `docker compose`.
+`docker-compose.yml` already has a `cloudflared` service wired up, pointed at
+`http://frontend:80` and `http://gateway:8080` via the tunnel's own ingress config (configured on
+the tunnel itself, in the Cloudflare dashboard under the tunnel's **Public Hostname** tab, not in
+the Compose file). All you need to do locally is put the tunnel's token in `.env`:
+
+```bash
+TUNNEL_TOKEN=your-tunnel-token   # Zero Trust dashboard: Networks > Tunnels > gprflow > Configure
+```
+
+If you'd rather not run `cloudflared` in Docker, install it directly on the host as a systemd
+service instead and point its ingress config at `http://localhost:5173` and
+`http://localhost:8080` — then drop the `cloudflared` service from `docker-compose.yml`.
 
 ### 5. Update third-party redirect URLs
 
@@ -305,9 +307,9 @@ above — they're listed here to track, not already resolved:
   defaults (e.g. `${JWT_SECRET:-wpembytr...}`) fall back to the same fixed string, visible to
   anyone reading the public repo. Setting a real `JWT_SECRET` in `.env` (step 2 above) covers
   this, but it's easy to forget since the app runs fine either way.
-- **CORS origins are hardcoded Java/YAML lists, not environment-driven.** Every future domain
-  change means editing source and rebuilding, as done manually in step 3. Worth migrating to a
-  `${CORS_ALLOWED_ORIGINS:...}` environment variable read by both the monolith and the gateway.
+- **CORS origins are a hardcoded YAML list, not environment-driven.** Every future domain change
+  means editing `application.yml` and rebuilding the gateway, as done manually in step 3. Worth
+  migrating to a `${CORS_ALLOWED_ORIGINS:...}` environment variable.
 - **Postgres publishes `5432:5432` to the host** in `docker-compose.yml`, which isn't needed —
   every service already reaches it over the internal Compose network by the `db` hostname.
   Recommend removing the host port mapping, or at minimum blocking it with `ufw deny 5432`, since
@@ -321,12 +323,13 @@ above — they're listed here to track, not already resolved:
   doing before this holds anything you can't afford to lose.
 - **No automated backups** for the `postgres-data` volume — see the cron job in step 7; it isn't
   set up by default.
-- **Inconsistent JWT trust model across services.** The monolith and coin-service each validate
-  JWTs independently with their own copy of the filter/secret; ledger-service has no JWT
-  validation of its own at all and fully trusts the gateway's `X-User-*` headers; chatbot-service
-  has no auth. This isn't urgent for personal use, but it means `ledger-service`,
-  `coin-service`, and `chatbot-service` must never be reachable except through the gateway —
-  true today because they publish no host ports in Compose, but worth re-checking any time the
+- **Inconsistent JWT trust model across services.** auth-service and coin-service each validate
+  JWTs independently with their own copy of the filter/secret; ledger-service and user-service
+  have no JWT validation of their own at all and fully trust the gateway's `X-User-*` headers;
+  chatbot-service has no auth. This isn't urgent for personal use, but it means `ledger-service`,
+  `user-service`, `coin-service`, and `chatbot-service` must never be reachable except through the
+  gateway — true today because they publish no host ports in Compose, but worth re-checking any
+  time the
   Compose file changes.
 - **No health checks beyond `db`.** Other services use `depends_on` without
   `condition: service_healthy`, so a cold `docker compose up` can show transient connection

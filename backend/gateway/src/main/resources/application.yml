@@ -20,6 +20,7 @@ spring:
               - "http://localhost:5174"
               - "http://localhost:4200"
               - "https://gprflow.trade"
+              - "https://app.gprflow.trade"
             allowedMethods:
               - "*"
             allowedHeaders:

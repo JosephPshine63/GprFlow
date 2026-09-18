@@ -154,5 +154,19 @@ services:
     ports:
       - "5173:80"
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: gprflow-cloudflared
+    restart: always
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
+    depends_on:
+      - frontend
+      - gateway
+    # No published ports: outbound-only connection to Cloudflare's edge.
+    # Ingress rules (app.gprflow.trade -> frontend:80, api.gprflow.trade -> gateway:8080)
+    # are configured on the tunnel itself via the Cloudflare dashboard/CLI, not here.
+
 volumes:
   postgres-data:
