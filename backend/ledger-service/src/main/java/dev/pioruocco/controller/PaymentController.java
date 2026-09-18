@@ -1,6 +1,5 @@
 package dev.pioruocco.controller;
 
-import com.razorpay.RazorpayException;
 import com.stripe.exception.StripeException;
 import dev.pioruocco.domain.PaymentMethod;
 import dev.pioruocco.model.PaymentOrder;
@@ -27,22 +26,14 @@ public class PaymentController {
             @PathVariable Long amount,
             @RequestHeader("X-User-Id") Long userId,
             @RequestHeader("X-User-Full-Name") String fullName,
-            @RequestHeader("X-User-Email") String email) throws RazorpayException, StripeException {
+            @RequestHeader("X-User-Email") String email) throws StripeException {
 
         if (amount == null || amount <= 0) {
             return ResponseEntity.badRequest().build();
         }
 
-        PaymentResponse paymentResponse;
-
         PaymentOrder order = paymentService.createOrder(userId, amount, paymentMethod);
-
-        if (paymentMethod.equals(PaymentMethod.RAZORPAY)) {
-            paymentResponse = paymentService.createRazorpayPaymentLink(userId, fullName, email, amount,
-                    order.getId());
-        } else {
-            paymentResponse = paymentService.createStripePaymentLink(amount, order.getId());
-        }
+        PaymentResponse paymentResponse = paymentService.createStripePaymentLink(amount, order.getId());
 
         return new ResponseEntity<>(paymentResponse, HttpStatus.CREATED);
     }

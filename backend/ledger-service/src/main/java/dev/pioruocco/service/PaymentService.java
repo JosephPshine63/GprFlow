@@ -1,6 +1,5 @@
 package dev.pioruocco.service;
 
-import com.razorpay.RazorpayException;
 import com.stripe.exception.StripeException;
 import dev.pioruocco.domain.PaymentMethod;
 import dev.pioruocco.model.PaymentOrder;
@@ -13,11 +12,7 @@ public interface PaymentService {
     PaymentOrder getPaymentOrderById(Long id) throws Exception;
 
     Boolean ProccedPaymentOrder(PaymentOrder paymentOrder,
-                                String paymentId) throws RazorpayException, StripeException;
-
-    PaymentResponse createRazorpayPaymentLink(Long userId, String fullName, String email,
-                                              Long Amount,
-                                              Long orderId) throws RazorpayException;
+                                String paymentId) throws StripeException;
 
     PaymentResponse createStripePaymentLink(Long Amount,
                                             Long orderId) throws StripeException;

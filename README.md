@@ -14,7 +14,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 - Buy/sell cryptocurrencies against a wallet balance
 - Real-time market data and price charts (CoinGecko API, multiple timeframes)
 - Portfolio view with per-asset profit/loss and full trading history
-- Wallet: deposit via Stripe or Razorpay, withdraw, transfer between users
+- Wallet: deposit via Stripe, withdraw, transfer between users
 - Watchlist for saved coins
 - JWT authentication + optional 2FA (OTP via email) + Google OAuth2 social login
 - Forgot/reset password flow (OTP via email)
@@ -33,7 +33,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 | Security | Spring Security, JWT (jjwt 0.11), OAuth2 (Google) |
 | ORM | Spring Data JPA / Hibernate |
 | Database | PostgreSQL 15 |
-| Payments | Stripe, Razorpay |
+| Payments | Stripe |
 | External APIs | CoinGecko, Gemini AI |
 | Email | Gmail SMTP |
 | Build | Maven |
@@ -182,7 +182,7 @@ example files and fill in real values:
 
 | File | Used by |
 |---|---|
-| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, SMTP, Stripe/Razorpay/CoinGecko/Gemini keys, Google OAuth2 |
+| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, SMTP, Stripe/CoinGecko/Gemini keys, Google OAuth2 |
 | `backend/monolith/.env.example` | Bare `mvn spring-boot:run` for the monolith |
 | `frontend/.env.example` | `VITE_API_BASE_URL` for `npm run dev` |
 
@@ -220,7 +220,7 @@ FRONTEND_URL=https://app.yourdomain.com
 API_BASE_URL=https://api.yourdomain.com
 ```
 
-Also fill in your real SMTP, Stripe, Razorpay, CoinGecko, Gemini, and Google OAuth2 credentials.
+Also fill in your real SMTP, Stripe, CoinGecko, Gemini, and Google OAuth2 credentials.
 
 You'll typically want **two public hostnames** — one for the frontend, one for the API — because
 the frontend calls `API_BASE_URL` as an absolute URL and the bundled nginx doesn't do
@@ -268,7 +268,7 @@ service instead and point its ingress config at `http://localhost:5173` and
 
 ### 5. Update third-party redirect URLs
 
-Google OAuth2 (Google Cloud Console) and any Stripe/Razorpay webhook or redirect URLs need to be
+Google OAuth2 (Google Cloud Console) and any Stripe webhook or redirect URLs need to be
 updated to point at your new public domain — they were previously configured for `localhost`.
 
 ### 6. Build and start

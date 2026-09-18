@@ -71,8 +71,6 @@ services:
       # No JWT_SECRET: ledger-service never parses a JWT, it trusts the gateway's headers.
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       STRIPE_API_KEY: ${STRIPE_API_KEY:-your key}
-      RAZORPAY_API_KEY: ${RAZORPAY_API_KEY:-your razorpay key}
-      RAZORPAY_API_SECRET: ${RAZORPAY_API_SECRET:-your razorpay secret}
       COIN_SERVICE_URL: http://coin-service:5455
     # No published port: reachable only via the gateway.
 

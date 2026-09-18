@@ -40,23 +40,21 @@ const Wallet = () => {
   const navigate=useNavigate();
   const { wallet } = useSelector((store) => store);
   const query = useQuery();
-  const paymentId = query.get("payment_id");
-  const razorpayPaymentId = query.get("razorpay_payment_id");
+  const paymentId = query.get("session_id");
   const orderId = query.get("order_id");
   const {order_id}=useParams();
 
   useEffect(() => {
-    if (orderId || order_id ) {
+    if ((orderId || order_id) && paymentId) {
       dispatch(
         depositMoney({
           orderId: orderId || order_id,
-          paymentId: razorpayPaymentId || "AuedkfeuUe",
+          paymentId,
           navigate,
         })
       );
-      console.log(paymentId, orderId);
     }
-  }, [paymentId, orderId,razorpayPaymentId]);
+  }, [paymentId, orderId]);
 
   useEffect(() => {
     handleFetchUserWallet();
