@@ -233,10 +233,18 @@ path-based routing to the gateway:
 
 CORS-allowed origins are **hardcoded** in `backend/gateway/src/main/resources/application.yml`
 (under `spring.cloud.gateway.globalcors.cors-configurations.'[/**]'.allowedOrigins`), not read
-from an environment variable — the gateway is the only service that terminates CORS, since every
-other backend service is reached exclusively through it. Add your frontend origin (e.g.
-`"https://app.yourdomain.com"`) to that list and rebuild the gateway, or the browser will reject
-every request with a CORS error the moment you point the frontend at your real domain.
+from an environment variable. Add your frontend origin (e.g. `"https://app.yourdomain.com"`) to
+that list, or the browser will reject every request with a CORS error the moment you point the
+frontend at your real domain.
+
+`auth-service` is the one exception to "the gateway is the only service that terminates CORS": it
+validates its own JWTs independently (see the trust-model note in `CLAUDE.md`) and enforces its
+**own** CORS list in `backend/auth-service/src/main/java/dev/pioruocco/config/AppConfig.java`
+(`corsConfigurationSource()`), separate from the gateway's. Requests to `/auth/**` and
+`/login/oauth2/**` pass through the gateway but are still CORS-checked again at auth-service
+itself, so your frontend origin needs adding to **both** lists — missing this one specifically
+breaks signin/signup/OAuth from the browser while everything else works, which makes it an easy
+thing to half-fix and move on from.
 
 This is a one-time step per domain, not something you need to repeat on every deploy — but it
 must happen before the first production build.
@@ -264,7 +272,9 @@ TUNNEL_TOKEN=your-tunnel-token   # Zero Trust dashboard: Networks > Tunnels > gp
 
 If you'd rather not run `cloudflared` in Docker, install it directly on the host as a systemd
 service instead and point its ingress config at `http://localhost:5173` and
-`http://localhost:8080` — then drop the `cloudflared` service from `docker-compose.yml`.
+`http://localhost:8087` (the gateway's host-published port — see `docker-compose.yml`; it's not
+8080, moved to avoid colliding with other services on the host) — then drop the `cloudflared`
+service from `docker-compose.yml`.
 
 ### 5. Update third-party redirect URLs
 
@@ -310,12 +320,11 @@ above — they're listed here to track, not already resolved:
 - **CORS origins are a hardcoded YAML list, not environment-driven.** Every future domain change
   means editing `application.yml` and rebuilding the gateway, as done manually in step 3. Worth
   migrating to a `${CORS_ALLOWED_ORIGINS:...}` environment variable.
-- **Postgres publishes `5432:5432` to the host** in `docker-compose.yml`, which isn't needed —
-  every service already reaches it over the internal Compose network by the `db` hostname.
-  Recommend removing the host port mapping, or at minimum blocking it with `ufw deny 5432`, since
-  a Cloudflare-Tunnel-only deployment never needs to reach Postgres from outside the box.
-  Nothing in this setup port-forwards it publicly, but it's still an unnecessary exposed surface
-  on the host.
+- **Postgres publishes `5434:5432` to the host** in `docker-compose.yml`, for direct debug access
+  (psql, DBeaver) — every service actually reaches it over the internal Compose network by the
+  `db` hostname, so this isn't required for the app to function. A Cloudflare-Tunnel-only
+  deployment never proxies it publicly, but if the host has any other public interface, block it
+  with `ufw deny 5434` unless you're actively using the direct-access debug path.
 - **Schema is created by Hibernate `ddl-auto=update`, not migrations.** A Liquibase changelog
   exists (`backend/monolith/src/main/resources/db/changelog/db.changelog-master.xml`) but
   `liquibase-core` isn't even a Maven dependency, so it's inert. Fine for a hobby project, but

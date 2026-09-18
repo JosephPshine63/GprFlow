@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +24,7 @@ public class EmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void sendVerificationOtpEmail(String userEmail, String otp) throws MailSendException {
+    public void sendVerificationOtpEmail(String userEmail, String otp) throws EmailSendException {
         String subject = "Account verification";
         String html = "<p>Your account verification code is: <strong>" + otp + "</strong></p>";
 
@@ -43,7 +42,7 @@ public class EmailService {
         try {
             restTemplate.postForEntity(RESEND_API_URL, new HttpEntity<>(body, headers), Void.class);
         } catch (RestClientException e) {
-            throw new MailSendException("Failed to send email", e);
+            throw new EmailSendException("Failed to send email", e);
         }
     }
 }
