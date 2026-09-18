@@ -10,6 +10,10 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d:ro
+    # 5432/5433 are already taken by other stacks on the host; publish on 5434
+    # for direct debug access (psql, DBeaver) without colliding with them.
+    ports:
+      - "5434:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-gprflow}"]
       interval: 5s

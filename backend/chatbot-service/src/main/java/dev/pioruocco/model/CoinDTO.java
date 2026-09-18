@@ -33,27 +33,4 @@ public class CoinDTO {
     private Date atlDate;
     private Date lastUpdated;
 
-
-    @Override
-    public String toString() {
-        return "{\n" +
-                "\"id\": \"" + id + "\",\n" +
-                "\"symbol\": \"" + symbol + "\",\n" +
-                "\"name\": \"" + name + "\",\n" +
-                "\"image\": \"" + image + "\",\n" +
-                "\"current_price\": " + currentPrice + ",\n" +
-                "\"market_cap\": " + marketCap + ",\n" +
-                "\"market_cap_rank\": " + marketCapRank + ",\n" +
-                "\"total_volume\": " + totalVolume + ",\n" +
-                "\"high_24h\": " + high24h + ",\n" +
-                "\"low_24h\": " + low24h + ",\n" +
-                "\"price_change_24h\": " + priceChange24h + ",\n" +
-                "\"price_change_percentage_24h\": " + priceChangePercentage24h + ",\n" +
-                "\"market_cap_change_24h\": " + marketCapChange24h + ",\n" +
-                "\"market_cap_change_percentage_24h\": " + marketCapChangePercentage24h + ",\n" +
-                "\"circulating_supply\": " + circulatingSupply + ",\n" +
-                "\"total_supply\": " + totalSupply + ",\n" +
-                "}";
-    }
-
 }

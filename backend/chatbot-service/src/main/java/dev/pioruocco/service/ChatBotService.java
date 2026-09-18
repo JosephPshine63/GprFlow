@@ -3,10 +3,12 @@ package dev.pioruocco.service;
 import dev.pioruocco.model.CoinDTO;
 import dev.pioruocco.response.ApiResponse;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface ChatBotService {
-    ApiResponse getCoinDetails(String coinName);
+    CompletableFuture<ApiResponse> getCoinDetails(String prompt);
 
     CoinDTO getCoinByName(String coinName);
 
-    String simpleChat(String prompt);
+    CompletableFuture<String> simpleChat(String prompt);
 }
