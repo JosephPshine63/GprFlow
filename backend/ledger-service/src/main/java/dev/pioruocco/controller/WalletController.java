@@ -64,6 +64,12 @@ public class WalletController {
 
         if (status) {
             wallet = walleteService.addBalanceToWallet(wallet, order.getAmount());
+            walletTransactionService.createTransaction(
+                    wallet,
+                    WalletTransactionType.ADD_MONEY, null,
+                    "wallet top-up",
+                    BigDecimal.valueOf(order.getAmount())
+            );
         }
 
 
