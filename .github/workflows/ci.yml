@@ -1,0 +1,95 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint:emoji
+      - run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - monolith
+          - coin-service
+          - chatbot-service
+          - ledger-service
+          - auth-service
+          - user-service
+          - gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+          cache-dependency-path: backend/${{ matrix.service }}/pom.xml
+      # ledger-service's integration tests start Postgres via Testcontainers (Docker is on the runner)
+      - run: mvn -B test
+        working-directory: backend/${{ matrix.service }}
+
+  deploy:
+    needs: [frontend, backend]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
+
+      - name: Add deploy SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      # Rolls the code back to the previous commit if the build or the gateway
+      # health check fails. Schema changes made by ddl-auto=update are not undone.
+      - name: Deploy over SSH
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new gpr-server@gpr-server '
+            set -e
+            cd ~/Applications/GprFlow
+            PREV=$(git rev-parse HEAD)
+            git pull --ff-only
+            if ! docker compose up --build -d; then
+              git reset --hard "$PREV"
+              docker compose up --build -d
+              exit 1
+            fi
+            sleep 40
+            if ! curl -fsS http://localhost:8087/ >/dev/null; then
+              git reset --hard "$PREV"
+              docker compose up --build -d
+              exit 1
+            fi
+          '
