@@ -4,6 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -42,8 +45,21 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
             "/api/payment-details"
     );
 
+    private static final List<String> IDENTITY_HEADERS =
+            List.of("X-User-Id", "X-User-Role", "X-User-Email", "X-User-Full-Name");
+
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthGlobalFilter.class);
+
     @Value("${jwt.secret}")
     private String jwtSecret;
+
+    @PostConstruct
+    void warnOnDefaultSecret() {
+        if (System.getenv("JWT_SECRET") == null) {
+            log.warn("JWT_SECRET is not set: tokens are verified against the default dev secret, "
+                    + "which is public in the repository. Set it (same value as auth-service) before exposing this gateway.");
+        }
+    }
 
     private SecretKey signingKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -59,7 +75,11 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getURI().getPath();
 
         if (!isProtected(path)) {
-            return chain.filter(exchange);
+            // never let a client-supplied identity header reach a service that trusts them
+            ServerHttpRequest clean = exchange.getRequest().mutate()
+                    .headers(h -> IDENTITY_HEADERS.forEach(h::remove))
+                    .build();
+            return chain.filter(exchange.mutate().request(clean).build());
         }
 
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");

@@ -6,6 +6,15 @@ jwt:
   # parses a JWT (JwtAuthGlobalFilter), previously it was a pure proxy.
   secret: ${JWT_SECRET:wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
 
+# per client IP, per minute; see RateLimitGlobalFilter
+rate-limit:
+  enabled: ${RATE_LIMIT_ENABLED:true}
+  auth-per-minute: ${RATE_LIMIT_AUTH_PER_MINUTE:20}
+  chat-per-minute: ${RATE_LIMIT_CHAT_PER_MINUTE:15}
+  api-per-minute: ${RATE_LIMIT_API_PER_MINUTE:300}
+  # no endpoint takes uploads; anything bigger is junk or abuse
+  max-body-bytes: ${MAX_BODY_BYTES:1048576}
+
 spring:
   application:
     name: gateway
