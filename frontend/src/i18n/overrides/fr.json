@@ -1,0 +1,18 @@
+{
+  "nav.portfolio": "Portfolio",
+  "portfolio.title": "Portfolio",
+  "home.subtitle": "Aperçu de votre portfolio et des marchés.",
+  "auth.login.subtitle": "Connectez-vous pour gérer votre portfolio.",
+  "auth.layout.headline": "Développez votre portfolio de cryptomonnaies.",
+  "otp.sendTo": "Nous vous enverrons un code à {{length}} chiffres à",
+  "stock.order": "Ordre",
+  "stock.orderSymbol": "Ordre {{symbol}}",
+  "trade.orderType": "Type d'ordre",
+  "history.emptyTitle": "Aucun ordre",
+  "portfolio.subtitle": "Vos actifs et l'historique de vos ordres.",
+  "portfolio.loadFailed": "Impossible de charger les actifs",
+  "watchlist.loadFailed": "Impossible de charger la liste de surveillance",
+  "market.addToWatchlist": "Ajouter {{name}} à la liste de surveillance",
+  "paymentDetails.confirm": "Confirmer {{label}}",
+  "chat.openUnread_one": "Ouvrir l'assistant, {{count}} nouveau message"
+}

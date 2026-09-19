@@ -1,0 +1,23 @@
+{
+  "nav.wallet": "Monedero",
+  "wallet.title": "Monedero",
+  "wallet.id": "ID del monedero {{id}}",
+  "transfer.toast.description": "{{amount}} al monedero {{wallet}}",
+  "payment.success.toWallet": "Ir al monedero",
+  "payment.cancel.toWallet": "Volver al monedero",
+  "payout.errors.accountDigits": "El número de cuenta debe tener entre {{min}} y {{max}} dígitos",
+  "otp.sendTo": "Le enviaremos un código de {{length}} dígitos a",
+  "withdrawals.emptyTitle": "Sin retiradas",
+  "admin.accepted": "Retirada aceptada",
+  "paymentDetails.dialogDescription": "Dónde se abonan las retiradas.",
+  "stock.order": "Orden",
+  "stock.orderSymbol": "Orden de {{symbol}}",
+  "trade.orderType": "Tipo de orden",
+  "history.emptyTitle": "Sin órdenes",
+  "portfolio.subtitle": "Sus activos y su historial de órdenes.",
+  "portfolio.loadFailed": "No se han podido cargar los activos",
+  "market.addToWatchlist": "Añadir {{name}} a la lista de seguimiento",
+  "market.removeFromWatchlist": "Quitar {{name}} de la lista de seguimiento",
+  "watchlist.remove": "Quitar {{name}} de la lista de seguimiento",
+  "chat.openUnread_one": "Abrir el asistente, {{count}} mensaje nuevo"
+}

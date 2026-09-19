@@ -13,7 +13,7 @@
     "portfolio": "Cartera",
     "watchlist": "Lista de seguimiento",
     "activity": "Actividad",
-    "wallet": "Cartera",
+    "wallet": "Monedero",
     "paymentDetails": "Datos de pago",
     "withdrawal": "Retirada",
     "profile": "Perfil",
@@ -142,8 +142,8 @@
     "change24h": "24 h",
     "volume": "Volumen",
     "marketCap": "Capitalización bursátil",
-    "removeFromWatchlist": "Elimine «{{name}}» de la lista de seguimiento",
-    "addToWatchlist": "Añada «{{name}}» a la lista de seguimiento"
+    "removeFromWatchlist": "Quitar {{name}} de la lista de seguimiento",
+    "addToWatchlist": "Añadir {{name}} a la lista de seguimiento"
   },
   "search": {
     "title": "Buscar",
@@ -161,7 +161,7 @@
   "watchlist": {
     "title": "Lista de seguimiento",
     "subtitle": "Las monedas que está siguiendo.",
-    "remove": "Elimine «{{name}}» de la lista de seguimiento",
+    "remove": "Quitar {{name}} de la lista de seguimiento",
     "loadFailed": "No se ha podido cargar la lista de seguimiento",
     "retry": "Inténtelo de nuevo",
     "emptyTitle": "No se lanzaron monedas",
@@ -177,8 +177,8 @@
     "unavailableBody": "No hemos podido cargar los datos de esta moneda. Inténtelo de nuevo dentro de un momento.",
     "retry": "Inténtelo de nuevo",
     "trade": "Comercio",
-    "order": "Pedido",
-    "orderSymbol": "Realice su pedido en {{symbol}}",
+    "order": "Orden",
+    "orderSymbol": "Orden de {{symbol}}",
     "orderHint": "Compre o venda al precio de mercado.",
     "stats": "Estadísticas",
     "marketCap": "Capitalización bursátil",
@@ -205,7 +205,7 @@
   "trade": {
     "buy": "Comprar",
     "sell": "Vender",
-    "orderType": "Tipo de pedido",
+    "orderType": "Tipo de orden",
     "amountUsd": "Importe en «USD»",
     "price": "Precio",
     "youReceive": "Recibirá",
@@ -230,14 +230,14 @@
   },
   "portfolio": {
     "title": "Cartera",
-    "subtitle": "Sus activos y su historial de pedidos.",
+    "subtitle": "Sus activos y su historial de órdenes.",
     "assetValue": "Valor de los activos",
     "pnl": "Pérdidas y ganancias",
     "assetsOwned": "Activos en propiedad",
     "section": "Sección",
     "tabAssets": "Activos",
     "tabHistory": "Historia",
-    "loadFailed": "No se han podido cargar los recursos",
+    "loadFailed": "No se han podido cargar los activos",
     "retry": "Inténtelo de nuevo",
     "emptyTitle": "Sin activos",
     "emptyBody": "Compre su primera moneda para verla en su cartera.",
@@ -251,7 +251,7 @@
   "history": {
     "loadFailed": "No se ha podido cargar el historial",
     "retry": "Inténtelo de nuevo",
-    "emptyTitle": "No hay pedidos",
+    "emptyTitle": "Sin órdenes",
     "emptyBody": "Cuando compre o venda un activo, la orden aparecerá aquí.",
     "date": "Fecha",
     "asset": "Activo",
@@ -266,13 +266,13 @@
     }
   },
   "wallet": {
-    "title": "Cartera",
+    "title": "Monedero",
     "loadFailed": "No se ha podido cargar el monedero",
     "retry": "Inténtelo de nuevo",
     "balanceLabel": "Saldo",
     "availableBalance": "Saldo disponible",
     "refresh": "Actualizar el saldo y los movimientos",
-    "id": "ID del monedero{{id}}",
+    "id": "ID del monedero {{id}}",
     "copyId": "Copie el ID del monedero",
     "idCopied": "Se ha copiado el ID del monedero",
     "copyFailed": "La copia no se ha realizado correctamente",
@@ -335,7 +335,7 @@
     },
     "toast": {
       "title": "Transferencia enviada",
-      "description": "{{amount}} a la cartera {{wallet}}"
+      "description": "{{amount}} al monedero {{wallet}}"
     }
   },
   "payout": {
@@ -359,7 +359,7 @@
       "country": "País"
     },
     "errors": {
-      "accountDigits": "El número de cuenta debe tener entre{{min}}y {{max}} dígitos.",
+      "accountDigits": "El número de cuenta debe tener entre {{min}} y {{max}} dígitos",
       "ibanInvalid": "IBAN no válido",
       "ibanCountry": "El «IBAN» no coincide con el país seleccionado.",
       "ibanChecksum": "IBAN no es válida; compruebe los dígitos",
@@ -385,7 +385,7 @@
     "emptyTitle": "No hay ningún método vinculado",
     "emptyBody": "Añada una cuenta bancaria o una tarjeta para poder solicitar retiradas de fondos.",
     "add": "Añada los datos de pago",
-    "dialogDescription": "Dónde se abonan los retiros.",
+    "dialogDescription": "Dónde se abonan las retiradas.",
     "saved": "Datos de pago guardados",
     "payoutMethod": "Método de pago",
     "cardHolder": "Portatarjetas",
@@ -419,7 +419,7 @@
     "title": "Retiradas",
     "request": "Solicite una retirada de fondos del monedero",
     "loadFailed": "No se pueden cargar las retiradas",
-    "emptyTitle": "No se admiten retiradas",
+    "emptyTitle": "Sin retiradas",
     "emptyBody": "Las solicitudes de retirada que realice desde el monedero aparecerán aquí.",
     "date": "Fecha",
     "amount": "Importe",
@@ -430,12 +430,12 @@
       "title": "Ingreso realizado",
       "body": "Los fondos se han añadido a su monedero.",
       "balance": "Saldo actual",
-      "toWallet": "Acceda a la cartera"
+      "toWallet": "Ir al monedero"
     },
     "cancel": {
       "title": "Pago cancelado",
       "body": "No se le ha cobrado nada. Puede volver a intentarlo cuando lo desee.",
-      "toWallet": "Volver a la cartera"
+      "toWallet": "Volver al monedero"
     }
   },
   "profile": {
@@ -481,7 +481,7 @@
     }
   },
   "otp": {
-    "sendTo": "Le enviaremos un código de {{length}}dígitos a",
+    "sendTo": "Le enviaremos un código de {{length}} dígitos a",
     "enterCode": "Introduzca el código que le hemos enviado a",
     "send": "Enviar código",
     "confirm": "Confirmar",
@@ -492,7 +492,7 @@
     "title": "Asistente",
     "close": "Colaborador de confianza",
     "open": "Asistente de Open",
-    "openUnread_one": "Abrir el asistente, «{{count}}» (nuevo mensaje)",
+    "openUnread_one": "Abrir el asistente, {{count}} mensaje nuevo",
     "openUnread_other": "Abrir el asistente, {{count}} mensajes nuevos",
     "greeting": "Hola, no dude en preguntarme sobre precios, capitalización bursátil y otros temas relacionados con las criptomonedas.",
     "greetingNamed": "Hola, {{name}}, pregúnteme sobre precios, capitalización bursátil y otros temas relacionados con las criptomonedas.",
@@ -518,7 +518,7 @@
     "manage": "Gestionar",
     "accept": "Aceptar",
     "decline": "Descenso",
-    "accepted": "Se ha aceptado la baja",
+    "accepted": "Retirada aceptada",
     "declined": "Se ha denegado la retirada",
     "failed": "La operación ha fallado",
     "loadFailed": "No se han podido cargar las solicitudes",

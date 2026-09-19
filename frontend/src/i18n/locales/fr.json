@@ -10,7 +10,7 @@
   },
   "nav": {
     "home": "Accueil",
-    "portfolio": "Portefeuille",
+    "portfolio": "Portfolio",
     "watchlist": "Liste de surveillance",
     "activity": "Activité",
     "wallet": "Portefeuille",
@@ -56,14 +56,14 @@
   },
   "auth": {
     "layout": {
-      "headline": "Développez votre portefeuille de cryptomonnaies.",
+      "headline": "Développez votre portfolio de cryptomonnaies.",
       "highlight1": "Cours et graphiques en temps réel",
       "highlight2": "Ordres d'achat et de vente immédiats",
       "highlight3": "La vérification en deux étapes sur votre compte"
     },
     "login": {
       "title": "Bon retour parmi nous",
-      "subtitle": "Connectez-vous pour gérer votre portefeuille.",
+      "subtitle": "Connectez-vous pour gérer votre portfolio.",
       "submit": "Se connecter",
       "noAccount": "Vous n'avez pas encore de compte ?",
       "signupLink": "S'inscrire",
@@ -117,7 +117,7 @@
   "home": {
     "greeting": "Bonjour, {{name}}",
     "dashboard": "Tableau de bord",
-    "subtitle": "Aperçu de votre portefeuille et des marchés.",
+    "subtitle": "Aperçu de votre portfolio et des marchés.",
     "totalBalance": "Solde total",
     "last24h": "au cours des dernières 24 heures",
     "available": "Disponible",
@@ -143,7 +143,7 @@
     "volume": "Volume",
     "marketCap": "Capitalisation boursière",
     "removeFromWatchlist": "Retirer {{name}} de la liste de surveillance",
-    "addToWatchlist": "Ajoutez « {{name}} » à votre liste de surveillance"
+    "addToWatchlist": "Ajouter {{name}} à la liste de surveillance"
   },
   "search": {
     "title": "Rechercher",
@@ -162,7 +162,7 @@
     "title": "Liste de surveillance",
     "subtitle": "Les cryptomonnaies que vous suivez.",
     "remove": "Retirer {{name}} de la liste de surveillance",
-    "loadFailed": "Impossible de charger la liste de suivi",
+    "loadFailed": "Impossible de charger la liste de surveillance",
     "retry": "Veuillez réessayer",
     "emptyTitle": "Aucune pièce n'a suivi",
     "emptyBody": "Ajoutez une cryptomonnaie à vos favoris pour pouvoir la suivre depuis cette page.",
@@ -177,8 +177,8 @@
     "unavailableBody": "Nous n'avons pas pu charger les données relatives à cette pièce. Veuillez réessayer dans quelques instants.",
     "retry": "Veuillez réessayer",
     "trade": "Commerce",
-    "order": "Commande",
-    "orderSymbol": "Commander « {{symbol}} »",
+    "order": "Ordre",
+    "orderSymbol": "Ordre {{symbol}}",
     "orderHint": "Achetez ou vendez au cours du marché.",
     "stats": "Statistiques",
     "marketCap": "Capitalisation boursière",
@@ -205,7 +205,7 @@
   "trade": {
     "buy": "Acheter",
     "sell": "Vendre",
-    "orderType": "Type de commande",
+    "orderType": "Type d'ordre",
     "amountUsd": "Montant en «USD »",
     "price": "Prix",
     "youReceive": "Vous recevrez",
@@ -229,15 +229,15 @@
     }
   },
   "portfolio": {
-    "title": "Portefeuille",
-    "subtitle": "Votre patrimoine et l'historique de vos commandes.",
+    "title": "Portfolio",
+    "subtitle": "Vos actifs et l'historique de vos ordres.",
     "assetValue": "Valeur des actifs",
     "pnl": "Résultat net",
     "assetsOwned": "Actifs détenus",
     "section": "Section",
     "tabAssets": "Actifs",
     "tabHistory": "Histoire",
-    "loadFailed": "Impossible de charger les ressources",
+    "loadFailed": "Impossible de charger les actifs",
     "retry": "Veuillez réessayer",
     "emptyTitle": "Aucun actif",
     "emptyBody": "Achetez votre première cryptomonnaie pour la voir apparaître dans votre portefeuille.",
@@ -251,7 +251,7 @@
   "history": {
     "loadFailed": "Impossible de charger l'historique",
     "retry": "Veuillez réessayer",
-    "emptyTitle": "Aucune commande",
+    "emptyTitle": "Aucun ordre",
     "emptyBody": "Lorsque vous achetez ou vendez un actif, l'ordre apparaît ici.",
     "date": "Date",
     "asset": "Actif",
@@ -395,7 +395,7 @@
     "cardNote": "Nous ne conservons que le nom du réseau de la carte et les 4 derniers chiffres, jamais le numéro complet.",
     "country": "Pays du compte",
     "bankName": "Nom de la banque",
-    "confirm": "Vérifiez l'adresse {{label}}",
+    "confirm": "Confirmer {{label}}",
     "repeat": "Répétez la valeur",
     "save": "Enregistrer"
   },
@@ -481,7 +481,7 @@
     }
   },
   "otp": {
-    "sendTo": "Nous vous enverrons un code de{{length}}-chiffres à",
+    "sendTo": "Nous vous enverrons un code à {{length}} chiffres à",
     "enterCode": "Veuillez saisir le code que nous vous avons envoyé à",
     "send": "Envoyer le code",
     "confirm": "Confirmer",
@@ -492,7 +492,7 @@
     "title": "Assistant(e)",
     "close": "Collaborateur de confiance",
     "open": "Assistant Open",
-    "openUnread_one": "Ouvrir l'assistant, « {{count}} » : nouveau message",
+    "openUnread_one": "Ouvrir l'assistant, {{count}} nouveau message",
     "openUnread_other": "Ouvrir l'assistant, {{count}} nouveaux messages",
     "greeting": "Bonjour, n'hésitez pas à me poser des questions sur les cours, la capitalisation boursière et bien d'autres sujets liés aux cryptomonnaies.",
     "greetingNamed": "Bonjour {{name}}, n'hésitez pas à me poser des questions sur les cours, la capitalisation boursière et bien d'autres sujets liés aux cryptomonnaies.",

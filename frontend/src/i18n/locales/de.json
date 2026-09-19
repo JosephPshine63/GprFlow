@@ -13,9 +13,9 @@
     "portfolio": "Portfolio",
     "watchlist": "Beobachtungsliste",
     "activity": "Aktivität",
-    "wallet": "Geldbörse",
+    "wallet": "Wallet",
     "paymentDetails": "Zahlungsdetails",
-    "withdrawal": "Rücktritt",
+    "withdrawal": "Auszahlung",
     "profile": "Profil",
     "admin": "Admin",
     "adminWithdrawals": "Verwaltung von Auszahlungen",
@@ -143,7 +143,7 @@
     "volume": "Umfang",
     "marketCap": "Marktkapitalisierung",
     "removeFromWatchlist": "{{name}} aus der Beobachtungsliste entfernen",
-    "addToWatchlist": "Fügen Sie „{{name}}“ zur Beobachtungsliste hinzu"
+    "addToWatchlist": "{{name}} zur Beobachtungsliste hinzufügen"
   },
   "search": {
     "title": "Suche",
@@ -177,8 +177,8 @@
     "unavailableBody": "Die Daten für diese Münze konnten nicht geladen werden. Bitte versuchen Sie es in Kürze erneut.",
     "retry": "Bitte versuchen Sie es erneut",
     "trade": "Handel",
-    "order": "Bestellung",
-    "orderSymbol": "Bestellen Sie „{{symbol}}“",
+    "order": "Auftrag",
+    "orderSymbol": "Auftrag für {{symbol}}",
     "orderHint": "Kaufen oder verkaufen Sie zum Marktpreis.",
     "stats": "Statistiken",
     "marketCap": "Marktkapitalisierung",
@@ -216,7 +216,7 @@
     "submit": "{{action}} {{symbol}}",
     "errors": {
       "enterAmount": "Bitte geben Sie einen Betrag ein",
-      "insufficientBalance": "Unzureichendes Guthaben auf dem Wallet",
+      "insufficientBalance": "Unzureichendes Guthaben in der Wallet",
       "insufficientQuantity": "Nicht genügend verfügbar",
       "tooSmall": "Der Betrag ist zu gering"
     },
@@ -230,7 +230,7 @@
   },
   "portfolio": {
     "title": "Portfolio",
-    "subtitle": "Ihr Guthaben und Ihre Bestellhistorie.",
+    "subtitle": "Ihre Vermögenswerte und Ihr Auftragsverlauf.",
     "assetValue": "Vermögenswert",
     "pnl": "Gewinn/Verlust",
     "assetsOwned": "Vermögenswerte im Besitz",
@@ -251,7 +251,7 @@
   "history": {
     "loadFailed": "Der Verlauf kann nicht geladen werden",
     "retry": "Bitte versuchen Sie es erneut",
-    "emptyTitle": "Keine Bestellungen",
+    "emptyTitle": "Keine Aufträge",
     "emptyBody": "Wenn Sie einen Vermögenswert kaufen oder verkaufen, wird die Order hier angezeigt.",
     "date": "Datum",
     "asset": "Vermögenswert",
@@ -266,13 +266,13 @@
     }
   },
   "wallet": {
-    "title": "Geldbörse",
+    "title": "Wallet",
     "loadFailed": "Die Wallet kann nicht geladen werden",
     "retry": "Bitte versuchen Sie es erneut",
     "balanceLabel": "Saldo",
     "availableBalance": "Verfügbares Guthaben",
     "refresh": "Kontostand und Transaktionen aktualisieren",
-    "id": "Wallet-ID{{id}}",
+    "id": "Wallet-ID {{id}}",
     "copyId": "Wallet-ID kopieren",
     "idCopied": "Wallet-ID kopiert",
     "copyFailed": "Das Kopieren ist fehlgeschlagen",
@@ -292,7 +292,7 @@
         "description": "Die Auszahlung wird Ihrem Konto nach der Genehmigung gutgeschrieben."
       },
       "transfer": {
-        "title": "Überweisung auf eine andere Geldbörse",
+        "title": "Überweisung an eine andere Wallet",
         "description": "Senden Sie Dollar an die Wallet eines anderen Nutzers."
       }
     },
@@ -301,7 +301,7 @@
     "noTransactionsBody": "Einzahlungen, Auszahlungen und Überweisungen werden hier angezeigt.",
     "transactionTypes": {
       "ADD_MONEY": "Einzahlung",
-      "WITHDRAWAL": "Rücktritt",
+      "WITHDRAWAL": "Auszahlung",
       "WALLET_TRANSFER": "Übertragung",
       "BUY_ASSET": "Kauf",
       "SELL_ASSET": "Ausverkauf",
@@ -329,13 +329,13 @@
     "submit": "Senden",
     "errors": {
       "wholeAmount": "Geben Sie eine ganze Zahl größer als Null ein",
-      "insufficient": "Unzureichendes Guthaben auf dem Wallet",
+      "insufficient": "Unzureichendes Guthaben in der Wallet",
       "idNumeric": "Die Wallet-ID besteht aus Ziffern",
-      "self": "Sie können keine Beträge auf Ihre eigene Geldbörse überweisen"
+      "self": "Sie können keinen Betrag auf Ihre eigene Wallet überweisen"
     },
     "toast": {
       "title": "Überweisung gesendet",
-      "description": "{{amount}} an die Wallet-Adresse {{wallet}}"
+      "description": "{{amount}} an die Wallet {{wallet}}"
     }
   },
   "payout": {
@@ -395,7 +395,7 @@
     "cardNote": "Wir speichern lediglich das Kartennetzwerk und die letzten vier Ziffern, niemals die vollständige Nummer.",
     "country": "Land des Kontos",
     "bankName": "Name der Bank",
-    "confirm": "Bestätigen Sie „{{label}}“",
+    "confirm": "{{label}} bestätigen",
     "repeat": "Geben Sie den Wert erneut ein",
     "save": "Speichern"
   },
@@ -404,13 +404,13 @@
     "needMethodBody": "Fügen Sie ein Bankkonto oder eine Karte hinzu, um eine Auszahlung beantragen zu können.",
     "addDetails": "Zahlungsdaten hinzufügen",
     "wholeAmount": "Geben Sie eine ganze Zahl größer als Null ein",
-    "insufficient": "Unzureichendes Guthaben auf dem Wallet",
+    "insufficient": "Unzureichendes Guthaben in der Wallet",
     "toast": {
       "title": "Auszahlungsantrag gesendet",
       "description": "{{amount}} zur Genehmigung vorgelegt"
     },
     "available": "Verfügbares Guthaben",
-    "amountLabel": "",
+    "amountLabel": "Auszahlungsbetrag (USD)",
     "max": "Max",
     "creditTo": "Quelle:",
     "submit": "Abheben"
@@ -419,7 +419,7 @@
     "title": "Auszahlungen",
     "request": "Eine Auszahlung aus der Wallet beantragen",
     "loadFailed": "Die Auszahlungen können nicht geladen werden",
-    "emptyTitle": "Keine Abhebungen",
+    "emptyTitle": "Keine Auszahlungen",
     "emptyBody": "Die von Ihnen über die Wallet eingereichten Auszahlungsanträge werden hier angezeigt.",
     "date": "Datum",
     "amount": "Betrag",
@@ -428,14 +428,14 @@
   "payment": {
     "success": {
       "title": "Einzahlung abgeschlossen",
-      "body": "Der Betrag wurde Ihrem Wallet gutgeschrieben.",
+      "body": "Der Betrag wurde Ihrer Wallet gutgeschrieben.",
       "balance": "Aktueller Saldo",
-      "toWallet": "Zur Geldbörse gehen"
+      "toWallet": "Zur Wallet"
     },
     "cancel": {
       "title": "Zahlung storniert",
       "body": "Es wurden Ihnen keine Kosten in Rechnung gestellt. Sie können es jederzeit erneut versuchen.",
-      "toWallet": "Zurück zur Geldbörse"
+      "toWallet": "Zurück zur Wallet"
     }
   },
   "profile": {
@@ -491,9 +491,9 @@
     "label": "Krypto-Assistent",
     "title": "Assistent",
     "close": "Enger Mitarbeiter",
-    "open": "Open Assistant",
-    "openUnread_one": "Open Assistant, {{count}} – Neue Nachricht",
-    "openUnread_other": "Open Assistant, {{count}} – neue Nachrichten",
+    "open": "Assistenten öffnen",
+    "openUnread_one": "Assistenten öffnen, {{count}} neue Nachricht",
+    "openUnread_other": "Assistenten öffnen, {{count}} neue Nachrichten",
     "greeting": "Guten Tag, fragen Sie mich gerne nach Kursen, Marktkapitalisierung und weiteren Themen rund um Kryptowährungen.",
     "greetingNamed": "Hallo {{name}}, fragen Sie mich nach Kursen, Marktkapitalisierung und weiteren Informationen zu Kryptowährungen.",
     "about": "GprFlow ist ein von {{developer}} erstelltes Demoprojekt. Falls Ihnen die Arbeit gefällt, nehmen Sie bitte Kontakt auf:",
@@ -518,8 +518,8 @@
     "manage": "Verwalten",
     "accept": "Akzeptieren",
     "decline": "Rückgang",
-    "accepted": "Rücktritt akzeptiert",
-    "declined": "Der Antrag auf Rücknahme wurde abgelehnt",
+    "accepted": "Auszahlung akzeptiert",
+    "declined": "Auszahlung abgelehnt",
     "failed": "Der Vorgang ist fehlgeschlagen",
     "loadFailed": "Die Anfragen können nicht geladen werden",
     "retry": "Bitte versuchen Sie es erneut",
