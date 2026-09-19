@@ -28,7 +28,7 @@ public class GeminiClient {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-    @Value("${gemini.api.model:gemini-2.0-flash}")
+    @Value("${gemini.api.model:gemini-3.6-flash}")
     private String model;
 
     public GeminiClient(RestClient externalApiRestClient, ObjectMapper objectMapper) {
