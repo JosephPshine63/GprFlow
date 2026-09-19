@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -103,6 +104,12 @@ public class VerificationController {
         String id = uuid.toString();
 
         ForgotPasswordToken token = forgotPasswordService.findByUser(user.getId());
+
+        // expiry is set once at creation, so an old token must not be reused
+        if (token != null && token.getExpiresAt().isBefore(LocalDateTime.now())) {
+            forgotPasswordService.deleteToken(token);
+            token = null;
+        }
 
         if (token == null) {
             token = forgotPasswordService.createToken(
