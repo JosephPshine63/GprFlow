@@ -64,7 +64,7 @@ export const fetchCoinList = (page) => async (dispatch) => {
   export const searchCoin = (keyword) => async (dispatch) => {
     dispatch({ type: SEARCH_COIN_REQUEST });
     try {
-      const response = await api.get(`/api/coins/search?q=${keyword}`);
+      const response = await api.get("/api/coins/search", { params: { q: keyword } });
       dispatch({ type: SEARCH_COIN_SUCCESS, payload: response.data });
     } catch (error) {
       dispatch({ type: SEARCH_COIN_FAILURE, payload: error.message });

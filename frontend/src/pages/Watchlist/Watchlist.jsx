@@ -1,91 +1,119 @@
-import { useEffect, useState } from "react";
-
-import { addItemToWatchlist, getUserWatchlist } from "@/Redux/Watchlist/Action";
+/* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { BookmarkFilledIcon } from "@radix-ui/react-icons";
+import { Link, useNavigate } from "react-router-dom";
+import { Bookmark, BookmarkMinus } from "lucide-react";
+import { addItemToWatchlist, getUserWatchlist } from "@/Redux/Watchlist/Action";
+import { Skeleton } from "@/components/ui/skeleton";
+import CoinLogo from "@/components/custome/CoinLogo";
+import EmptyState from "@/components/custome/EmptyState";
+import PriceChange from "@/components/custome/PriceChange";
+import { formatCompact, formatCurrency } from "@/Util/format";
+
+// The name link stretches over the card, so the remove button has to sit above it.
+const WatchCard = ({ coin, onRemove }) => (
+  <div className="surface relative p-4 transition-colors hover:bg-primary/5">
+    <div className="flex items-start justify-between gap-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <CoinLogo src={coin.image} symbol={coin.symbol} className="h-10 w-10" />
+        <div className="min-w-0">
+          <Link
+            to={`/market/${coin.id}`}
+            className="block truncate font-medium after:absolute after:inset-0"
+          >
+            {coin.name}
+          </Link>
+          <span className="text-xs uppercase text-muted-foreground">{coin.symbol}</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        aria-label={`Rimuovi ${coin.name} dalla watchlist`}
+        onClick={() => onRemove(coin.id)}
+        className="relative z-10 rounded-full p-2 text-muted-foreground transition-colors hover:bg-down/10 hover:text-down"
+      >
+        <BookmarkMinus className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+      </button>
+    </div>
+
+    <div className="mt-4 flex items-end justify-between gap-2">
+      <p className="text-xl font-semibold tabular-nums">{formatCurrency(coin.current_price)}</p>
+      <PriceChange value={coin.price_change_percentage_24h} />
+    </div>
+
+    <dl className="mt-3 grid grid-cols-2 gap-2 border-t pt-3 text-xs">
+      <div>
+        <dt className="text-muted-foreground">Volume</dt>
+        <dd className="mt-0.5 font-medium tabular-nums">{formatCompact(coin.total_volume)}</dd>
+      </div>
+      <div>
+        <dt className="text-muted-foreground">Market cap</dt>
+        <dd className="mt-0.5 font-medium tabular-nums">{formatCompact(coin.market_cap)}</dd>
+      </div>
+    </dl>
+  </div>
+);
 
 const Watchlist = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const { watchlist,coin } = useSelector((store) => store);
   const navigate = useNavigate();
+  const { items, loading, error } = useSelector((store) => store.watchlist);
 
   useEffect(() => {
     dispatch(getUserWatchlist());
-  }, [page]);
+  }, [dispatch]);
 
-  const handleAddToWatchlist=(id)=>{
-    dispatch(addItemToWatchlist(id))
-  }
+  const coins = (items ?? []).filter((c) => c?.id);
+  const hydrating = loading && coins.length === 0;
+
   return (
-    <div className="pt-8 lg:px-10">
-        <div className="flex items-center pt-5 pb-10 gap-5">
-            <BookmarkFilledIcon className="h-10 w-10"/>
-        <h1 className=" text-4xl font-semibold">Watchlist</h1> 
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold md:text-3xl">Watchlist</h1>
+        <p className="text-sm text-muted-foreground">Le monete che stai seguendo.</p>
+      </div>
+
+      {hydrating ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} className="h-40 rounded-2xl" />
+          ))}
         </div>
-       
-      <Table className="px-5 lg:px-20  border-t relative border-x border-b p-10 ">
-        <ScrollArea className={""}>
-          <TableHeader>
-            <TableRow className="sticky top-0 left-0 right-0 bg-background">
-              <TableHead className="py-4">Coin</TableHead>
-              <TableHead>SYMBOL</TableHead>
-              <TableHead>VOLUME</TableHead>
-              <TableHead>MARKET CAP</TableHead>
-              <TableHead>24H</TableHead>
-              <TableHead className="">PRICE</TableHead>
-              <TableHead className="text-right text-red-700">Remove</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody className="">
-            {watchlist.items.map((item) => (
-              <TableRow className="" key={item.id}>
-                <TableCell
-                  onClick={() => navigate(`/market/${item.id}`)}
-                  className="font-medium flex items-center gap-2 cursor-pointer"
-                >
-                  <Avatar className="-z-50">
-                    <AvatarImage src={item.image} alt={item.symbol} />
-                  </Avatar>
-                  <span> {item.name}</span>
-                </TableCell>
-                <TableCell>{item.symbol.toUpperCase()}</TableCell>
-                <TableCell>{item.total_volume}</TableCell>
-                <TableCell>{item.market_cap}</TableCell>
-                <TableCell
-                  className={`${
-                    item.market_cap_change_percentage_24h < 0
-                      ? "text-red-600"
-                      : "text-green-600"
-                  }`}
-                >
-                  {item.market_cap_change_percentage_24h}%
-                </TableCell>
-                <TableCell>{item.current_price}</TableCell>
-
-                <TableCell className="text-right">
-                  <Button onClick={()=>handleAddToWatchlist(item.id)} className="h-10 w-10" variant="outline" size="icon">
-                    <BookmarkFilledIcon className="h-6 w-6" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </ScrollArea>
-      </Table>
+      ) : error && coins.length === 0 ? (
+        <div className="surface">
+          <EmptyState icon={Bookmark} title="Impossibile caricare la watchlist" description={error}>
+            <button
+              type="button"
+              onClick={() => dispatch(getUserWatchlist())}
+              className="btn-brand h-11"
+            >
+              Riprova
+            </button>
+          </EmptyState>
+        </div>
+      ) : coins.length === 0 ? (
+        <div className="surface">
+          <EmptyState
+            icon={Bookmark}
+            title="Nessuna moneta seguita"
+            description="Aggiungi una moneta ai preferiti per tenerla d'occhio da qui."
+          >
+            <button type="button" onClick={() => navigate("/")} className="btn-brand h-11">
+              Esplora i mercati
+            </button>
+          </EmptyState>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {coins.map((coin) => (
+            <WatchCard
+              key={coin.id}
+              coin={coin}
+              onRemove={(id) => dispatch(addItemToWatchlist(id))}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

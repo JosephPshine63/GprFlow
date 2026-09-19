@@ -1,94 +1,110 @@
-/* eslint-disable no-unused-vars */
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserAssets } from "@/Redux/Assets/Action";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { getAllOrdersForUser } from "@/Redux/Order/Action";
-import { calculateProfite } from "@/Util/calculateProfite";
-import { readableDate } from "@/Util/readableDate";
-import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Search as SearchIcon, SearchX } from "lucide-react";
 import { searchCoin } from "@/Redux/Coin/Action";
-import { useNavigate } from "react-router-dom";
-import SpinnerBackdrop from "@/components/custome/SpinnerBackdrop";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import CoinLogo from "@/components/custome/CoinLogo";
+import EmptyState from "@/components/custome/EmptyState";
+
+const MAX_RESULTS = 30;
 
 const SearchCoin = () => {
   const dispatch = useDispatch();
-  const { asset, order,coin } = useSelector((store) => store);
-  const [keyword, setKeyword] = useState("keyword");
-  const navigate=useNavigate()
+  const { searchCoinList, loading, error } = useSelector((store) => store.coin);
+  const [keyword, setKeyword] = useState("");
+  const [submitted, setSubmitted] = useState("");
 
-  const handleSearchCoin = () => {
-    dispatch(searchCoin(keyword));
+  const run = (term) => {
+    setSubmitted(term);
+    dispatch(searchCoin(term));
   };
 
-  if(coin.loading){
-    return <SpinnerBackdrop/>
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const term = keyword.trim();
+    if (term) run(term);
+  };
+
+  const results = (searchCoinList ?? []).slice(0, MAX_RESULTS);
 
   return (
-    <div className="p-10 lg:p=[50%]">
-      <div className="flex items-center justify-center pb-16">
-        <Input
-          className="p-5 w-[90%] lg:w-[50%] rounded-r-none"
-          placeholder="explore market..."
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <Button onClick={handleSearchCoin} className="p-5 rounded-l-none">
-          <SearchIcon />
-        </Button>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold md:text-3xl">Cerca</h1>
+        <p className="text-sm text-muted-foreground">Trova una moneta per nome o simbolo.</p>
       </div>
-      <Table className="px-5  relative">
-        <TableHeader className="py-9">
-          <TableRow className="sticky top-0 left-0 right-0 bg-background ">
-            <TableHead className="py-3">Market Cap Rank</TableHead>
-            <TableHead>Trading Pair</TableHead>
-         
-            <TableHead className="text-right">SYMBOL</TableHead>
-          </TableRow>
-        </TableHeader>
 
-        <TableBody className="">
-          {coin.searchCoinList?.map((item) => (
-            <TableRow onClick={()=>navigate(`/market/${item.id}`)} key={item.id}>
-              <TableCell>
-               
-                <p className="">
-                  {item.market_cap_rank}
-                </p>
-              </TableCell>
-              <TableCell className="font-medium flex items-center gap-2">
-                <Avatar className="-z-50">
-                  <AvatarImage
-                    src={item.large}
-                    alt={""}
-                  />
-                </Avatar>
-                <span> {item.name}</span>
-              </TableCell>
+      <form onSubmit={handleSubmit} className="flex gap-2" role="search">
+        <div className="relative flex-1">
+          <SearchIcon
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+          <Input
+            autoFocus
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            aria-label="Cerca una moneta"
+            placeholder="Bitcoin, ETH, solana..."
+            className="h-11 pl-10"
+          />
+        </div>
+        <button type="submit" disabled={!keyword.trim()} className="btn-brand h-11 px-5">
+          Cerca
+        </button>
+      </form>
 
-              <TableCell className="text-right">${item.symbol}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="surface overflow-hidden">
+        {!submitted ? (
+          <EmptyState
+            icon={SearchIcon}
+            title="Cerca una moneta"
+            description="Digita il nome o il simbolo, ad esempio bitcoin o eth."
+          />
+        ) : loading ? (
+          <div className="space-y-3 p-5">
+            {[0, 1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-12 w-full" />
+            ))}
+          </div>
+        ) : error ? (
+          <EmptyState icon={SearchX} title="Ricerca non riuscita" description={error}>
+            <button type="button" onClick={() => run(submitted)} className="btn-brand h-11">
+              Riprova
+            </button>
+          </EmptyState>
+        ) : results.length === 0 ? (
+          <EmptyState
+            icon={SearchX}
+            title="Nessun risultato"
+            description={`Nessuna moneta trovata per "${submitted}".`}
+          />
+        ) : (
+          <ul className="divide-y">
+            {results.map((item) => (
+              <li key={item.id}>
+                <Link
+                  to={`/market/${item.id}`}
+                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-primary/5"
+                >
+                  <span className="w-8 text-xs tabular-nums text-muted-foreground">
+                    {item.market_cap_rank ? `#${item.market_cap_rank}` : ""}
+                  </span>
+                  <CoinLogo src={item.large ?? item.thumb} symbol={item.symbol} />
+                  <span className="min-w-0 flex-1 truncate font-medium">{item.name}</span>
+                  <span className="text-xs font-semibold uppercase text-muted-foreground">
+                    {item.symbol}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

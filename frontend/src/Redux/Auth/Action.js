@@ -1,5 +1,6 @@
 import * as actionTypes from "./ActionTypes";
 import api from "@/Api/api";
+import { apiErrorMessage } from "@/Util/apiError";
 
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.REGISTER_REQUEST });
@@ -82,10 +83,9 @@ export const sendVerificationOtp = ({ verificationType }) => {
         payload: response.data,
       });
     } catch (error) {
-      dispatch({
-        type: actionTypes.SEND_VERIFICATION_OTP_FAILURE,
-        payload: error.message,
-      });
+      const message = apiErrorMessage(error);
+      dispatch({ type: actionTypes.SEND_VERIFICATION_OTP_FAILURE, payload: message });
+      throw new Error(message);
     }
   };
 };
@@ -99,7 +99,9 @@ export const verifyOtp = ({ otp }) => {
       );
       dispatch({ type: actionTypes.VERIFY_OTP_SUCCESS, payload: response.data });
     } catch (error) {
-      dispatch({ type: actionTypes.VERIFY_OTP_FAILURE, payload: error.message });
+      const message = apiErrorMessage(error);
+      dispatch({ type: actionTypes.VERIFY_OTP_FAILURE, payload: message });
+      throw new Error(message);
     }
   };
 };
@@ -116,10 +118,12 @@ export const enableTwoStepAuthentication = ({ otp }) => {
         payload: response.data,
       });
     } catch (error) {
+      const message = apiErrorMessage(error);
       dispatch({
         type: actionTypes.ENABLE_TWO_STEP_AUTHENTICATION_FAILURE,
-        payload: error.message,
+        payload: message,
       });
+      throw new Error(message);
     }
   };
 };

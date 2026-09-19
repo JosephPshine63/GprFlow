@@ -1,192 +1,156 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MailCheck, ShieldCheck } from "lucide-react";
+import { enableTwoStepAuthentication, getUser, verifyOtp } from "@/Redux/Auth/Action";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
+import AppDialog from "@/components/custome/AppDialog";
+import { cn } from "@/lib/utils";
 import AccountVarificationForm from "./AccountVarificationForm";
-import { VerifiedIcon } from "lucide-react";
-import { enableTwoStepAuthentication, verifyOtp } from "@/Redux/Auth/Action";
+
+const ROLES = { ROLE_ADMIN: "Amministratore", ROLE_USER: "Utente" };
+
+const StateBadge = ({ ok, okLabel, pendingLabel }) => (
+  <span
+    className={cn(
+      "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+      ok ? "bg-up/10 text-up" : "bg-warning/15 text-warning"
+    )}
+  >
+    {ok ? okLabel : pendingLabel}
+  </span>
+);
+
+const Section = ({ icon: Icon, title, badge, description, children }) => (
+  <section className="surface flex flex-col p-6">
+    <div className="flex items-center gap-3">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white">
+        <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+      </span>
+      <h2 className="flex-1 text-lg font-semibold">{title}</h2>
+      {badge}
+    </div>
+    <p className="mt-4 flex-1 text-sm text-muted-foreground">{description}</p>
+    {children && <div className="mt-5">{children}</div>}
+  </section>
+);
 
 const Profile = () => {
-  const { auth } = useSelector((store) => store);
+  const user = useSelector((store) => store.auth.user);
   const dispatch = useDispatch();
+  const { toast } = useToast();
+  const [dialog, setDialog] = useState(null);
 
-  const handleEnableTwoStepVerification =(otp)=>{
-    console.log("EnableTwoStepVerification",otp)
-    dispatch(enableTwoStepAuthentication({otp}))
-  }
+  const twoFactor = Boolean(user?.twoFactorAuth?.enabled);
+  const verified = Boolean(user?.verified);
+  const name = user?.fullName || user?.email || "";
 
-  const handleVerifyOtp=(otp)=>{
-    console.log("otp  - ",otp)
-    dispatch(verifyOtp({otp}))
-  }
+  const confirmTwoFactor = async (otp) => {
+    await dispatch(enableTwoStepAuthentication({ otp }));
+    await dispatch(getUser());
+    toast({ title: "Verifica in due passaggi attivata" });
+  };
+
+  const confirmAccount = async (otp) => {
+    await dispatch(verifyOtp({ otp }));
+    await dispatch(getUser());
+    toast({ title: "Account verificato" });
+  };
+
+  const rows = [
+    ["Nome", user?.fullName],
+    ["Email", user?.email],
+    ["Ruolo", ROLES[user?.role] ?? user?.role],
+  ];
+
   return (
-    <div className="flex flex-col items-center mb-5">
-      <div className="pt-10 w-full lg:w-[60%]">
-        <Card>
-          <CardHeader className="pb-9">
-            <CardTitle>Your Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="lg:flex gap-32">
-              <div className="space-y-7">
-                <div className="flex">
-                  <p className="w-[9rem]">Email : </p>
-                  <p className="text-gray-500">{auth.user?.email} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">Full Name : </p>
-                  <p className="text-gray-500">{"code with dev.pioruocco"} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">Date Of Birth : </p>
-                  <p className="text-gray-500">{"25/09/2000"} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">Nationality : </p>
-                  <p className="text-gray-500">{"indian"} </p>
-                </div>
-              </div>
-              <div className="space-y-7">
-                <div className="flex">
-                  <p className="w-[9rem]">Address : </p>
-                  <p className="text-gray-500">{"code with dev.pioruocco"} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">City : </p>
-                  <p className="text-gray-500">{"mumbai"} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">Postcode : </p>
-                  <p className="text-gray-500">{345020} </p>
-                </div>
-                <div className="flex">
-                  <p className="w-[9rem]">Country : </p>
-                  <p className="text-gray-500">{"india"} </p>
-                </div>
-              </div>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <h1 className="text-2xl font-semibold md:text-3xl">Profilo</h1>
+
+      <section className="surface p-6">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14">
+            <AvatarFallback className="bg-brand text-xl font-semibold text-white">
+              {name.charAt(0).toUpperCase() || "?"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <p className="truncate text-lg font-semibold">{name}</p>
+            <p className="truncate text-sm text-muted-foreground">{user?.email}</p>
+          </div>
+        </div>
+        <dl className="mt-5 divide-y text-sm">
+          {rows.map(([label, value]) => (
+            <div key={label} className="flex justify-between gap-4 py-3">
+              <dt className="text-muted-foreground">{label}</dt>
+              <dd className="min-w-0 truncate text-right font-medium">{value || "-"}</dd>
             </div>
-          </CardContent>
-        </Card>
-        <div className="mt-6">
-        <Card className="w-full">
-            <CardHeader className="pb-7">
-              <div className="flex items-center gap-3">
-                <CardTitle>2 Step Verification</CardTitle>
+          ))}
+        </dl>
+      </section>
 
-                {auth.user.twoFactorAuth?.enabled ? (
-                  <Badge className="space-x-2 text-white bg-green-600">
-                    <VerifiedIcon /> <span>{"Enabled"}</span>
-                  </Badge>
-                ) : (
-                  <Badge className="bg-orange-500">Disabled</Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              
-              <div>
-                <Dialog>
-                  <DialogTrigger>
-                    <Button>Enabled Two Step Verification</Button>
-                  </DialogTrigger>
-                  <DialogContent className="">
-                    <DialogHeader className="">
-                      <DialogTitle className="px-10 pt-5 text-center">
-                        verify your account
-                      </DialogTitle>
-                    </DialogHeader>
-                    <AccountVarificationForm handleSubmit={handleEnableTwoStepVerification} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="lg:flex gap-5 mt-5">
-          <Card className="w-full">
-            <CardHeader className="pb-7">
-              <CardTitle>Change Password</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5 ">
-              <div className="flex items-center">
-                <p className="w-[8rem]">Email :</p>
-                <p>{auth.user.email}</p>
-              </div>
-              {/* <div className="flex items-center">
-                <p className="w-[8rem]">Mobile :</p>
-                <p>+918987667899</p>
-              </div> */}
-              <div className="flex items-center">
-                <p className="w-[8rem]">Password :</p>
-                <Button variant="secondary">Change Password</Button>
-              </div>
-            </CardContent>
-          </Card>
-          {/* <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Close Account</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5 ">
-              <div className="flex items-center">
-                <p className="w-[8rem]">Customer Id :</p>
-                <p>#53DKJ736</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-[8rem]">Account :</p>
-                <Button variant="secondary">Close Account</Button>
-              </div>
-            </CardContent>
-          </Card> */}
-          <Card className="w-full">
-            <CardHeader className="pb-7">
-              <div className="flex items-center gap-3">
-                <CardTitle>Account Status</CardTitle>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Section
+          icon={ShieldCheck}
+          title="Sicurezza"
+          badge={<StateBadge ok={twoFactor} okLabel="2FA attiva" pendingLabel="2FA non attiva" />}
+          description={
+            twoFactor
+              ? "Al login ti chiediamo anche un codice inviato via email."
+              : "Aggiungi un codice via email al login per proteggere meglio il tuo account."
+          }
+        >
+          {!twoFactor && (
+            <button
+              type="button"
+              onClick={() => setDialog("twoFactor")}
+              className="btn-brand h-11 w-full"
+            >
+              Attiva verifica in due passaggi
+            </button>
+          )}
+        </Section>
 
-                {auth.user.verified ? (
-                  <Badge className="space-x-2 text-white bg-green-600">
-                    <VerifiedIcon /> <span>verified</span>
-                  </Badge>
-                ) : (
-                  <Badge className="bg-orange-500">pending</Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="flex items-center">
-                <p className="w-[8rem]">Email :</p>
-                <p>{auth.user.email}</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-[8rem]">Mobile :</p>
-                <p>+918987667899</p>
-              </div>
-              <div>
-                <Dialog>
-                  <DialogTrigger>
-                    <Button>Verify Account</Button>
-                    
-                  </DialogTrigger>
-                  <DialogContent className="">
-                    <DialogHeader className="">
-                      <DialogTitle className="px-10 pt-5 text-center">
-                        verify your account
-                      </DialogTitle>
-                    </DialogHeader>
-                    <AccountVarificationForm handleSubmit={handleVerifyOtp}/>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Section
+          icon={MailCheck}
+          title="Stato account"
+          badge={<StateBadge ok={verified} okLabel="Verificato" pendingLabel="Da verificare" />}
+          description={
+            verified
+              ? "La tua email è verificata."
+              : "Verifica la tua email con un codice a 6 cifre."
+          }
+        >
+          {!verified && (
+            <button
+              type="button"
+              onClick={() => setDialog("verify")}
+              className="btn-brand h-11 w-full"
+            >
+              Verifica account
+            </button>
+          )}
+        </Section>
       </div>
+
+      <AppDialog
+        open={dialog === "twoFactor"}
+        onOpenChange={(open) => !open && setDialog(null)}
+        title="Verifica in due passaggi"
+        description="Conferma la tua email per attivarla."
+      >
+        <AccountVarificationForm onSubmit={confirmTwoFactor} onDone={() => setDialog(null)} />
+      </AppDialog>
+
+      <AppDialog
+        open={dialog === "verify"}
+        onOpenChange={(open) => !open && setDialog(null)}
+        title="Verifica account"
+        description="Conferma che l'email è tua."
+      >
+        <AccountVarificationForm onSubmit={confirmAccount} onDone={() => setDialog(null)} />
+      </AppDialog>
     </div>
   );
 };
