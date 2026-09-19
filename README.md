@@ -7,6 +7,8 @@
 
 A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage a wallet, track portfolio performance, and interact with an AI chatbot powered by Gemini. Admins can approve or reject withdrawal requests.
 
+**Live demo:** [gprflow.trade](https://gprflow.trade) — payments run in Stripe test mode, so no real money is involved.
+
 ---
 
 ## Features
