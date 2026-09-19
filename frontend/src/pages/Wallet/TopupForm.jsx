@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Loader2 } from "lucide-react";
+import { Check, Copy, Loader2 } from "lucide-react";
 import { paymentHandler } from "@/Redux/Wallet/Action";
 import { Input } from "@/components/ui/input";
 import AuthError from "@/components/custome/AuthError";
@@ -10,6 +10,48 @@ import { parseWholeAmount } from "@/Util/amount";
 import { formatCurrency } from "@/Util/format";
 
 const PRESETS = [50, 100, 250, 500];
+const TEST_CARD = "4242 4242 4242 4242";
+const TEST_MODE =
+  (window.__RUNTIME_CONFIG__?.STRIPE_TEST_MODE ?? import.meta.env.VITE_STRIPE_TEST_MODE) === "true";
+
+const TestCardHint = () => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(TEST_CARD);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard blocked (insecure context, permissions): the number stays selectable
+    }
+  };
+
+  return (
+    <div className="rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+      <p className="font-medium text-warning">Modalità test</p>
+      <p className="mt-1 text-muted-foreground">
+        Nessun addebito reale. Su Stripe usa questa carta, con una scadenza futura e un CVC
+        qualsiasi.
+      </p>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <code className="select-all font-mono text-base tabular-nums">{TEST_CARD}</code>
+        <button
+          type="button"
+          onClick={copy}
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-colors hover:bg-accent"
+        >
+          {copied ? (
+            <Check className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          ) : (
+            <Copy className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          )}
+          <span aria-live="polite">{copied ? "Copiato" : "Copia"}</span>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const TopupForm = () => {
   const dispatch = useDispatch();
@@ -91,6 +133,8 @@ const TopupForm = () => {
           className="h-6 dark:invert"
         />
       </div>
+
+      {TEST_MODE && <TestCardHint />}
 
       <button
         type="submit"

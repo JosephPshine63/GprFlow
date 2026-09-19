@@ -153,6 +153,7 @@ services:
       - gateway
     environment:
       API_BASE_URL: ${API_BASE_URL:-http://localhost:8087}
+      STRIPE_TEST_MODE: ${STRIPE_TEST_MODE:-false}
     ports:
       - "5173:80"
 
