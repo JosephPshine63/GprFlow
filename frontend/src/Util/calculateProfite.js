@@ -1,13 +1,7 @@
-export const calculateProfite=(order)=>{
-
-    console.log("order --------- ",order.orderItem.sellPrice,
-    order.orderItem?.buyPrice,order.orderItem.buyPrice)
-// return "-"
-    if(order && order.orderItem && order.orderItem.buyPrice && order.orderItem.sellPrice){
-         return order.orderItem.sellPrice-order.orderItem.buyPrice;
-    }
-    return "-"
-
-   
-
-}
+// Realized profit of a SELL order; null when the order has no sell leg.
+export const calculateProfite = (order) => {
+  const item = order?.orderItem;
+  if (order?.orderType !== "SELL" || !item?.buyPrice || !item?.sellPrice) return null;
+  const value = (item.sellPrice - item.buyPrice) * item.quantity;
+  return { value, pct: (item.sellPrice / item.buyPrice - 1) * 100 };
+};

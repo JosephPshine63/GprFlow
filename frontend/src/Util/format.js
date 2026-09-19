@@ -26,6 +26,11 @@ export const formatCurrency = (v) => {
   return Math.abs(v) > 0 && Math.abs(v) < 1 ? usdSmall.format(v) : usd.format(v);
 };
 
+export const formatSignedCurrency = (v) => {
+  if (!isNum(v)) return "-";
+  return `${v > 0 ? "+" : ""}${formatCurrency(v)}`;
+};
+
 export const formatCompact = (v) => (isNum(v) ? compact.format(v) : "-");
 
 export const formatNumber = (v) => (isNum(v) ? number.format(v) : "-");

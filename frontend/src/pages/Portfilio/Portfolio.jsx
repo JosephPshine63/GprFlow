@@ -1,4 +1,9 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { PieChart } from "lucide-react";
+import { getUserAssets } from "@/Redux/Assets/Action";
 import {
   Table,
   TableBody,
@@ -7,132 +12,209 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserAssets } from "@/Redux/Assets/Action";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import Chip from "@/components/custome/Chip";
+import CoinLogo from "@/components/custome/CoinLogo";
+import EmptyState from "@/components/custome/EmptyState";
+import PriceChange from "@/components/custome/PriceChange";
+import Pnl from "@/components/custome/Pnl";
+import { formatCurrency, formatNumber } from "@/Util/format";
+import { assetPnl, portfolioSummary } from "@/Util/portfolio";
 import TradingHistory from "./TradingHistory";
-import { useNavigate } from "react-router-dom";
 
-const tab = ["portfolio", "history"];
+const Stat = ({ label, children }) => (
+  <div className="surface p-4">
+    <p className="text-xs font-medium text-muted-foreground">{label}</p>
+    <div className="mt-1 text-xl font-semibold tabular-nums md:text-2xl">{children}</div>
+  </div>
+);
+
+const AssetCell = ({ coin }) => (
+  <div className="flex items-center gap-3">
+    <CoinLogo src={coin.image} symbol={coin.symbol} />
+    <div className="min-w-0">
+      <Link
+        to={`/market/${coin.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="block truncate font-medium hover:underline"
+      >
+        {coin.name}
+      </Link>
+      <span className="text-xs uppercase text-muted-foreground">{coin.symbol}</span>
+    </div>
+  </div>
+);
+
 const Portfolio = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [currentTab, setCurrentTab] = useState("portfolio");
-  const { asset } = useSelector((store) => store);
-  // const [activeTab, setActiveTab] = useState("portfolio");
+  const [tab, setTab] = useState("assets");
+  const { userAssets, loading, error } = useSelector((store) => store.asset);
 
   useEffect(() => {
     dispatch(getUserAssets());
-  }, []);
+  }, [dispatch]);
 
-  const handleTabChange = (value) => {
-    setCurrentTab(value);
-  };
+  // An asset whose coin lookup failed can't be priced, so it stays out of the table.
+  const assets = useMemo(() => (userAssets ?? []).filter((a) => a?.coin), [userAssets]);
+  const summary = useMemo(() => portfolioSummary(assets), [assets]);
+  const hydrating = loading && assets.length === 0;
 
-  console.log("currentTab-----", currentTab);
   return (
-    <div className="px-10 py-5 mt-10">
-      <div className="pb-5 flex items-center gap-5">
-        <Select
-          onValueChange={handleTabChange}
-          defaultValue="portfolio"
-          className=""
-        >
-          <SelectTrigger className="w-[180px] py-[1.2rem] ">
-            <SelectValue placeholder="Select Portfolio" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="portfolio">Portfilio</SelectItem>
-            <SelectItem value="history">History</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* {tab.map((item) => (
-          <Button
-          key={item}
-            className="rounded-full"
-            size="lg"
-            onClick={() => setActiveTab(item)}
-            variant={activeTab == item ? "secondary" : "outline"}
-          >
-            {item.toUpperCase()}
-          </Button>
-        ))} */}
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold md:text-3xl">Portfolio</h1>
+        <p className="text-sm text-muted-foreground">I tuoi asset e lo storico degli ordini.</p>
       </div>
-      {
-        currentTab == "portfolio" ? (
-          <Table className="px-5  relative">
-            <TableHeader className="py-9">
-              <TableRow className="sticky top-0 left-0 right-0 bg-background ">
-                <TableHead className="py-3">Assets</TableHead>
-                <TableHead>PRICE</TableHead>
-                <TableHead>UNIT</TableHead>
-                <TableHead>CHANGE</TableHead>
-                <TableHead>CHANGE(%)</TableHead>
-                <TableHead className="text-right">VALUE</TableHead>
-              </TableRow>
-            </TableHeader>
 
-            <TableBody className="">
-              {asset.userAssets?.map((item) => (
-                <TableRow
-                  onClick={() => navigate(`/market/${item.coin.id}`)}
-                  key={item.id}
-                >
-                  <TableCell className="font-medium flex items-center gap-2">
-                    <Avatar className="-z-50">
-                      <AvatarImage
-                        src={item.coin.image}
-                        alt={item.coin.symbol}
-                      />
-                    </Avatar>
-                    <span> {item.coin.name}</span>
-                  </TableCell>
-                  <TableCell>{item.coin.current_price}</TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell
-                    className={`${
-                      item.coin.price_change_percentage_24h < 0
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {item.coin.price_change_24h}
-                  </TableCell>
-                  <TableCell
-                    className={`${
-                      item.coin.price_change_percentage_24h < 0
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {item.coin.price_change_percentage_24h}%
-                  </TableCell>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+        <Stat label="Valore degli asset">
+          {hydrating ? <Skeleton className="h-8 w-28" /> : formatCurrency(summary.invested)}
+        </Stat>
+        <Stat label="Profitto/Perdita">
+          {hydrating ? (
+            <Skeleton className="h-8 w-28" />
+          ) : (
+            <Pnl
+              pnl={
+                assets.length
+                  ? {
+                      value: summary.pnl,
+                      pct: summary.invested - summary.pnl > 0
+                        ? (summary.pnl / (summary.invested - summary.pnl)) * 100
+                        : 0,
+                    }
+                  : null
+              }
+              showPct={false}
+            />
+          )}
+        </Stat>
+        <div className="col-span-2 md:col-span-1">
+          <Stat label="Asset posseduti">
+            {hydrating ? <Skeleton className="h-8 w-12" /> : assets.length}
+          </Stat>
+        </div>
+      </div>
 
-                  <TableCell className="text-right">
-                    {item.coin.current_price * item.quantity}
-                  </TableCell>
+      <div className="flex gap-2" role="group" aria-label="Sezione">
+        <Chip active={tab === "assets"} onClick={() => setTab("assets")}>
+          Asset
+        </Chip>
+        <Chip active={tab === "history"} onClick={() => setTab("history")}>
+          Storico
+        </Chip>
+      </div>
+
+      {tab === "history" ? (
+        <TradingHistory />
+      ) : hydrating ? (
+        <div className="surface space-y-3 p-5">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      ) : error && assets.length === 0 ? (
+        <div className="surface">
+          <EmptyState icon={PieChart} title="Impossibile caricare gli asset" description={error}>
+            <button
+              type="button"
+              onClick={() => dispatch(getUserAssets())}
+              className="btn-brand h-11"
+            >
+              Riprova
+            </button>
+          </EmptyState>
+        </div>
+      ) : assets.length === 0 ? (
+        <div className="surface">
+          <EmptyState
+            icon={PieChart}
+            title="Nessun asset"
+            description="Acquista la tua prima moneta per vederla nel portfolio."
+          >
+            <button type="button" onClick={() => navigate("/")} className="btn-brand h-11">
+              Esplora i mercati
+            </button>
+          </EmptyState>
+        </div>
+      ) : (
+        <>
+          <div className="surface hidden overflow-hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Asset</TableHead>
+                  <TableHead className="text-right">Prezzo</TableHead>
+                  <TableHead className="text-right">Quantità</TableHead>
+                  <TableHead className="text-right">24h</TableHead>
+                  <TableHead className="text-right">Profitto/Perdita</TableHead>
+                  <TableHead className="text-right">Valore</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <TradingHistory />
-        )
-        // <div className="flex items-center justify-center h-[70vh]">
-        //   <h1 className="text-3xl font-semibold">No History Available</h1>
-        //   </div>
-      }
+              </TableHeader>
+              <TableBody>
+                {assets.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    onClick={() => navigate(`/market/${item.coin.id}`)}
+                    className="cursor-pointer"
+                  >
+                    <TableCell>
+                      <AssetCell coin={item.coin} />
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {formatCurrency(item.coin.current_price)}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {formatNumber(item.quantity)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <PriceChange value={item.coin.price_change_percentage_24h} />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Pnl pnl={assetPnl(item)} />
+                    </TableCell>
+                    <TableCell className="text-right font-medium tabular-nums">
+                      {formatCurrency(item.coin.current_price * item.quantity)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <ul className="space-y-3 md:hidden">
+            {assets.map((item) => (
+              <li
+                key={item.id}
+                onClick={() => navigate(`/market/${item.coin.id}`)}
+                className="surface cursor-pointer p-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <AssetCell coin={item.coin} />
+                  <PriceChange value={item.coin.price_change_percentage_24h} />
+                </div>
+                <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  <dt className="text-muted-foreground">Prezzo</dt>
+                  <dd className="text-right tabular-nums">
+                    {formatCurrency(item.coin.current_price)}
+                  </dd>
+                  <dt className="text-muted-foreground">Quantità</dt>
+                  <dd className="text-right tabular-nums">{formatNumber(item.quantity)}</dd>
+                  <dt className="text-muted-foreground">Profitto/Perdita</dt>
+                  <dd className="text-right">
+                    <Pnl pnl={assetPnl(item)} />
+                  </dd>
+                  <dt className="text-muted-foreground">Valore</dt>
+                  <dd className="text-right font-medium tabular-nums">
+                    {formatCurrency(item.coin.current_price * item.quantity)}
+                  </dd>
+                </dl>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

@@ -1,4 +1,9 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { ReceiptText } from "lucide-react";
+import { getAllOrdersForUser } from "@/Redux/Order/Action";
 import {
   Table,
   TableBody,
@@ -7,89 +12,189 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserAssets } from "@/Redux/Assets/Action";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { getAllOrdersForUser } from "@/Redux/Order/Action";
+import { Skeleton } from "@/components/ui/skeleton";
+import CoinLogo from "@/components/custome/CoinLogo";
+import EmptyState from "@/components/custome/EmptyState";
+import Pnl from "@/components/custome/Pnl";
 import { calculateProfite } from "@/Util/calculateProfite";
-import { readableDate } from "@/Util/readableDate";
+import { formatCurrency, formatDateTime, formatNumber } from "@/Util/format";
+import { cn } from "@/lib/utils";
+
+const TYPE = {
+  BUY: { label: "Acquisto", tone: "bg-up/10 text-up" },
+  SELL: { label: "Vendita", tone: "bg-down/10 text-down" },
+};
+
+const TypeBadge = ({ type }) => {
+  const meta = TYPE[type] ?? { label: type, tone: "bg-secondary text-muted-foreground" };
+  return (
+    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-semibold", meta.tone)}>
+      {meta.label}
+    </span>
+  );
+};
+
+// Flattens an order into what the row and card layouts both need.
+const toRow = (order) => {
+  const item = order.orderItem ?? {};
+  const coin = item.coin;
+  return {
+    id: order.id,
+    type: order.orderType,
+    date: order.timestamp,
+    coinId: coin?.id ?? item.coinId,
+    name: coin?.name ?? item.coinSymbol?.toUpperCase() ?? "-",
+    symbol: coin?.symbol ?? item.coinSymbol,
+    image: coin?.image,
+    quantity: item.quantity,
+    unitPrice: order.orderType === "SELL" ? item.sellPrice : item.buyPrice,
+    total: Number(order.price),
+    pnl: calculateProfite(order),
+  };
+};
+
+const CoinCell = ({ row }) => (
+  <div className="flex items-center gap-3">
+    <CoinLogo src={row.image} symbol={row.symbol} />
+    {row.coinId ? (
+      <Link to={`/market/${row.coinId}`} className="font-medium hover:underline">
+        {row.name}
+      </Link>
+    ) : (
+      <span className="font-medium">{row.name}</span>
+    )}
+  </div>
+);
 
 const TradingHistory = () => {
   const dispatch = useDispatch();
-  const [currentTab, setCurrentTab] = useState("portfolio");
-  const { asset, order } = useSelector((store) => store);
-  // const [activeTab, setActiveTab] = useState("portfolio");
+  const { orders, loading, error } = useSelector((store) => store.order);
 
   useEffect(() => {
-    dispatch(getUserAssets());
     dispatch(getAllOrdersForUser());
-  }, []);
+  }, [dispatch]);
 
-  const handleTabChange = (value) => {
-    setCurrentTab(value);
-  };
+  const rows = useMemo(
+    () =>
+      [...(orders ?? [])]
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .map(toRow),
+    [orders]
+  );
+
+  if (loading && rows.length === 0) {
+    return (
+      <div className="surface space-y-3 p-5">
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-12 w-full" />
+        ))}
+      </div>
+    );
+  }
+
+  if (error && rows.length === 0) {
+    return (
+      <div className="surface">
+        <EmptyState
+          icon={ReceiptText}
+          title="Impossibile caricare lo storico"
+          description={error}
+        >
+          <button
+            type="button"
+            onClick={() => dispatch(getAllOrdersForUser())}
+            className="btn-brand h-11"
+          >
+            Riprova
+          </button>
+        </EmptyState>
+      </div>
+    );
+  }
+
+  if (rows.length === 0) {
+    return (
+      <div className="surface">
+        <EmptyState
+          icon={ReceiptText}
+          title="Nessun ordine"
+          description="Quando acquisti o vendi un asset, l'ordine compare qui."
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="">
-      <Table className="px-5  relative">
-        <TableHeader className="py-9">
-          <TableRow className="sticky top-0 left-0 right-0 bg-background ">
-            <TableHead className="py-3">Date & Time</TableHead>
-            <TableHead>Trading Pair</TableHead>
-            <TableHead>Buy Price</TableHead>
-            <TableHead>Selling Price</TableHead>
-            <TableHead>Order Type</TableHead>
-            <TableHead>Profite/Loss</TableHead>
-            <TableHead className="text-right">VALUE</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody className="">
-          {order.orders?.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>
-                <p>{readableDate(item.timestamp).date}</p>
-                <p className="text-gray-400">
-                  {readableDate(item.timestamp).time}
-                </p>
-              </TableCell>
-              <TableCell className="font-medium flex items-center gap-2">
-                <Avatar className="-z-50">
-                  <AvatarImage
-                    src={item.orderItem.coin.image}
-                    alt={item.orderItem.coin.symbol}
-                  />
-                </Avatar>
-                <span> {item.orderItem.coin.name}</span>
-              </TableCell>
-
-              <TableCell>${item.orderItem.buyPrice}</TableCell>
-              <TableCell>{"$" + item.orderItem.sellPrice || "-"}</TableCell>
-              <TableCell>{item.orderType}</TableCell>
-              <TableCell
-                className={`${
-                  calculateProfite(item) < 0 ? "text-red-600" : ""
-                }`}
-              >
-                {item.orderType == "SELL" ? calculateProfite(item) : "-"}
-              </TableCell>
-              <TableCell className="text-right">${item.price}</TableCell>
-              {/*  */}
+    <>
+      <div className="surface hidden overflow-hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Data</TableHead>
+              <TableHead>Asset</TableHead>
+              <TableHead>Tipo</TableHead>
+              <TableHead className="text-right">Quantità</TableHead>
+              <TableHead className="text-right">Prezzo</TableHead>
+              <TableHead className="text-right">Totale</TableHead>
+              <TableHead className="text-right">Profitto/Perdita</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className="whitespace-nowrap text-muted-foreground">
+                  {formatDateTime(row.date)}
+                </TableCell>
+                <TableCell>
+                  <CoinCell row={row} />
+                </TableCell>
+                <TableCell>
+                  <TypeBadge type={row.type} />
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatNumber(row.quantity)}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatCurrency(row.unitPrice)}
+                </TableCell>
+                <TableCell className="text-right font-medium tabular-nums">
+                  {formatCurrency(row.total)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Pnl pnl={row.pnl} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <ul className="space-y-3 md:hidden">
+        {rows.map((row) => (
+          <li key={row.id} className="surface p-4">
+            <div className="flex items-center justify-between gap-3">
+              <CoinCell row={row} />
+              <TypeBadge type={row.type} />
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">{formatDateTime(row.date)}</p>
+            <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <dt className="text-muted-foreground">Quantità</dt>
+              <dd className="text-right tabular-nums">{formatNumber(row.quantity)}</dd>
+              <dt className="text-muted-foreground">Prezzo</dt>
+              <dd className="text-right tabular-nums">{formatCurrency(row.unitPrice)}</dd>
+              <dt className="text-muted-foreground">Totale</dt>
+              <dd className="text-right font-medium tabular-nums">
+                {formatCurrency(row.total)}
+              </dd>
+              <dt className="text-muted-foreground">Profitto/Perdita</dt>
+              <dd className="text-right">
+                <Pnl pnl={row.pnl} />
+              </dd>
+            </dl>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 
