@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { verifyResetPassowrdOTP } from "@/Redux/Auth/Action";
+import { resetPasswordSchema } from "@/Util/passwordSchema";
 import AuthLayout from "@/components/layout/AuthLayout";
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
@@ -23,36 +24,30 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-const formSchema = z
-  .object({
-    password: z.string().min(8, "La password deve avere almeno 8 caratteri"),
-    confirmPassword: z.string().min(1, "Conferma la password"),
-    otp: z.string().length(6, "Il codice deve avere 6 cifre"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Le password non coincidono",
-  });
-
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { session } = useParams();
-  const error = useSelector((store) => store.auth.error);
+  const [error, setError] = useState(null);
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: { confirmPassword: "", password: "", otp: "" },
   });
 
-  const onSubmit = (data) => {
-    dispatch(
-      verifyResetPassowrdOTP({
-        otp: data.otp,
-        password: data.password,
-        session,
-        navigate,
-      })
-    );
+  const onSubmit = async (data) => {
+    setError(null);
+    try {
+      await dispatch(
+        verifyResetPassowrdOTP({
+          otp: data.otp,
+          password: data.password,
+          session,
+          navigate,
+        })
+      );
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -131,7 +126,7 @@ const ResetPasswordForm = () => {
               </FormItem>
             )}
           />
-          <SubmitButton>Cambia password</SubmitButton>
+          <SubmitButton loading={form.formState.isSubmitting}>Cambia password</SubmitButton>
         </form>
       </Form>
     </AuthLayout>

@@ -136,17 +136,20 @@ export const sendResetPassowrdOTP = ({ sendTo, verificationType, navigate }) => 
         `/auth/users/reset-password/send-otp`,
         { sendTo, verificationType }
       );
-      const user = response.data;
-      navigate(`/reset-password/${user.session}`);
+      const data = response.data;
       dispatch({
         type: actionTypes.SEND_RESET_PASSWORD_OTP_SUCCESS,
-        payload: user,
+        payload: data,
       });
+      navigate?.(`/reset-password/${data.session}`);
+      return data;
     } catch (error) {
+      const message = apiErrorMessage(error);
       dispatch({
         type: actionTypes.SEND_RESET_PASSWORD_OTP_FAILURE,
-        payload: error.message,
+        payload: message,
       });
+      throw new Error(message);
     }
   };
 };
@@ -164,12 +167,15 @@ export const verifyResetPassowrdOTP = ({ otp, password, session, navigate }) => 
         type: actionTypes.VERIFY_RESET_PASSWORD_OTP_SUCCESS,
         payload: response.data,
       });
-      navigate("/password-update-successfully");
+      navigate?.("/password-update-successfully");
+      return response.data;
     } catch (error) {
+      const message = apiErrorMessage(error);
       dispatch({
         type: actionTypes.VERIFY_RESET_PASSWORD_OTP_FAILURE,
-        payload: error.message,
+        payload: message,
       });
+      throw new Error(message);
     }
   };
 };

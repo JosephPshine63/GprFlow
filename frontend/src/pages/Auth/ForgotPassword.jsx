@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +13,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
 
 const formSchema = z.object({
@@ -26,19 +28,27 @@ const ForgotPasswordForm = () => {
     defaultValues: { email: "" },
   });
 
-  const onSubmit = (data) => {
-    dispatch(
-      sendResetPassowrdOTP({
-        sendTo: data.email,
-        navigate,
-        verificationType: "EMAIL",
-      })
-    );
+  const [error, setError] = useState(null);
+
+  const onSubmit = async (data) => {
+    setError(null);
+    try {
+      await dispatch(
+        sendResetPassowrdOTP({
+          sendTo: data.email,
+          navigate,
+          verificationType: "EMAIL",
+        })
+      );
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <AuthError error={error} />
         <FormField
           control={form.control}
           name="email"
@@ -58,7 +68,7 @@ const ForgotPasswordForm = () => {
             </FormItem>
           )}
         />
-        <SubmitButton>Invia codice</SubmitButton>
+        <SubmitButton loading={form.formState.isSubmitting}>Invia codice</SubmitButton>
       </form>
     </Form>
   );

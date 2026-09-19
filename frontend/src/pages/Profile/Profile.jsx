@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MailCheck, ShieldCheck } from "lucide-react";
+import { KeyRound, MailCheck, ShieldCheck } from "lucide-react";
 import { enableTwoStepAuthentication, getUser, verifyOtp } from "@/Redux/Auth/Action";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 import AppDialog from "@/components/custome/AppDialog";
 import { cn } from "@/lib/utils";
 import AccountVarificationForm from "./AccountVarificationForm";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const ROLES = { ROLE_ADMIN: "Amministratore", ROLE_USER: "Utente" };
 
@@ -101,15 +102,25 @@ const Profile = () => {
               : "Aggiungi un codice via email al login per proteggere meglio il tuo account."
           }
         >
-          {!twoFactor && (
+          <div className="space-y-2">
+            {!twoFactor && (
+              <button
+                type="button"
+                onClick={() => setDialog("twoFactor")}
+                className="btn-brand h-11 w-full"
+              >
+                Attiva verifica in due passaggi
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => setDialog("twoFactor")}
-              className="btn-brand h-11 w-full"
+              onClick={() => setDialog("password")}
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-colors hover:bg-accent"
             >
-              Attiva verifica in due passaggi
+              <KeyRound className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              Cambia password
             </button>
-          )}
+          </div>
         </Section>
 
         <Section
@@ -141,6 +152,20 @@ const Profile = () => {
         description="Conferma la tua email per attivarla."
       >
         <AccountVarificationForm onSubmit={confirmTwoFactor} onDone={() => setDialog(null)} />
+      </AppDialog>
+
+      <AppDialog
+        open={dialog === "password"}
+        onOpenChange={(open) => !open && setDialog(null)}
+        title="Cambia password"
+        description="Ti inviamo un codice via email per confermare il cambio."
+      >
+        <ChangePasswordForm
+          onDone={() => {
+            setDialog(null);
+            toast({ title: "Password aggiornata" });
+          }}
+        />
       </AppDialog>
 
       <AppDialog
