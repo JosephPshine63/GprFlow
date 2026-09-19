@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const ChatWidget = () => {
   const dispatch = useDispatch();
-  const { messages, loading } = useSelector((store) => store.chatBot);
+  const { messages, loading, error } = useSelector((store) => store.chatBot);
   const fullName = useSelector((store) => store.auth.user?.fullName);
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
@@ -15,7 +15,7 @@ const ChatWidget = () => {
 
   useEffect(() => {
     if (open) endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, error, open]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -79,6 +79,14 @@ const ChatWidget = () => {
                     style={{ animationDelay: `${i * 0.2}s` }}
                   />
                 ))}
+              </div>
+            )}
+            {error && !loading && (
+              <div
+                role="alert"
+                className="max-w-[85%] self-start rounded-2xl rounded-bl-sm border border-down/30 bg-down/10 px-4 py-2.5 text-sm text-down"
+              >
+                L&apos;assistente non risponde in questo momento. Riprova tra poco.
               </div>
             )}
             <div ref={endRef} />

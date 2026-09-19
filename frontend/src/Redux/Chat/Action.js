@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 import api from "@/Api/api";
+import { stripEmoji } from "@/Util/stripEmoji";
 import {
   CHAT_BOT_FAILURE,
   CHAT_BOT_REQUEST,
@@ -16,9 +16,9 @@ export const sendMessage = ({ prompt }) => async (dispatch) => {
     const { data } = await api.post("/chat/bot/coin", { prompt });
     dispatch({
       type: CHAT_BOT_SUCCESS,
-      payload: { ans: data.message, role: "model" },
+      payload: { ans: stripEmoji(data.message), role: "model" },
     });
   } catch (error) {
-    dispatch({ type: CHAT_BOT_FAILURE, payload: error });
+    dispatch({ type: CHAT_BOT_FAILURE, payload: error.message });
   }
 };

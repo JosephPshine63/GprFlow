@@ -39,8 +39,11 @@ export const proceedWithdrawal = ({ id, accept }) => async dispatch => {
   try {
     const response = await api.patch(`/api/admin/withdrawal/${id}/proceed/${accept}`, null);
     dispatch({ type: WITHDRAWAL_PROCEED_SUCCESS, payload: response.data });
+    return response.data;
   } catch (error) {
-    dispatch({ type: WITHDRAWAL_PROCEED_FAILURE, payload: error.message });
+    const message = apiErrorMessage(error);
+    dispatch({ type: WITHDRAWAL_PROCEED_FAILURE, payload: message });
+    throw new Error(message);
   }
 };
 

@@ -31,7 +31,7 @@ const chatBotReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: action.error,
+        error: action.payload,
       };
     default:
       return state;
