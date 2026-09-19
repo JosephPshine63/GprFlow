@@ -11,6 +11,10 @@ spring:
     name: gateway
   cloud:
     gateway:
+      # auth-service and coin-service add their own CORS headers, so without this
+      # the browser sees each one twice and rejects the response
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
       globalcors:
         cors-configurations:
           '[/**]':
