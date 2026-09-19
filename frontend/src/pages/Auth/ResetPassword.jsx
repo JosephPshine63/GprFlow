@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { i18nResolver } from "@/i18n/resolver";
 import { useDispatch } from "react-redux";
 import { verifyResetPassowrdOTP } from "@/Redux/Auth/Action";
 import { resetPasswordSchema } from "@/Util/passwordSchema";
@@ -25,12 +26,13 @@ import {
 } from "@/components/ui/input-otp";
 
 const ResetPasswordForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { session } = useParams();
   const [error, setError] = useState(null);
   const form = useForm({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: i18nResolver(resetPasswordSchema),
     defaultValues: { confirmPassword: "", password: "", otp: "" },
   });
 
@@ -52,11 +54,11 @@ const ResetPasswordForm = () => {
 
   return (
     <AuthLayout
-      title="Reimposta la password"
-      subtitle="Inserisci il codice ricevuto via email e scegli una nuova password."
+      title={t("auth.reset.title")}
+      subtitle={t("auth.reset.subtitle")}
       footer={
         <Link to="/signin" className="font-semibold text-primary hover:underline">
-          Torna al login
+          {t("common.backToLogin")}
         </Link>
       }
     >
@@ -68,7 +70,7 @@ const ResetPasswordForm = () => {
             name="otp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Codice di verifica</FormLabel>
+                <FormLabel>{t("auth.fields.verificationCode")}</FormLabel>
                 <FormControl>
                   <InputOTP {...field} maxLength={6}>
                     <InputOTPGroup>
@@ -98,9 +100,9 @@ const ResetPasswordForm = () => {
                     {...field}
                     type="password"
                     autoComplete="new-password"
-                    aria-label="Nuova password"
+                    aria-label={t("auth.fields.newPassword")}
                     className="h-11"
-                    placeholder="Nuova password"
+                    placeholder={t("auth.fields.newPassword")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -117,16 +119,16 @@ const ResetPasswordForm = () => {
                     {...field}
                     type="password"
                     autoComplete="new-password"
-                    aria-label="Conferma password"
+                    aria-label={t("auth.fields.confirmPassword")}
                     className="h-11"
-                    placeholder="Conferma password"
+                    placeholder={t("auth.fields.confirmPassword")}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <SubmitButton loading={form.formState.isSubmitting}>Cambia password</SubmitButton>
+          <SubmitButton loading={form.formState.isSubmitting}>{t("auth.reset.submit")}</SubmitButton>
         </form>
       </Form>
     </AuthLayout>

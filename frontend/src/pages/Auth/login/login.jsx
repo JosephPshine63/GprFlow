@@ -2,7 +2,8 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { i18nResolver } from "@/i18n/resolver";
 import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/Redux/Auth/Action";
@@ -19,16 +20,17 @@ import SubmitButton from "@/components/custome/SubmitButton";
 import TurnstileWidget from "@/components/custome/TurnstileWidget";
 
 const formSchema = z.object({
-  email: z.string().email("Indirizzo email non valido"),
-  password: z.string().min(8, "La password deve avere almeno 8 caratteri"),
+  email: z.string().email("validation.emailInvalid"),
+  password: z.string().min(8, "validation.passwordMin"),
 });
 
 const LoginForm = ({ error }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector((store) => store.auth.loading);
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: i18nResolver(formSchema),
     defaultValues: { email: "", password: "" },
   });
 
@@ -57,9 +59,9 @@ const LoginForm = ({ error }) => {
                   {...field}
                   type="email"
                   autoComplete="email"
-                  aria-label="Email"
+                  aria-label={t("auth.fields.email")}
                   className="h-11"
-                  placeholder="Email"
+                  placeholder={t("auth.fields.email")}
                 />
               </FormControl>
               <FormMessage />
@@ -76,9 +78,9 @@ const LoginForm = ({ error }) => {
                   {...field}
                   type="password"
                   autoComplete="current-password"
-                  aria-label="Password"
+                  aria-label={t("auth.fields.password")}
                   className="h-11"
-                  placeholder="Password"
+                  placeholder={t("auth.fields.password")}
                 />
               </FormControl>
               <FormMessage />
@@ -90,11 +92,11 @@ const LoginForm = ({ error }) => {
             to="/forgot-password"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            Password dimenticata?
+            {t("auth.login.forgot")}
           </Link>
         </div>
         <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setCaptchaError} />
-        <SubmitButton loading={loading} disabled={!captcha}>Accedi</SubmitButton>
+        <SubmitButton loading={loading} disabled={!captcha}>{t("auth.login.submit")}</SubmitButton>
       </form>
     </Form>
   );

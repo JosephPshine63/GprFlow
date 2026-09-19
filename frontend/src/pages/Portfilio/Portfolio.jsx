@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -46,6 +47,7 @@ const AssetCell = ({ coin }) => (
 );
 
 const Portfolio = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("assets");
@@ -63,15 +65,15 @@ const Portfolio = () => {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold md:text-3xl">Portfolio</h1>
-        <p className="text-sm text-muted-foreground">I tuoi asset e lo storico degli ordini.</p>
+        <h1 className="text-2xl font-semibold md:text-3xl">{t("portfolio.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("portfolio.subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-        <Stat label="Valore degli asset">
+        <Stat label={t("portfolio.assetValue")}>
           {hydrating ? <Skeleton className="h-8 w-28" /> : formatCurrency(summary.invested)}
         </Stat>
-        <Stat label="Profitto/Perdita">
+        <Stat label={t("portfolio.pnl")}>
           {hydrating ? (
             <Skeleton className="h-8 w-28" />
           ) : (
@@ -91,18 +93,18 @@ const Portfolio = () => {
           )}
         </Stat>
         <div className="col-span-2 md:col-span-1">
-          <Stat label="Asset posseduti">
+          <Stat label={t("portfolio.assetsOwned")}>
             {hydrating ? <Skeleton className="h-8 w-12" /> : assets.length}
           </Stat>
         </div>
       </div>
 
-      <div className="flex gap-2" role="group" aria-label="Sezione">
+      <div className="flex gap-2" role="group" aria-label={t("portfolio.section")}>
         <Chip active={tab === "assets"} onClick={() => setTab("assets")}>
-          Asset
+          {t("portfolio.tabAssets")}
         </Chip>
         <Chip active={tab === "history"} onClick={() => setTab("history")}>
-          Storico
+          {t("portfolio.tabHistory")}
         </Chip>
       </div>
 
@@ -116,13 +118,13 @@ const Portfolio = () => {
         </div>
       ) : error && assets.length === 0 ? (
         <div className="surface">
-          <EmptyState icon={PieChart} title="Impossibile caricare gli asset" description={error}>
+          <EmptyState icon={PieChart} title={t("portfolio.loadFailed")} description={error}>
             <button
               type="button"
               onClick={() => dispatch(getUserAssets())}
               className="btn-brand h-11"
             >
-              Riprova
+              {t("portfolio.retry")}
             </button>
           </EmptyState>
         </div>
@@ -130,11 +132,11 @@ const Portfolio = () => {
         <div className="surface">
           <EmptyState
             icon={PieChart}
-            title="Nessun asset"
-            description="Acquista la tua prima moneta per vederla nel portfolio."
+            title={t("portfolio.emptyTitle")}
+            description={t("portfolio.emptyBody")}
           >
             <button type="button" onClick={() => navigate("/")} className="btn-brand h-11">
-              Esplora i mercati
+              {t("portfolio.explore")}
             </button>
           </EmptyState>
         </div>
@@ -144,12 +146,12 @@ const Portfolio = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Asset</TableHead>
-                  <TableHead className="text-right">Prezzo</TableHead>
-                  <TableHead className="text-right">Quantità</TableHead>
-                  <TableHead className="text-right">24h</TableHead>
-                  <TableHead className="text-right">Profitto/Perdita</TableHead>
-                  <TableHead className="text-right">Valore</TableHead>
+                  <TableHead>{t("portfolio.asset")}</TableHead>
+                  <TableHead className="text-right">{t("portfolio.price")}</TableHead>
+                  <TableHead className="text-right">{t("portfolio.quantity")}</TableHead>
+                  <TableHead className="text-right">{t("portfolio.change24h")}</TableHead>
+                  <TableHead className="text-right">{t("portfolio.pnl")}</TableHead>
+                  <TableHead className="text-right">{t("portfolio.value")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -195,17 +197,17 @@ const Portfolio = () => {
                   <PriceChange value={item.coin.price_change_percentage_24h} />
                 </div>
                 <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                  <dt className="text-muted-foreground">Prezzo</dt>
+                  <dt className="text-muted-foreground">{t("portfolio.price")}</dt>
                   <dd className="text-right tabular-nums">
                     {formatCurrency(item.coin.current_price)}
                   </dd>
-                  <dt className="text-muted-foreground">Quantità</dt>
+                  <dt className="text-muted-foreground">{t("portfolio.quantity")}</dt>
                   <dd className="text-right tabular-nums">{formatNumber(item.quantity)}</dd>
-                  <dt className="text-muted-foreground">Profitto/Perdita</dt>
+                  <dt className="text-muted-foreground">{t("portfolio.pnl")}</dt>
                   <dd className="text-right">
                     <Pnl pnl={assetPnl(item)} />
                   </dd>
-                  <dt className="text-muted-foreground">Valore</dt>
+                  <dt className="text-muted-foreground">{t("portfolio.value")}</dt>
                   <dd className="text-right font-medium tabular-nums">
                     {formatCurrency(item.coin.current_price * item.quantity)}
                   </dd>

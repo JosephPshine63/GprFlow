@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '@/i18n';
 
 // window.__RUNTIME_CONFIG__ is injected at container start (Phase 2 Docker
 // entrypoint) so one built image can point at different backends without
@@ -12,5 +13,11 @@ const api = axios.create({
 });
 
 api.defaults.headers.post['Content-Type'] = 'application/json';
+
+// The backend localizes emails and chatbot replies from this header.
+api.interceptors.request.use((config) => {
+  config.headers['Accept-Language'] = i18n.language;
+  return config;
+});
 
 export default api;

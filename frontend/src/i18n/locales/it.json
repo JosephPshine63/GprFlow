@@ -1,0 +1,534 @@
+{
+  "language": {
+    "change": "Cambia lingua"
+  },
+  "common": {
+    "close": "Chiudi",
+    "genericError": "Si è verificato un errore.",
+    "backToHome": "Torna alla Home",
+    "backToLogin": "Torna al login"
+  },
+  "nav": {
+    "home": "Home",
+    "portfolio": "Portfolio",
+    "watchlist": "Watchlist",
+    "activity": "Attività",
+    "wallet": "Wallet",
+    "paymentDetails": "Dati di pagamento",
+    "withdrawal": "Prelievi",
+    "profile": "Profilo",
+    "admin": "Admin",
+    "adminWithdrawals": "Admin prelievi",
+    "more": "Altro",
+    "menu": "Menu",
+    "main": "Navigazione principale",
+    "logout": "Esci",
+    "userMenu": "Menu utente",
+    "searchCoin": "Cerca una moneta"
+  },
+  "theme": {
+    "toLight": "Passa al tema chiaro",
+    "toDark": "Passa al tema scuro"
+  },
+  "status": {
+    "PENDING": "In attesa",
+    "SUCCESS": "Completato",
+    "DECLINE": "Rifiutato"
+  },
+  "banner": {
+    "label": "Avviso ambiente demo",
+    "title": "Ambiente demo.",
+    "body": "GprFlow è un'app dimostrativa creata per portfolio e CV: è tutto in sandbox, non si può fare trading con denaro reale né eseguire prelievi (payout) o altre operazioni reali.",
+    "dismiss": "Chiudi l'avviso"
+  },
+  "errorBoundary": {
+    "title": "Qualcosa è andato storto",
+    "body": "Si è verificato un errore imprevisto. Ricarica la pagina per riprovare.",
+    "reload": "Ricarica"
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "body": "L'indirizzo non esiste o la pagina è stata spostata."
+  },
+  "turnstile": {
+    "failed": "Verifica anti-bot non riuscita, riprova.",
+    "loadFailed": "Impossibile caricare la verifica anti-bot."
+  },
+  "auth": {
+    "layout": {
+      "headline": "Fai crescere il tuo portafoglio crypto.",
+      "highlight1": "Mercati e grafici in tempo reale",
+      "highlight2": "Ordini di acquisto e vendita immediati",
+      "highlight3": "Verifica in due passaggi sul tuo account"
+    },
+    "login": {
+      "title": "Bentornato",
+      "subtitle": "Accedi per gestire il tuo portafoglio.",
+      "submit": "Accedi",
+      "noAccount": "Non hai un account?",
+      "signupLink": "Registrati",
+      "forgot": "Password dimenticata?"
+    },
+    "signup": {
+      "title": "Crea il tuo account",
+      "subtitle": "Inizia a fare trading in pochi minuti.",
+      "submit": "Registrati",
+      "haveAccount": "Hai già un account?",
+      "loginLink": "Accedi",
+      "passwordPlaceholder": "Password (minimo 8 caratteri)"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "fullName": "Nome e cognome",
+      "newPassword": "Nuova password",
+      "confirmPassword": "Conferma password",
+      "verificationCode": "Codice di verifica"
+    },
+    "forgot": {
+      "title": "Recupera la password",
+      "subtitle": "Ti invieremo un codice via email per reimpostarla.",
+      "submit": "Invia codice"
+    },
+    "reset": {
+      "title": "Reimposta la password",
+      "subtitle": "Inserisci il codice ricevuto via email e scegli una nuova password.",
+      "submit": "Cambia password"
+    },
+    "twoFactor": {
+      "title": "Verifica in due passaggi",
+      "subtitle": "Inserisci il codice a 6 cifre che ti abbiamo inviato via email.",
+      "submit": "Verifica"
+    },
+    "passwordUpdated": {
+      "title": "Password aggiornata",
+      "subtitle": "La tua password è stata cambiata con successo.",
+      "toLogin": "Vai al login"
+    }
+  },
+  "validation": {
+    "emailInvalid": "Indirizzo email non valido",
+    "passwordMin": "La password deve avere almeno 8 caratteri",
+    "passwordConfirm": "Conferma la password",
+    "otpLength": "Il codice deve avere 6 cifre",
+    "passwordMismatch": "Le password non coincidono",
+    "nameRequired": "Il nome è obbligatorio"
+  },
+  "home": {
+    "greeting": "Ciao, {{name}}",
+    "dashboard": "Dashboard",
+    "subtitle": "Panoramica del tuo portafoglio e dei mercati.",
+    "totalBalance": "Saldo totale",
+    "last24h": "ultime 24h",
+    "available": "Disponibile",
+    "invested": "Investito",
+    "deposit": "Deposita",
+    "viewPortfolio": "Vedi portfolio",
+    "movers": "Movers 24h",
+    "gainers": "In rialzo",
+    "losers": "In ribasso",
+    "markets": "Mercati",
+    "all": "Tutti",
+    "top50": "Top 50",
+    "noMarketData": "Dati di mercato non disponibili",
+    "tryAgainLater": "Riprova tra qualche istante.",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "page": "Pagina {{page}}"
+  },
+  "market": {
+    "coin": "Coin",
+    "price": "Prezzo",
+    "change24h": "24h",
+    "volume": "Volume",
+    "marketCap": "Market cap",
+    "removeFromWatchlist": "Rimuovi {{name}} dalla watchlist",
+    "addToWatchlist": "Aggiungi {{name}} alla watchlist"
+  },
+  "search": {
+    "title": "Cerca",
+    "subtitle": "Trova una moneta per nome o simbolo.",
+    "label": "Cerca una moneta",
+    "placeholder": "Bitcoin, ETH, solana...",
+    "submit": "Cerca",
+    "emptyTitle": "Cerca una moneta",
+    "emptyBody": "Digita il nome o il simbolo, ad esempio bitcoin o eth.",
+    "failed": "Ricerca non riuscita",
+    "retry": "Riprova",
+    "noResults": "Nessun risultato",
+    "noResultsBody": "Nessuna moneta trovata per \"{{term}}\"."
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "subtitle": "Le monete che stai seguendo.",
+    "remove": "Rimuovi {{name}} dalla watchlist",
+    "loadFailed": "Impossibile caricare la watchlist",
+    "retry": "Riprova",
+    "emptyTitle": "Nessuna moneta seguita",
+    "emptyBody": "Aggiungi una moneta ai preferiti per tenerla d'occhio da qui.",
+    "explore": "Esplora i mercati"
+  },
+  "activity": {
+    "title": "Attività",
+    "subtitle": "Tutti i tuoi acquisti e le tue vendite."
+  },
+  "stock": {
+    "unavailable": "Moneta non disponibile",
+    "unavailableBody": "Non è stato possibile caricare i dati di questa moneta. Riprova tra qualche istante.",
+    "retry": "Riprova",
+    "trade": "Fai trading",
+    "order": "Ordine",
+    "orderSymbol": "Ordine {{symbol}}",
+    "orderHint": "Acquista o vendi a prezzo di mercato.",
+    "stats": "Statistiche",
+    "marketCap": "Capitalizzazione",
+    "volume24h": "Volume 24h",
+    "high24h": "Massimo 24h",
+    "low24h": "Minimo 24h",
+    "ath": "Massimo storico",
+    "change7d": "Variazione 7g",
+    "change30d": "Variazione 30g",
+    "circulating": "Offerta circolante"
+  },
+  "chart": {
+    "range": "Intervallo",
+    "price": "Prezzo",
+    "ranges": {
+      "1": "1G",
+      "7": "1S",
+      "30": "1M",
+      "90": "3M",
+      "180": "6M",
+      "365": "1A"
+    }
+  },
+  "trade": {
+    "buy": "Acquista",
+    "sell": "Vendi",
+    "orderType": "Tipo di ordine",
+    "amountUsd": "Importo in USD",
+    "price": "Prezzo",
+    "youReceive": "Riceverai",
+    "youSell": "Venderai",
+    "market": "Market",
+    "availableBalance": "Saldo disponibile",
+    "owned": "{{symbol}} posseduti",
+    "submit": "{{action}} {{symbol}}",
+    "errors": {
+      "enterAmount": "Inserisci un importo",
+      "insufficientBalance": "Saldo del wallet insufficiente",
+      "insufficientQuantity": "Quantità disponibile insufficiente",
+      "tooSmall": "Importo troppo piccolo"
+    },
+    "toast": {
+      "bought": "Acquisto completato",
+      "sold": "Vendita completata",
+      "detail": "{{quantity}} {{symbol}} a {{price}}",
+      "failed": "Ordine non eseguito",
+      "retry": "Riprova tra qualche istante."
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "I tuoi asset e lo storico degli ordini.",
+    "assetValue": "Valore degli asset",
+    "pnl": "Profitto/Perdita",
+    "assetsOwned": "Asset posseduti",
+    "section": "Sezione",
+    "tabAssets": "Asset",
+    "tabHistory": "Storico",
+    "loadFailed": "Impossibile caricare gli asset",
+    "retry": "Riprova",
+    "emptyTitle": "Nessun asset",
+    "emptyBody": "Acquista la tua prima moneta per vederla nel portfolio.",
+    "explore": "Esplora i mercati",
+    "asset": "Asset",
+    "price": "Prezzo",
+    "quantity": "Quantità",
+    "change24h": "24h",
+    "value": "Valore"
+  },
+  "history": {
+    "loadFailed": "Impossibile caricare lo storico",
+    "retry": "Riprova",
+    "emptyTitle": "Nessun ordine",
+    "emptyBody": "Quando acquisti o vendi un asset, l'ordine compare qui.",
+    "date": "Data",
+    "asset": "Asset",
+    "type": "Tipo",
+    "quantity": "Quantità",
+    "price": "Prezzo",
+    "total": "Totale",
+    "pnl": "Profitto/Perdita",
+    "types": {
+      "BUY": "Acquisto",
+      "SELL": "Vendita"
+    }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "loadFailed": "Impossibile caricare il wallet",
+    "retry": "Riprova",
+    "balanceLabel": "Saldo",
+    "availableBalance": "Saldo disponibile",
+    "refresh": "Aggiorna saldo e movimenti",
+    "id": "ID wallet {{id}}",
+    "copyId": "Copia ID wallet",
+    "idCopied": "ID wallet copiato",
+    "copyFailed": "Copia non riuscita",
+    "depositFailed": "Deposito non completato",
+    "actions": {
+      "topup": "Deposita",
+      "withdraw": "Preleva",
+      "transfer": "Trasferisci"
+    },
+    "dialogs": {
+      "topup": {
+        "title": "Deposita fondi",
+        "description": "Ricarica il wallet con carta tramite Stripe."
+      },
+      "withdraw": {
+        "title": "Richiedi un prelievo",
+        "description": "Il prelievo viene accreditato sul tuo conto dopo l'approvazione."
+      },
+      "transfer": {
+        "title": "Trasferisci a un altro wallet",
+        "description": "Invia dollari al wallet di un altro utente."
+      }
+    },
+    "transactions": "Movimenti",
+    "noTransactions": "Nessun movimento",
+    "noTransactionsBody": "Depositi, prelievi e trasferimenti compariranno qui.",
+    "transactionTypes": {
+      "ADD_MONEY": "Deposito",
+      "WITHDRAWAL": "Prelievo",
+      "WALLET_TRANSFER": "Trasferimento",
+      "BUY_ASSET": "Acquisto",
+      "SELL_ASSET": "Vendita",
+      "other": "Movimento"
+    }
+  },
+  "topup": {
+    "testMode": "Modalità test",
+    "testModeBody": "Nessun addebito reale. Su Stripe usa questa carta, con una scadenza futura e un CVC qualsiasi.",
+    "copied": "Copiato",
+    "copy": "Copia",
+    "amountUsd": "Importo in USD",
+    "invalid": "Inserisci un importo intero maggiore di zero",
+    "hint": "Importi interi, in dollari.",
+    "method": "Metodo di pagamento",
+    "submit": "Procedi al pagamento"
+  },
+  "transfer": {
+    "amountUsd": "Importo in USD",
+    "available": "Disponibile: {{amount}}",
+    "recipient": "ID wallet destinatario",
+    "recipientPlaceholder": "Es. 12",
+    "purpose": "Causale (facoltativa)",
+    "purposePlaceholder": "Es. regalo",
+    "submit": "Invia",
+    "errors": {
+      "wholeAmount": "Inserisci un importo intero maggiore di zero",
+      "insufficient": "Saldo del wallet insufficiente",
+      "idNumeric": "L'ID wallet è numerico",
+      "self": "Non puoi trasferire al tuo stesso wallet"
+    },
+    "toast": {
+      "title": "Trasferimento inviato",
+      "description": "{{amount}} al wallet {{wallet}}"
+    }
+  },
+  "payout": {
+    "methods": {
+      "BANK_TRANSFER": "Bonifico bancario",
+      "CARD": "Carta"
+    },
+    "otherCountry": "Altro paese",
+    "accountNumber": "Numero di conto",
+    "accountNumberOrIban": "Numero di conto o IBAN",
+    "accountPlaceholderOther": "Numero di conto",
+    "ifscCode": "Codice IFSC",
+    "bankCode": "Codice banca",
+    "bic": "Codice SWIFT/BIC",
+    "bicOptional": "Codice SWIFT/BIC (facoltativo)",
+    "digitsPlaceholder": "9 cifre",
+    "rows": {
+      "method": "Metodo",
+      "holder": "Intestatario",
+      "card": "Carta",
+      "country": "Paese"
+    },
+    "errors": {
+      "accountDigits": "Il numero di conto deve avere da {{min}} a {{max}} cifre",
+      "ibanInvalid": "IBAN non valido",
+      "ibanCountry": "L'IBAN non corrisponde al paese scelto",
+      "ibanChecksum": "IBAN non valido, controlla le cifre",
+      "routing": "Il routing number ha 9 cifre",
+      "sortCode": "Il sort code ha 6 cifre",
+      "ifsc": "Il codice IFSC ha 11 caratteri",
+      "bsb": "Il BSB ha 6 cifre",
+      "accountLength": "Il numero di conto deve avere da 4 a 34 caratteri",
+      "holderRequired": "Inserisci l'intestatario",
+      "bankRequired": "Inserisci il nome della banca",
+      "enterIban": "Inserisci l'IBAN",
+      "enterAccount": "Inserisci il numero di conto",
+      "mismatch": "I valori non coincidono",
+      "enterCode": "Inserisci {{label}}",
+      "bicRequired": "Per questo paese serve il codice SWIFT/BIC",
+      "bicInvalid": "Codice SWIFT/BIC non valido",
+      "cardInvalid": "Numero di carta non valido"
+    }
+  },
+  "paymentDetails": {
+    "title": "Dati di pagamento",
+    "methodFor": "Metodo per i prelievi",
+    "emptyTitle": "Nessun metodo collegato",
+    "emptyBody": "Aggiungi un conto bancario o una carta per poter richiedere i prelievi.",
+    "add": "Aggiungi dati di pagamento",
+    "dialogDescription": "Dove vengono accreditati i prelievi.",
+    "saved": "Dati di pagamento salvati",
+    "payoutMethod": "Metodo di payout",
+    "cardHolder": "Intestatario della carta",
+    "accountHolder": "Intestatario del conto",
+    "holderPlaceholder": "Mario Rossi",
+    "cardNumber": "Numero di carta",
+    "cardNote": "Salviamo solo il circuito e le ultime 4 cifre, mai il numero completo.",
+    "country": "Paese del conto",
+    "bankName": "Nome della banca",
+    "confirm": "Conferma {{label}}",
+    "repeat": "Ripeti il valore",
+    "save": "Salva"
+  },
+  "withdraw": {
+    "needMethod": "Serve un metodo di pagamento",
+    "needMethodBody": "Aggiungi un conto bancario o una carta per poter richiedere un prelievo.",
+    "addDetails": "Aggiungi dati di pagamento",
+    "wholeAmount": "Inserisci un importo intero maggiore di zero",
+    "insufficient": "Saldo del wallet insufficiente",
+    "toast": {
+      "title": "Richiesta di prelievo inviata",
+      "description": "{{amount}} in attesa di approvazione"
+    },
+    "available": "Saldo disponibile",
+    "amountLabel": "Importo da prelevare (USD)",
+    "max": "Max",
+    "creditTo": "Accredito su",
+    "submit": "Preleva"
+  },
+  "withdrawals": {
+    "title": "Prelievi",
+    "request": "Richiedi un prelievo dal wallet",
+    "loadFailed": "Impossibile caricare i prelievi",
+    "emptyTitle": "Nessun prelievo",
+    "emptyBody": "Le richieste di prelievo che fai dal wallet compariranno qui.",
+    "date": "Data",
+    "amount": "Importo",
+    "status": "Stato"
+  },
+  "payment": {
+    "success": {
+      "title": "Deposito completato",
+      "body": "I fondi sono stati aggiunti al tuo wallet.",
+      "balance": "Saldo attuale",
+      "toWallet": "Vai al wallet"
+    },
+    "cancel": {
+      "title": "Pagamento annullato",
+      "body": "Non è stato addebitato nulla. Puoi riprovare quando vuoi.",
+      "toWallet": "Torna al wallet"
+    }
+  },
+  "profile": {
+    "title": "Profilo",
+    "roles": {
+      "ROLE_ADMIN": "Amministratore",
+      "ROLE_USER": "Utente"
+    },
+    "rows": {
+      "name": "Nome",
+      "email": "Email",
+      "role": "Ruolo"
+    },
+    "security": "Sicurezza",
+    "twoFactorOn": "2FA attiva",
+    "twoFactorOff": "2FA non attiva",
+    "twoFactorOnBody": "Al login ti chiediamo anche un codice inviato via email.",
+    "twoFactorOffBody": "Aggiungi un codice via email al login per proteggere meglio il tuo account.",
+    "enableTwoFactor": "Attiva verifica in due passaggi",
+    "changePassword": "Cambia password",
+    "accountStatus": "Stato account",
+    "verified": "Verificato",
+    "unverified": "Da verificare",
+    "verifiedBody": "La tua email è verificata.",
+    "unverifiedBody": "Verifica la tua email con un codice a 6 cifre.",
+    "verifyAccount": "Verifica account",
+    "twoFactorDialog": {
+      "title": "Verifica in due passaggi",
+      "description": "Conferma la tua email per attivarla."
+    },
+    "passwordDialog": {
+      "title": "Cambia password",
+      "description": "Ti inviamo un codice via email per confermare il cambio."
+    },
+    "verifyDialog": {
+      "title": "Verifica account",
+      "description": "Conferma che l'email è tua."
+    },
+    "toast": {
+      "twoFactorEnabled": "Verifica in due passaggi attivata",
+      "accountVerified": "Account verificato",
+      "passwordUpdated": "Password aggiornata"
+    }
+  },
+  "otp": {
+    "sendTo": "Invieremo un codice a {{length}} cifre a",
+    "enterCode": "Inserisci il codice che abbiamo inviato a",
+    "send": "Invia codice",
+    "confirm": "Conferma",
+    "resend": "Invia di nuovo il codice"
+  },
+  "chat": {
+    "label": "Assistente crypto",
+    "title": "Assistente",
+    "close": "Chiudi assistente",
+    "open": "Apri assistente",
+    "openUnread_one": "Apri assistente, {{count}} nuovo messaggio",
+    "openUnread_other": "Apri assistente, {{count}} nuovi messaggi",
+    "greeting": "Ciao, chiedimi prezzi, market cap e altro sulle crypto.",
+    "greetingNamed": "Ciao {{name}}, chiedimi prezzi, market cap e altro sulle crypto.",
+    "about": "GprFlow è un progetto dimostrativo sviluppato da {{developer}}. Se ti interessa il lavoro, scrivimi:",
+    "typing": "L'assistente sta scrivendo",
+    "error": "L'assistente non risponde in questo momento. Riprova tra poco.",
+    "placeholder": "Scrivi una domanda",
+    "message": "Messaggio",
+    "send": "Invia"
+  },
+  "admin": {
+    "title": "Richieste di prelievo",
+    "noPending": "Nessuna richiesta in attesa.",
+    "pending_one": "{{count}} richiesta in attesa.",
+    "pending_other": "{{count}} richieste in attesa.",
+    "filterLabel": "Filtra per stato",
+    "filters": {
+      "ALL": "Tutte",
+      "PENDING": "In attesa",
+      "SUCCESS": "Completate",
+      "DECLINE": "Rifiutate"
+    },
+    "manage": "Gestisci",
+    "accept": "Accetta",
+    "decline": "Rifiuta",
+    "accepted": "Prelievo accettato",
+    "declined": "Prelievo rifiutato",
+    "failed": "Operazione non riuscita",
+    "loadFailed": "Impossibile caricare le richieste",
+    "retry": "Riprova",
+    "emptyTitle": "Nessuna richiesta",
+    "emptyAll": "Le richieste di prelievo degli utenti compariranno qui.",
+    "emptyFiltered": "Nessuna richiesta con questo stato.",
+    "date": "Data",
+    "user": "Utente",
+    "amount": "Importo",
+    "status": "Stato"
+  }
+}

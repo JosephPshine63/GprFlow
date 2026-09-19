@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -12,6 +13,7 @@ import EmptyState from "@/components/custome/EmptyState";
 const MAX_RESULTS = 30;
 
 const SearchCoin = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { searchCoinList, loading, error } = useSelector((store) => store.coin);
   const [keyword, setKeyword] = useState("");
@@ -33,8 +35,8 @@ const SearchCoin = () => {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold md:text-3xl">Cerca</h1>
-        <p className="text-sm text-muted-foreground">Trova una moneta per nome o simbolo.</p>
+        <h1 className="text-2xl font-semibold md:text-3xl">{t("search.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("search.subtitle")}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2" role="search">
@@ -48,13 +50,13 @@ const SearchCoin = () => {
             autoFocus
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            aria-label="Cerca una moneta"
-            placeholder="Bitcoin, ETH, solana..."
+            aria-label={t("search.label")}
+            placeholder={t("search.placeholder")}
             className="h-11 pl-10"
           />
         </div>
         <button type="submit" disabled={!keyword.trim()} className="btn-brand h-11 px-5">
-          Cerca
+          {t("search.submit")}
         </button>
       </form>
 
@@ -62,8 +64,8 @@ const SearchCoin = () => {
         {!submitted ? (
           <EmptyState
             icon={SearchIcon}
-            title="Cerca una moneta"
-            description="Digita il nome o il simbolo, ad esempio bitcoin o eth."
+            title={t("search.emptyTitle")}
+            description={t("search.emptyBody")}
           />
         ) : loading ? (
           <div className="space-y-3 p-5">
@@ -72,16 +74,16 @@ const SearchCoin = () => {
             ))}
           </div>
         ) : error ? (
-          <EmptyState icon={SearchX} title="Ricerca non riuscita" description={error}>
+          <EmptyState icon={SearchX} title={t("search.failed")} description={error}>
             <button type="button" onClick={() => run(submitted)} className="btn-brand h-11">
-              Riprova
+              {t("search.retry")}
             </button>
           </EmptyState>
         ) : results.length === 0 ? (
           <EmptyState
             icon={SearchX}
-            title="Nessun risultato"
-            description={`Nessuna moneta trovata per "${submitted}".`}
+            title={t("search.noResults")}
+            description={t("search.noResultsBody", { term: submitted })}
           />
         ) : (
           <ul className="divide-y">

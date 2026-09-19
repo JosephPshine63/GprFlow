@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import { parseWholeAmount } from "@/Util/amount";
 import { formatCurrency } from "@/Util/format";
 
 const WithdrawForm = ({ onDone }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -27,8 +29,8 @@ const WithdrawForm = ({ onDone }) => {
     return (
       <EmptyState
         icon={Landmark}
-        title="Serve un metodo di pagamento"
-        description="Aggiungi un conto bancario o una carta per poter richiedere un prelievo."
+        title={t("withdraw.needMethod")}
+        description={t("withdraw.needMethodBody")}
         className="py-6"
       >
         <button
@@ -39,7 +41,7 @@ const WithdrawForm = ({ onDone }) => {
           }}
           className="btn-brand h-11"
         >
-          Aggiungi dati di pagamento
+          {t("withdraw.addDetails")}
         </button>
       </EmptyState>
     );
@@ -53,9 +55,9 @@ const WithdrawForm = ({ onDone }) => {
     amount === ""
       ? null
       : !(value > 0)
-        ? "Inserisci un importo intero maggiore di zero"
+        ? t("withdraw.wholeAmount")
         : value > balance
-          ? "Saldo del wallet insufficiente"
+          ? t("withdraw.insufficient")
           : null;
   const ready = value > 0 && !problem;
 
@@ -69,8 +71,8 @@ const WithdrawForm = ({ onDone }) => {
       dispatch(getUserWallet());
       dispatch(getWalletTransactions());
       toast({
-        title: "Richiesta di prelievo inviata",
-        description: `${formatCurrency(value)} in attesa di approvazione`,
+        title: t("withdraw.toast.title"),
+        description: t("withdraw.toast.description", { amount: formatCurrency(value) }),
       });
       onDone();
     } catch (err) {
@@ -84,7 +86,7 @@ const WithdrawForm = ({ onDone }) => {
       <AuthError error={error} />
 
       <div className="flex items-center justify-between rounded-xl bg-secondary px-4 py-3 text-sm">
-        <span className="text-muted-foreground">Saldo disponibile</span>
+        <span className="text-muted-foreground">{t("withdraw.available")}</span>
         <span className="font-semibold tabular-nums">{formatCurrency(balance)}</span>
       </div>
 
@@ -93,7 +95,7 @@ const WithdrawForm = ({ onDone }) => {
           htmlFor="withdraw-amount"
           className="mb-1.5 block text-xs font-medium text-muted-foreground"
         >
-          Importo da prelevare (USD)
+          {t("withdraw.amountLabel")}
         </label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -118,7 +120,7 @@ const WithdrawForm = ({ onDone }) => {
             disabled={!(balance >= 1)}
             className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/10 disabled:pointer-events-none disabled:opacity-40"
           >
-            Max
+            {t("withdraw.max")}
           </button>
         </div>
         <p
@@ -131,7 +133,7 @@ const WithdrawForm = ({ onDone }) => {
       </div>
 
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">Accredito su</p>
+        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t("withdraw.creditTo")}</p>
         <div className="flex items-center gap-3 rounded-xl border px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
             <PayoutIcon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -151,7 +153,7 @@ const WithdrawForm = ({ onDone }) => {
         className="btn-brand h-12 w-full"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        Preleva {ready && formatCurrency(value)}
+        {t("withdraw.submit")} {ready && formatCurrency(value)}
       </button>
     </form>
   );

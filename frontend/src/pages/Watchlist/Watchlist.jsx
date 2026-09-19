@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +12,9 @@ import PriceChange from "@/components/custome/PriceChange";
 import { formatCompact, formatCurrency } from "@/Util/format";
 
 // The name link stretches over the card, so the remove button has to sit above it.
-const WatchCard = ({ coin, onRemove }) => (
+const WatchCard = ({ coin, onRemove }) => {
+  const { t } = useTranslation();
+  return (
   <div className="surface relative p-4 transition-colors hover:bg-primary/5">
     <div className="flex items-start justify-between gap-3">
       <div className="flex min-w-0 items-center gap-3">
@@ -28,7 +31,7 @@ const WatchCard = ({ coin, onRemove }) => (
       </div>
       <button
         type="button"
-        aria-label={`Rimuovi ${coin.name} dalla watchlist`}
+        aria-label={t("watchlist.remove", { name: coin.name })}
         onClick={() => onRemove(coin.id)}
         className="relative z-10 rounded-full p-2 text-muted-foreground transition-colors hover:bg-down/10 hover:text-down"
       >
@@ -43,18 +46,20 @@ const WatchCard = ({ coin, onRemove }) => (
 
     <dl className="mt-3 grid grid-cols-2 gap-2 border-t pt-3 text-xs">
       <div>
-        <dt className="text-muted-foreground">Volume</dt>
+        <dt className="text-muted-foreground">{t("market.volume")}</dt>
         <dd className="mt-0.5 font-medium tabular-nums">{formatCompact(coin.total_volume)}</dd>
       </div>
       <div>
-        <dt className="text-muted-foreground">Market cap</dt>
+        <dt className="text-muted-foreground">{t("market.marketCap")}</dt>
         <dd className="mt-0.5 font-medium tabular-nums">{formatCompact(coin.market_cap)}</dd>
       </div>
     </dl>
   </div>
-);
+  );
+};
 
 const Watchlist = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items, loading, error } = useSelector((store) => store.watchlist);
@@ -69,8 +74,8 @@ const Watchlist = () => {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold md:text-3xl">Watchlist</h1>
-        <p className="text-sm text-muted-foreground">Le monete che stai seguendo.</p>
+        <h1 className="text-2xl font-semibold md:text-3xl">{t("watchlist.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("watchlist.subtitle")}</p>
       </div>
 
       {hydrating ? (
@@ -81,13 +86,13 @@ const Watchlist = () => {
         </div>
       ) : error && coins.length === 0 ? (
         <div className="surface">
-          <EmptyState icon={Bookmark} title="Impossibile caricare la watchlist" description={error}>
+          <EmptyState icon={Bookmark} title={t("watchlist.loadFailed")} description={error}>
             <button
               type="button"
               onClick={() => dispatch(getUserWatchlist())}
               className="btn-brand h-11"
             >
-              Riprova
+              {t("watchlist.retry")}
             </button>
           </EmptyState>
         </div>
@@ -95,11 +100,11 @@ const Watchlist = () => {
         <div className="surface">
           <EmptyState
             icon={Bookmark}
-            title="Nessuna moneta seguita"
-            description="Aggiungi una moneta ai preferiti per tenerla d'occhio da qui."
+            title={t("watchlist.emptyTitle")}
+            description={t("watchlist.emptyBody")}
           >
             <button type="button" onClick={() => navigate("/")} className="btn-brand h-11">
-              Esplora i mercati
+              {t("watchlist.explore")}
             </button>
           </EmptyState>
         </div>

@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import {
@@ -16,6 +17,7 @@ import { formatCompact, formatCurrency } from "@/Util/format";
 import { cn } from "@/lib/utils";
 
 const MarketTable = ({ coins, favorites, onToggleFavorite, loading }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -24,12 +26,12 @@ const MarketTable = ({ coins, favorites, onToggleFavorite, loading }) => {
         <TableRow className="hover:bg-transparent">
           <TableHead className="w-8 px-2 sm:w-10 sm:px-4" />
           <TableHead className="hidden w-10 text-center sm:table-cell">#</TableHead>
-          <TableHead className="px-2 sm:px-4">Coin</TableHead>
-          <TableHead className="px-2 text-right sm:px-4">Prezzo</TableHead>
-          <TableHead className="px-2 text-right sm:px-4">24h</TableHead>
-          <TableHead className="hidden text-right md:table-cell">Volume</TableHead>
+          <TableHead className="px-2 sm:px-4">{t("market.coin")}</TableHead>
+          <TableHead className="px-2 text-right sm:px-4">{t("market.price")}</TableHead>
+          <TableHead className="px-2 text-right sm:px-4">{t("market.change24h")}</TableHead>
+          <TableHead className="hidden text-right md:table-cell">{t("market.volume")}</TableHead>
           <TableHead className="hidden text-right lg:table-cell">
-            Market cap
+            {t("market.marketCap")}
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -56,8 +58,8 @@ const MarketTable = ({ coins, favorites, onToggleFavorite, loading }) => {
                   type="button"
                   aria-label={
                     favorite
-                      ? `Rimuovi ${item.name} dalla watchlist`
-                      : `Aggiungi ${item.name} alla watchlist`
+                      ? t("market.removeFromWatchlist", { name: item.name })
+                      : t("market.addToWatchlist", { name: item.name })
                   }
                   aria-pressed={favorite}
                   onClick={(e) => {

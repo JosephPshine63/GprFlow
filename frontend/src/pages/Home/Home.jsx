@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, AlertCircle, TrendingDown, TrendingUp } from "lucide-react";
@@ -21,6 +22,7 @@ import StockChart from "../StockDetails/StockChart";
 import MarketTable from "./MarketTable";
 
 const Home = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -73,17 +75,17 @@ const Home = () => {
     <div className="mx-auto max-w-7xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold md:text-3xl">
-          {firstName ? `Ciao, ${firstName}` : "Dashboard"}
+          {firstName ? t("home.greeting", { name: firstName }) : t("home.dashboard")}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Panoramica del tuo portafoglio e dei mercati.
+          {t("home.subtitle")}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <section className="relative overflow-hidden rounded-2xl bg-brand p-6 text-white">
-            <p className="text-sm font-medium text-white/80">Saldo totale</p>
+            <p className="text-sm font-medium text-white/80">{t("home.totalBalance")}</p>
             {hydrating ? (
               <Skeleton className="mt-2 h-10 w-56 bg-white/20" />
             ) : (
@@ -99,19 +101,19 @@ const Home = () => {
                   <TrendingDown className="h-4 w-4" strokeWidth={1.75} />
                 )}
                 {formatCurrency(summary.change24h)} ({formatPercent(summary.changePct)})
-                <span className="text-white/70">ultime 24h</span>
+                <span className="text-white/70">{t("home.last24h")}</span>
               </p>
             )}
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="rounded-xl bg-white/10 p-3">
-                <p className="text-xs text-white/70">Disponibile</p>
+                <p className="text-xs text-white/70">{t("home.available")}</p>
                 <p className="font-semibold tabular-nums">
                   {hydrating ? "-" : formatCurrency(Number(wallet.userWallet.balance))}
                 </p>
               </div>
               <div className="rounded-xl bg-white/10 p-3">
-                <p className="text-xs text-white/70">Investito</p>
+                <p className="text-xs text-white/70">{t("home.invested")}</p>
                 <p className="font-semibold tabular-nums">
                   {hydrating ? "-" : formatCurrency(summary.invested)}
                 </p>
@@ -123,14 +125,14 @@ const Home = () => {
                 onClick={() => navigate("/wallet")}
                 className="rounded-xl bg-white text-[#2F3195] hover:bg-white/90"
               >
-                Deposita
+                {t("home.deposit")}
               </Button>
               <Button
                 onClick={() => navigate("/portfolio")}
                 variant="ghost"
                 className="rounded-xl text-white hover:bg-white/15 hover:text-white"
               >
-                Vedi portfolio
+                {t("home.viewPortfolio")}
               </Button>
             </div>
           </section>
@@ -160,13 +162,13 @@ const Home = () => {
         </div>
 
         <section className="surface h-fit p-5">
-          <h2 className="text-lg font-bold">Movers 24h</h2>
+          <h2 className="text-lg font-bold">{t("home.movers")}</h2>
           <div className="mt-3 flex gap-2">
             <Chip active={moversTab === "gainers"} onClick={() => setMoversTab("gainers")}>
-              In rialzo
+              {t("home.gainers")}
             </Chip>
             <Chip active={moversTab === "losers"} onClick={() => setMoversTab("losers")}>
-              In ribasso
+              {t("home.losers")}
             </Chip>
           </div>
           <ul className="mt-4 divide-y">
@@ -202,13 +204,13 @@ const Home = () => {
 
       <section className="surface overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 p-5 pb-3">
-          <h2 className="text-lg font-bold">Mercati</h2>
+          <h2 className="text-lg font-bold">{t("home.markets")}</h2>
           <div className="flex gap-2">
             <Chip active={category === "all"} onClick={() => setCategory("all")}>
-              Tutti
+              {t("home.all")}
             </Chip>
             <Chip active={category === "top50"} onClick={() => setCategory("top50")}>
-              Top 50
+              {t("home.top50")}
             </Chip>
           </div>
         </div>
@@ -216,9 +218,9 @@ const Home = () => {
         {!coin.loading && coins.length === 0 ? (
           <div className="flex flex-col items-center gap-2 px-5 py-16 text-center">
             <AlertCircle className="h-10 w-10 animate-soft-pulse text-primary" strokeWidth={1.5} />
-            <p className="font-semibold">Dati di mercato non disponibili</p>
+            <p className="font-semibold">{t("home.noMarketData")}</p>
             <p className="text-sm text-muted-foreground">
-              Riprova tra qualche istante.
+              {t("home.tryAgainLater")}
             </p>
           </div>
         ) : (
@@ -239,13 +241,13 @@ const Home = () => {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
             >
               <ChevronLeft className="mr-1 h-4 w-4" strokeWidth={1.75} />
-              Precedente
+              {t("home.previous")}
             </Button>
             <span className="text-sm text-muted-foreground tabular-nums">
-              Pagina {page}
+              {t("home.page", { page })}
             </span>
             <Button variant="ghost" size="sm" onClick={() => setPage((p) => p + 1)}>
-              Successiva
+              {t("home.next")}
               <ChevronRight className="ml-1 h-4 w-4" strokeWidth={1.75} />
             </Button>
           </div>

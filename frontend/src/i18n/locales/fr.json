@@ -1,0 +1,534 @@
+{
+  "language": {
+    "change": "Changer de langue"
+  },
+  "common": {
+    "close": "Fermer",
+    "genericError": "Une erreur s'est produite.",
+    "backToHome": "Retour à la page d'accueil",
+    "backToLogin": "Retour à la page de connexion"
+  },
+  "nav": {
+    "home": "Accueil",
+    "portfolio": "Portefeuille",
+    "watchlist": "Liste de surveillance",
+    "activity": "Activité",
+    "wallet": "Portefeuille",
+    "paymentDetails": "Informations relatives au paiement",
+    "withdrawal": "Retrait",
+    "profile": "Profil",
+    "admin": "Admin",
+    "adminWithdrawals": "Gestion des retraits",
+    "more": "En savoir plus",
+    "menu": "Menu",
+    "main": "Navigation principale",
+    "logout": "Se déconnecter",
+    "userMenu": "Menu utilisateur",
+    "searchCoin": "Rechercher une pièce"
+  },
+  "theme": {
+    "toLight": "Passer au thème clair",
+    "toDark": "Passer au thème sombre"
+  },
+  "status": {
+    "PENDING": "En attente",
+    "SUCCESS": "Terminé",
+    "DECLINE": "Refusé"
+  },
+  "banner": {
+    "label": "Avis concernant l'environnement de démonstration",
+    "title": "Environnement de démonstration.",
+    "body": "GprFlow Il s'agit d'une application de démonstration conçue pour un portfolio et un CV : tout fonctionne dans un environnement isolé, et vous ne pouvez pas effectuer d'opérations avec de l'argent réel, ni procéder à des retraits, ni réaliser aucune autre transaction réelle.",
+    "dismiss": "Fermer la notification"
+  },
+  "errorBoundary": {
+    "title": "Une erreur s'est produite",
+    "body": "Une erreur inattendue s'est produite. Veuillez actualiser la page pour réessayer.",
+    "reload": "Actualiser"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "L'adresse n'existe pas ou la page a été déplacée."
+  },
+  "turnstile": {
+    "failed": "Le contrôle anti-bot a échoué. Veuillez réessayer.",
+    "loadFailed": "Impossible de charger le contrôle anti-bot."
+  },
+  "auth": {
+    "layout": {
+      "headline": "Développez votre portefeuille de cryptomonnaies.",
+      "highlight1": "Cours et graphiques en temps réel",
+      "highlight2": "Ordres d'achat et de vente immédiats",
+      "highlight3": "La vérification en deux étapes sur votre compte"
+    },
+    "login": {
+      "title": "Bon retour parmi nous",
+      "subtitle": "Connectez-vous pour gérer votre portefeuille.",
+      "submit": "Se connecter",
+      "noAccount": "Vous n'avez pas encore de compte ?",
+      "signupLink": "S'inscrire",
+      "forgot": "Vous avez oublié votre mot de passe ?"
+    },
+    "signup": {
+      "title": "Créez votre compte",
+      "subtitle": "Commencez à trader en quelques minutes.",
+      "submit": "S'inscrire",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Se connecter",
+      "passwordPlaceholder": "Mot de passe (au moins 8 caractères)"
+    },
+    "fields": {
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "fullName": "Nom complet",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmez votre mot de passe",
+      "verificationCode": "Code de vérification"
+    },
+    "forgot": {
+      "title": "Récupérer votre mot de passe",
+      "subtitle": "Nous vous enverrons par e-mail un code vous permettant de le réinitialiser.",
+      "submit": "Envoyer le code"
+    },
+    "reset": {
+      "title": "Réinitialiser votre mot de passe",
+      "subtitle": "Saisissez le code que vous avez reçu par e-mail et choisissez un nouveau mot de passe.",
+      "submit": "Modifier le mot de passe"
+    },
+    "twoFactor": {
+      "title": "Authentification en deux étapes",
+      "subtitle": "Veuillez saisir le code à 6 chiffres que nous vous avons envoyé par e-mail.",
+      "submit": "Vérifier"
+    },
+    "passwordUpdated": {
+      "title": "Mot de passe mis à jour",
+      "subtitle": "Votre mot de passe a bien été modifié.",
+      "toLogin": "Accéder à la page de connexion"
+    }
+  },
+  "validation": {
+    "emailInvalid": "Adresse e-mail non valide",
+    "passwordMin": "Le mot de passe doit comporter au moins 8 caractères",
+    "passwordConfirm": "Confirmez le mot de passe",
+    "otpLength": "Le code doit comporter 6 chiffres",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "nameRequired": "Le nom est obligatoire"
+  },
+  "home": {
+    "greeting": "Bonjour, {{name}}",
+    "dashboard": "Tableau de bord",
+    "subtitle": "Aperçu de votre portefeuille et des marchés.",
+    "totalBalance": "Solde total",
+    "last24h": "au cours des dernières 24 heures",
+    "available": "Disponible",
+    "invested": "Investi",
+    "deposit": "Acompte",
+    "viewPortfolio": "Consulter le portfolio",
+    "movers": "Déménageurs 24h/24",
+    "gainers": "Les gagnants",
+    "losers": "Les perdants",
+    "markets": "Marchés",
+    "all": "Tout",
+    "top50": "Top 50",
+    "noMarketData": "Données de marché non disponibles",
+    "tryAgainLater": "Veuillez réessayer dans quelques instants.",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{page}}"
+  },
+  "market": {
+    "coin": "Pièce de monnaie",
+    "price": "Prix",
+    "change24h": "24 h",
+    "volume": "Volume",
+    "marketCap": "Capitalisation boursière",
+    "removeFromWatchlist": "Retirer {{name}} de la liste de surveillance",
+    "addToWatchlist": "Ajoutez « {{name}} » à votre liste de surveillance"
+  },
+  "search": {
+    "title": "Rechercher",
+    "subtitle": "Recherchez une pièce par son nom ou son symbole.",
+    "label": "Rechercher une pièce",
+    "placeholder": "Bitcoin, ETH, Solana…",
+    "submit": "Rechercher",
+    "emptyTitle": "Rechercher une pièce",
+    "emptyBody": "Saisissez un nom ou un symbole, par exemple « bitcoin » ou « eth ».",
+    "failed": "La recherche a échoué",
+    "retry": "Veuillez réessayer",
+    "noResults": "Aucun résultat",
+    "noResultsBody": "Aucune pièce n'a été trouvée pour «{{term}}»."
+  },
+  "watchlist": {
+    "title": "Liste de surveillance",
+    "subtitle": "Les cryptomonnaies que vous suivez.",
+    "remove": "Retirer {{name}} de la liste de surveillance",
+    "loadFailed": "Impossible de charger la liste de suivi",
+    "retry": "Veuillez réessayer",
+    "emptyTitle": "Aucune pièce n'a suivi",
+    "emptyBody": "Ajoutez une cryptomonnaie à vos favoris pour pouvoir la suivre depuis cette page.",
+    "explore": "Découvrez les marchés"
+  },
+  "activity": {
+    "title": "Activité",
+    "subtitle": "Tous vos achats et ventes."
+  },
+  "stock": {
+    "unavailable": "Pièce indisponible",
+    "unavailableBody": "Nous n'avons pas pu charger les données relatives à cette pièce. Veuillez réessayer dans quelques instants.",
+    "retry": "Veuillez réessayer",
+    "trade": "Commerce",
+    "order": "Commande",
+    "orderSymbol": "Commander « {{symbol}} »",
+    "orderHint": "Achetez ou vendez au cours du marché.",
+    "stats": "Statistiques",
+    "marketCap": "Capitalisation boursière",
+    "volume24h": "Volume sur 24 heures",
+    "high24h": "Plus haut sur 24 heures",
+    "low24h": "Plus bas sur 24 heures",
+    "ath": "Record historique",
+    "change7d": "Changement de 7 jours",
+    "change30d": "Variation sur 30 jours",
+    "circulating": "Offre en circulation"
+  },
+  "chart": {
+    "range": "Gamme",
+    "price": "Prix",
+    "ranges": {
+      "1": "1D",
+      "7": "1 W",
+      "30": "1 million",
+      "90": "3M",
+      "180": "6M",
+      "365": "1 an"
+    }
+  },
+  "trade": {
+    "buy": "Acheter",
+    "sell": "Vendre",
+    "orderType": "Type de commande",
+    "amountUsd": "Montant en «USD »",
+    "price": "Prix",
+    "youReceive": "Vous recevrez",
+    "youSell": "Vous vendrez",
+    "market": "Marché",
+    "availableBalance": "Solde disponible",
+    "owned": "{{symbol}} appartenant à",
+    "submit": "{{action}} {{symbol}}",
+    "errors": {
+      "enterAmount": "Veuillez saisir un montant",
+      "insufficientBalance": "Solde insuffisant sur le portefeuille",
+      "insufficientQuantity": "Quantité disponible insuffisante",
+      "tooSmall": "Montant trop faible"
+    },
+    "toast": {
+      "bought": "Achat effectué",
+      "sold": "Vente conclue",
+      "detail": "{{quantity}} {{symbol}} sur {{price}}",
+      "failed": "Ordre non exécuté",
+      "retry": "Veuillez réessayer dans quelques instants."
+    }
+  },
+  "portfolio": {
+    "title": "Portefeuille",
+    "subtitle": "Votre patrimoine et l'historique de vos commandes.",
+    "assetValue": "Valeur des actifs",
+    "pnl": "Résultat net",
+    "assetsOwned": "Actifs détenus",
+    "section": "Section",
+    "tabAssets": "Actifs",
+    "tabHistory": "Histoire",
+    "loadFailed": "Impossible de charger les ressources",
+    "retry": "Veuillez réessayer",
+    "emptyTitle": "Aucun actif",
+    "emptyBody": "Achetez votre première cryptomonnaie pour la voir apparaître dans votre portefeuille.",
+    "explore": "Découvrez les marchés",
+    "asset": "Actif",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "change24h": "24 h",
+    "value": "Valeur"
+  },
+  "history": {
+    "loadFailed": "Impossible de charger l'historique",
+    "retry": "Veuillez réessayer",
+    "emptyTitle": "Aucune commande",
+    "emptyBody": "Lorsque vous achetez ou vendez un actif, l'ordre apparaît ici.",
+    "date": "Date",
+    "asset": "Actif",
+    "type": "Type",
+    "quantity": "Quantité",
+    "price": "Prix",
+    "total": "Total",
+    "pnl": "Résultat net",
+    "types": {
+      "BUY": "Achat",
+      "SELL": "Soldes"
+    }
+  },
+  "wallet": {
+    "title": "Portefeuille",
+    "loadFailed": "Impossible de charger le portefeuille",
+    "retry": "Veuillez réessayer",
+    "balanceLabel": "Solde",
+    "availableBalance": "Solde disponible",
+    "refresh": "Actualiser le solde et les opérations",
+    "id": "Identifiant du portefeuille {{id}}",
+    "copyId": "Copier l'identifiant du portefeuille",
+    "idCopied": "L'identifiant du portefeuille a été copié",
+    "copyFailed": "La copie a échoué",
+    "depositFailed": "Le versement n'a pas été effectué",
+    "actions": {
+      "topup": "Acompte",
+      "withdraw": "Retirer",
+      "transfer": "Transfert"
+    },
+    "dialogs": {
+      "topup": {
+        "title": "Approvisionner votre compte",
+        "description": "Rechargez votre portefeuille par carte sur Stripe."
+      },
+      "withdraw": {
+        "title": "Demander un retrait",
+        "description": "Le retrait est crédité sur votre compte après validation."
+      },
+      "transfer": {
+        "title": "Transférer vers un autre portefeuille",
+        "description": "Envoyez des dollars vers le portefeuille d'un autre utilisateur."
+      }
+    },
+    "transactions": "Transactions",
+    "noTransactions": "Aucune transaction",
+    "noTransactionsBody": "Les dépôts, retraits et virements s'afficheront ici.",
+    "transactionTypes": {
+      "ADD_MONEY": "Acompte",
+      "WITHDRAWAL": "Retrait",
+      "WALLET_TRANSFER": "Transfert",
+      "BUY_ASSET": "Achat",
+      "SELL_ASSET": "Soldes",
+      "other": "Transaction"
+    }
+  },
+  "topup": {
+    "testMode": "Mode test",
+    "testModeBody": "Pas de frais réels. Sur Stripe, utilisez cette carte, quelle que soit sa date d'expiration et quel que soit son numéro « CVC ».",
+    "copied": "Copié",
+    "copy": "Copier",
+    "amountUsd": "Montant en «USD »",
+    "invalid": "Veuillez saisir un nombre entier supérieur à zéro",
+    "hint": "Montants entiers, en dollars.",
+    "method": "Mode de paiement",
+    "submit": "Passer au paiement"
+  },
+  "transfer": {
+    "amountUsd": "Montant en «USD »",
+    "available": "Disponible sur : {{amount}}",
+    "recipient": "Identifiant du portefeuille du destinataire",
+    "recipientPlaceholder": "Ex. 12",
+    "purpose": "Objet (facultatif)",
+    "purposePlaceholder": "Par exemple : un cadeau",
+    "submit": "Envoyer",
+    "errors": {
+      "wholeAmount": "Veuillez saisir un nombre entier supérieur à zéro",
+      "insufficient": "Solde du portefeuille insuffisant",
+      "idNumeric": "L'identifiant du portefeuille est numérique",
+      "self": "Vous ne pouvez pas effectuer de virement vers votre propre portefeuille"
+    },
+    "toast": {
+      "title": "Virement envoyé",
+      "description": "{{amount}} vers le portefeuille {{wallet}}"
+    }
+  },
+  "payout": {
+    "methods": {
+      "BANK_TRANSFER": "Virement bancaire",
+      "CARD": "Carte"
+    },
+    "otherCountry": "Autre pays",
+    "accountNumber": "Numéro de compte",
+    "accountNumberOrIban": "Numéro de compte ou IBAN",
+    "accountPlaceholderOther": "Numéro de compte",
+    "ifscCode": "IFSC code",
+    "bankCode": "Code bancaire",
+    "bic": "SWIFT/BIC code",
+    "bicOptional": "SWIFT/BIC code (facultatif)",
+    "digitsPlaceholder": "9 chiffres",
+    "rows": {
+      "method": "Méthode",
+      "holder": "Titulaire du compte",
+      "card": "Carte",
+      "country": "Pays"
+    },
+    "errors": {
+      "accountDigits": "Le numéro de compte doit comporter entre {{min}} et {{max}} chiffres",
+      "ibanInvalid": "IBAN non valide",
+      "ibanCountry": "L'IBANe ne correspond pas au pays sélectionné",
+      "ibanChecksum": "IBAN non valide, veuillez vérifier les chiffres",
+      "routing": "Le numéro d'acheminement comporte 9 chiffres",
+      "sortCode": "Le code d'identification de la banque comporte 6 chiffres",
+      "ifsc": "Le code «IFSC» comporte 11 caractères",
+      "bsb": "L'BSBe comporte 6 chiffres",
+      "accountLength": "Le numéro de compte doit comporter entre 4 et 34 caractères",
+      "holderRequired": "Veuillez saisir le nom du titulaire du compte",
+      "bankRequired": "Veuillez saisir le nom de la banque",
+      "enterIban": "Découvrez l'IBAN",
+      "enterAccount": "Veuillez saisir le numéro de compte",
+      "mismatch": "Les valeurs ne correspondent pas",
+      "enterCode": "Accédez à {{label}}",
+      "bicRequired": "Ce pays exige le code «SWIFT/BIC»",
+      "bicInvalid": "Code d'SWIFT/BICation non valide",
+      "cardInvalid": "Numéro de carte invalide"
+    }
+  },
+  "paymentDetails": {
+    "title": "Informations relatives au paiement",
+    "methodFor": "Mode de retrait",
+    "emptyTitle": "Aucune méthode associée",
+    "emptyBody": "Ajoutez un compte bancaire ou une carte pour pouvoir effectuer des retraits.",
+    "add": "Ajouter vos informations de paiement",
+    "dialogDescription": "Où les retraits sont crédités.",
+    "saved": "Informations de paiement enregistrées",
+    "payoutMethod": "Mode de paiement",
+    "cardHolder": "Porte-cartes",
+    "accountHolder": "Titulaire du compte",
+    "holderPlaceholder": "Jane Doe",
+    "cardNumber": "Numéro de carte",
+    "cardNote": "Nous ne conservons que le nom du réseau de la carte et les 4 derniers chiffres, jamais le numéro complet.",
+    "country": "Pays du compte",
+    "bankName": "Nom de la banque",
+    "confirm": "Vérifiez l'adresse {{label}}",
+    "repeat": "Répétez la valeur",
+    "save": "Enregistrer"
+  },
+  "withdraw": {
+    "needMethod": "Un moyen de paiement est obligatoire",
+    "needMethodBody": "Ajoutez un compte bancaire ou une carte pour pouvoir demander un retrait.",
+    "addDetails": "Ajouter vos informations de paiement",
+    "wholeAmount": "Veuillez saisir un nombre entier supérieur à zéro",
+    "insufficient": "Solde du portefeuille insuffisant",
+    "toast": {
+      "title": "Demande de retrait envoyée",
+      "description": "{{amount}} en attente de validation"
+    },
+    "available": "Solde disponible",
+    "amountLabel": "Montant à retirer (USD)",
+    "max": "Max",
+    "creditTo": "Source :",
+    "submit": "Retirer"
+  },
+  "withdrawals": {
+    "title": "Retraits",
+    "request": "Demander un retrait depuis le portefeuille",
+    "loadFailed": "Impossible de charger les retraits",
+    "emptyTitle": "Aucun retrait",
+    "emptyBody": "Les demandes de retrait que vous effectuez depuis le portefeuille s'afficheront ici.",
+    "date": "Date",
+    "amount": "Montant",
+    "status": "Statut"
+  },
+  "payment": {
+    "success": {
+      "title": "Le versement a été effectué",
+      "body": "Les fonds ont été crédités sur votre portefeuille.",
+      "balance": "Solde actuel",
+      "toWallet": "Accédez au portefeuille"
+    },
+    "cancel": {
+      "title": "Paiement annulé",
+      "body": "Vous n'avez pas été débité. Vous pouvez réessayer quand vous le souhaitez.",
+      "toWallet": "Retour au portefeuille"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "roles": {
+      "ROLE_ADMIN": "Administrateur",
+      "ROLE_USER": "Utilisateur"
+    },
+    "rows": {
+      "name": "Nom",
+      "email": "E-mail",
+      "role": "Fonction"
+    },
+    "security": "Sécurité",
+    "twoFactorOn": "2FA sur",
+    "twoFactorOff": "2FA désactivé",
+    "twoFactorOnBody": "Lors de la connexion, nous vous demandons également un code envoyé par e-mail.",
+    "twoFactorOffBody": "Ajoutez un code envoyé par e-mail lors de votre connexion afin de mieux protéger votre compte.",
+    "enableTwoFactor": "Activer la vérification en deux étapes",
+    "changePassword": "Modifier le mot de passe",
+    "accountStatus": "État du compte",
+    "verified": "Vérifié",
+    "unverified": "À vérifier",
+    "verifiedBody": "Votre adresse e-mail a été validée.",
+    "unverifiedBody": "Vérifiez votre adresse e-mail à l'aide d'un code à 6 chiffres.",
+    "verifyAccount": "Vérifier le compte",
+    "twoFactorDialog": {
+      "title": "Authentification en deux étapes",
+      "description": "Veuillez confirmer votre adresse e-mail pour l'activer."
+    },
+    "passwordDialog": {
+      "title": "Modifier le mot de passe",
+      "description": "Nous vous envoyons un code par e-mail pour confirmer la modification."
+    },
+    "verifyDialog": {
+      "title": "Vérifier le compte",
+      "description": "Veuillez confirmer que cette adresse e-mail vous appartient."
+    },
+    "toast": {
+      "twoFactorEnabled": "Vérification en deux étapes activée",
+      "accountVerified": "Compte vérifié",
+      "passwordUpdated": "Mot de passe mis à jour"
+    }
+  },
+  "otp": {
+    "sendTo": "Nous vous enverrons un code de{{length}}-chiffres à",
+    "enterCode": "Veuillez saisir le code que nous vous avons envoyé à",
+    "send": "Envoyer le code",
+    "confirm": "Confirmer",
+    "resend": "Veuillez m'envoyer à nouveau le code"
+  },
+  "chat": {
+    "label": "Assistant crypto",
+    "title": "Assistant(e)",
+    "close": "Collaborateur de confiance",
+    "open": "Assistant Open",
+    "openUnread_one": "Ouvrir l'assistant, « {{count}} » : nouveau message",
+    "openUnread_other": "Ouvrir l'assistant, {{count}} nouveaux messages",
+    "greeting": "Bonjour, n'hésitez pas à me poser des questions sur les cours, la capitalisation boursière et bien d'autres sujets liés aux cryptomonnaies.",
+    "greetingNamed": "Bonjour {{name}}, n'hésitez pas à me poser des questions sur les cours, la capitalisation boursière et bien d'autres sujets liés aux cryptomonnaies.",
+    "about": "GprFlow Il s'agit d'un projet de démonstration réalisé par {{developer}}. Si ce travail vous plaît, n'hésitez pas à nous contacter :",
+    "typing": "L'assistant est en train de taper",
+    "error": "L'assistant ne répond pas pour le moment. Veuillez réessayer dans quelques instants.",
+    "placeholder": "Posez une question",
+    "message": "Message",
+    "send": "Envoyer"
+  },
+  "admin": {
+    "title": "Demandes de retrait",
+    "noPending": "Aucune demande en attente.",
+    "pending_one": "{{count}} demande en attente.",
+    "pending_other": "{{count}} demandes en attente.",
+    "filterLabel": "Filtrer par statut",
+    "filters": {
+      "ALL": "Tout",
+      "PENDING": "En attente",
+      "SUCCESS": "Terminé",
+      "DECLINE": "Refusé"
+    },
+    "manage": "Gérer",
+    "accept": "Accepter",
+    "decline": "Refus",
+    "accepted": "Retrait accepté",
+    "declined": "Le retrait a été refusé",
+    "failed": "L'opération a échoué",
+    "loadFailed": "Impossible de charger les requêtes",
+    "retry": "Veuillez réessayer",
+    "emptyTitle": "Aucune demande",
+    "emptyAll": "Les demandes de retrait des utilisateurs s'afficheront ici.",
+    "emptyFiltered": "Aucune demande ne présente ce statut.",
+    "date": "Date",
+    "user": "Utilisateur",
+    "amount": "Montant",
+    "status": "Statut"
+  }
+}

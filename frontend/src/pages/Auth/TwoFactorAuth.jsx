@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { twoStepVerification } from "@/Redux/Auth/Action";
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/input-otp";
 
 const TwoFactorAuth = () => {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,11 +27,11 @@ const TwoFactorAuth = () => {
 
   return (
     <AuthLayout
-      title="Verifica in due passaggi"
-      subtitle="Inserisci il codice a 6 cifre che ti abbiamo inviato via email."
+      title={t("auth.twoFactor.title")}
+      subtitle={t("auth.twoFactor.subtitle")}
       footer={
         <Link to="/signin" className="font-semibold text-primary hover:underline">
-          Torna al login
+          {t("common.backToLogin")}
         </Link>
       }
     >
@@ -53,7 +55,7 @@ const TwoFactorAuth = () => {
           disabled={value.length < 6}
           className="btn-brand h-11 w-full"
         >
-          Verifica
+          {t("auth.twoFactor.submit")}
         </button>
       </form>
     </AuthLayout>

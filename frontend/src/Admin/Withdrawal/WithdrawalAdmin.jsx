@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AlertCircle, Check, ChevronDown, Inbox, Loader2, X } from "lucide-react";
@@ -24,14 +25,10 @@ import EmptyState from "@/components/custome/EmptyState";
 import StatusBadge from "@/components/custome/StatusBadge";
 import { formatCurrency, formatDateTime } from "@/Util/format";
 
-const FILTERS = [
-  { key: "ALL", label: "Tutte" },
-  { key: "PENDING", label: "In attesa" },
-  { key: "SUCCESS", label: "Completate" },
-  { key: "DECLINE", label: "Rifiutate" },
-];
+const FILTERS = ["ALL", "PENDING", "SUCCESS", "DECLINE"];
 
 const RequestActions = ({ item, busy, onProceed }) => {
+  const { t } = useTranslation();
   if (item.status !== "PENDING") return null;
   return (
     <DropdownMenu>
@@ -41,7 +38,7 @@ const RequestActions = ({ item, busy, onProceed }) => {
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
           ) : (
             <>
-              Gestisci
+              {t("admin.manage")}
               <ChevronDown className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
             </>
           )}
@@ -50,11 +47,11 @@ const RequestActions = ({ item, busy, onProceed }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuItem className="gap-2 text-up" onSelect={() => onProceed(item, true)}>
           <Check className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-          Accetta
+          {t("admin.accept")}
         </DropdownMenuItem>
         <DropdownMenuItem className="gap-2 text-down" onSelect={() => onProceed(item, false)}>
           <X className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-          Rifiuta
+          {t("admin.decline")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -69,6 +66,7 @@ const UserCell = ({ user }) => (
 );
 
 const WithdrawalAdmin = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { toast } = useToast();
   const { requests, loading, error } = useSelector((store) => store.withdrawal);
@@ -90,9 +88,9 @@ const WithdrawalAdmin = () => {
     setBusyId(item.id);
     try {
       await dispatch(proceedWithdrawal({ id: item.id, accept }));
-      toast({ title: accept ? "Prelievo accettato" : "Prelievo rifiutato" });
+      toast({ title: accept ? t("admin.accepted") : t("admin.declined") });
     } catch (err) {
-      toast({ title: "Operazione non riuscita", description: err.message, variant: "destructive" });
+      toast({ title: t("admin.failed"), description: err.message, variant: "destructive" });
     } finally {
       setBusyId(null);
     }
@@ -101,18 +99,16 @@ const WithdrawalAdmin = () => {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold md:text-3xl">Richieste di prelievo</h1>
+        <h1 className="text-2xl font-semibold md:text-3xl">{t("admin.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          {pending === 0
-            ? "Nessuna richiesta in attesa."
-            : `${pending} ${pending === 1 ? "richiesta in attesa" : "richieste in attesa"}.`}
+          {pending === 0 ? t("admin.noPending") : t("admin.pending", { count: pending })}
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filtra per stato">
-        {FILTERS.map(({ key, label }) => (
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t("admin.filterLabel")}>
+        {FILTERS.map((key) => (
           <Chip key={key} active={filter === key} onClick={() => setFilter(key)}>
-            {label}
+            {t(`admin.filters.${key}`)}
           </Chip>
         ))}
       </div>
@@ -125,13 +121,13 @@ const WithdrawalAdmin = () => {
         </div>
       ) : rows.length === 0 && error ? (
         <div className="surface">
-          <EmptyState icon={AlertCircle} title="Impossibile caricare le richieste" description={error}>
+          <EmptyState icon={AlertCircle} title={t("admin.loadFailed")} description={error}>
             <button
               type="button"
               onClick={() => dispatch(getAllWithdrawalRequest())}
               className="btn-brand h-11"
             >
-              Riprova
+              {t("admin.retry")}
             </button>
           </EmptyState>
         </div>
@@ -139,12 +135,8 @@ const WithdrawalAdmin = () => {
         <div className="surface">
           <EmptyState
             icon={Inbox}
-            title="Nessuna richiesta"
-            description={
-              filter === "ALL"
-                ? "Le richieste di prelievo degli utenti compariranno qui."
-                : "Nessuna richiesta con questo stato."
-            }
+            title={t("admin.emptyTitle")}
+            description={filter === "ALL" ? t("admin.emptyAll") : t("admin.emptyFiltered")}
           />
         </div>
       ) : (
@@ -153,10 +145,10 @@ const WithdrawalAdmin = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="py-4">Data</TableHead>
-                  <TableHead>Utente</TableHead>
-                  <TableHead className="text-right">Importo</TableHead>
-                  <TableHead className="text-right">Stato</TableHead>
+                  <TableHead className="py-4">{t("admin.date")}</TableHead>
+                  <TableHead>{t("admin.user")}</TableHead>
+                  <TableHead className="text-right">{t("admin.amount")}</TableHead>
+                  <TableHead className="text-right">{t("admin.status")}</TableHead>
                   <TableHead className="w-32" />
                 </TableRow>
               </TableHeader>

@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "node scripts/check-no-emoji.mjs && eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "lint:emoji": "node scripts/check-no-emoji.mjs"
+    "lint:emoji": "node scripts/check-no-emoji.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "i18n:translate": "node scripts/i18n-translate.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -27,12 +29,15 @@
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "i18next": "^26.4.2",
+    "i18next-browser-languagedetector": "^8.2.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.321.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
+    "react-i18next": "^17.0.14",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.3",
     "redux": "^5.0.1",

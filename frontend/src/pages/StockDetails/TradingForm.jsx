@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { getAssetDetails } from "@/Redux/Assets/Action";
@@ -14,6 +15,7 @@ const PERCENTS = [25, 50, 75, 100];
 const round8 = (v) => Number(v.toFixed(8));
 
 const TradingForm = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { toast } = useToast();
   const coinDetails = useSelector((store) => store.coin.coinDetails);
@@ -43,10 +45,10 @@ const TradingForm = () => {
       : rawQuantity;
 
   const validate = () => {
-    if (!(value > 0)) return "Inserisci un importo";
-    if (isBuy && value > balance) return "Saldo del wallet insufficiente";
-    if (!isBuy && quantity > owned) return "Quantità disponibile insufficiente";
-    if (!(quantity > 0)) return "Importo troppo piccolo";
+    if (!(value > 0)) return t("trade.errors.enterAmount");
+    if (isBuy && value > balance) return t("trade.errors.insufficientBalance");
+    if (!isBuy && quantity > owned) return t("trade.errors.insufficientQuantity");
+    if (!(quantity > 0)) return t("trade.errors.tooSmall");
     return null;
   };
   const error = validate();
@@ -75,8 +77,12 @@ const TradingForm = () => {
     setSubmitting(false);
     if (order) {
       toast({
-        title: isBuy ? "Acquisto completato" : "Vendita completata",
-        description: `${formatNumber(quantity)} ${symbol} a ${formatCurrency(price)}`,
+        title: isBuy ? t("trade.toast.bought") : t("trade.toast.sold"),
+        description: t("trade.toast.detail", {
+          quantity: formatNumber(quantity),
+          symbol,
+          price: formatCurrency(price),
+        }),
       });
       setAmount("");
       dispatch(getUserWallet());
@@ -84,8 +90,8 @@ const TradingForm = () => {
     } else {
       toast({
         variant: "destructive",
-        title: "Ordine non eseguito",
-        description: "Riprova tra qualche istante.",
+        title: t("trade.toast.failed"),
+        description: t("trade.toast.retry"),
       });
     }
   };
@@ -94,12 +100,12 @@ const TradingForm = () => {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div
         role="tablist"
-        aria-label="Tipo di ordine"
+        aria-label={t("trade.orderType")}
         className="grid grid-cols-2 gap-1 rounded-xl bg-secondary p-1"
       >
         {[
-          { type: "BUY", label: "Acquista", active: "bg-up text-background" },
-          { type: "SELL", label: "Vendi", active: "bg-down text-background" },
+          { type: "BUY", label: t("trade.buy"), active: "bg-up text-background" },
+          { type: "SELL", label: t("trade.sell"), active: "bg-down text-background" },
         ].map(({ type, label, active }) => (
           <button
             key={type}
@@ -124,7 +130,7 @@ const TradingForm = () => {
           htmlFor="trade-amount"
           className="mb-1.5 block text-xs font-medium text-muted-foreground"
         >
-          Importo in USD
+          {t("trade.amountUsd")}
         </label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -164,24 +170,24 @@ const TradingForm = () => {
 
       <dl className="space-y-2 rounded-xl border p-3 text-sm">
         <div className="flex justify-between">
-          <dt className="text-muted-foreground">Prezzo</dt>
+          <dt className="text-muted-foreground">{t("trade.price")}</dt>
           <dd className="font-medium tabular-nums">{formatCurrency(price)}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-muted-foreground">
-            {isBuy ? "Riceverai" : "Venderai"}
+            {isBuy ? t("trade.youReceive") : t("trade.youSell")}
           </dt>
           <dd className="font-medium tabular-nums">
             {formatNumber(quantity)} {symbol}
           </dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-muted-foreground">Tipo di ordine</dt>
-          <dd className="font-medium">Market</dd>
+          <dt className="text-muted-foreground">{t("trade.orderType")}</dt>
+          <dd className="font-medium">{t("trade.market")}</dd>
         </div>
         <div className="flex justify-between border-t pt-2">
           <dt className="text-muted-foreground">
-            {isBuy ? "Saldo disponibile" : `${symbol} posseduti`}
+            {isBuy ? t("trade.availableBalance") : t("trade.owned", { symbol })}
           </dt>
           <dd className="font-medium tabular-nums">
             {isBuy ? formatCurrency(balance) : `${formatNumber(owned)} ${symbol}`}
@@ -198,7 +204,7 @@ const TradingForm = () => {
         )}
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        {isBuy ? "Acquista" : "Vendi"} {symbol}
+        {t("trade.submit", { action: isBuy ? t("trade.buy") : t("trade.sell"), symbol })}
       </button>
     </form>
   );

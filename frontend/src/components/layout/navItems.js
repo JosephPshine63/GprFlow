@@ -11,18 +11,18 @@ import {
 } from "lucide-react";
 
 export const navItems = [
-  { name: "Home", path: "/", icon: Home },
-  { name: "Portfolio", path: "/portfolio", icon: PieChart },
-  { name: "Watchlist", path: "/watchlist", icon: Bookmark },
-  { name: "Activity", path: "/activity", icon: Activity },
-  { name: "Wallet", path: "/wallet", icon: Wallet },
-  { name: "Payment Details", path: "/payment-details", icon: Landmark },
-  { name: "Withdrawal", path: "/withdrawal", icon: Banknote },
-  { name: "Profile", path: "/profile", icon: User },
+  { labelKey: "nav.home", path: "/", icon: Home },
+  { labelKey: "nav.portfolio", path: "/portfolio", icon: PieChart },
+  { labelKey: "nav.watchlist", path: "/watchlist", icon: Bookmark },
+  { labelKey: "nav.activity", path: "/activity", icon: Activity },
+  { labelKey: "nav.wallet", path: "/wallet", icon: Wallet },
+  { labelKey: "nav.paymentDetails", path: "/payment-details", icon: Landmark },
+  { labelKey: "nav.withdrawal", path: "/withdrawal", icon: Banknote },
+  { labelKey: "nav.profile", path: "/profile", icon: User },
 ];
 
 export const adminItem = {
-  name: "Admin",
+  labelKey: "nav.admin",
   path: "/admin/withdrawal",
   icon: ShieldCheck,
 };

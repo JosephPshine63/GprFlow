@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { LogOut, Search, ShieldCheck, User } from "lucide-react";
 import { logout } from "@/Redux/Auth/Action";
@@ -13,9 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import BrandMark from "@/components/custome/BrandMark";
+import LanguageSwitcher from "@/components/custome/LanguageSwitcher";
 import ThemeToggle from "@/components/custome/ThemeToggle";
 
 const Topbar = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.auth.user);
@@ -36,21 +39,22 @@ const Topbar = () => {
         variant="outline"
         onClick={() => navigate("/search")}
         className="ml-auto h-10 w-10 justify-center gap-2 rounded-xl px-0 text-muted-foreground md:ml-0 md:w-72 md:justify-start md:px-3 lg:w-96"
-        aria-label="Cerca una moneta"
+        aria-label={t("nav.searchCoin")}
       >
         <Search className="h-4 w-4" strokeWidth={1.75} />
         <span className="hidden text-sm font-normal md:inline">
-          Cerca una moneta
+          {t("nav.searchCoin")}
         </span>
       </Button>
 
       <div className="flex items-center gap-1 md:ml-auto">
+        <LanguageSwitcher />
         <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               className="rounded-full"
-              aria-label="Menu utente"
+              aria-label={t("nav.userMenu")}
               type="button"
             >
               <Avatar className="h-9 w-9">
@@ -70,18 +74,18 @@ const Topbar = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate("/profile")}>
               <User className="mr-2 h-4 w-4" strokeWidth={1.75} />
-              Profilo
+              {t("nav.profile")}
             </DropdownMenuItem>
             {user?.role === "ROLE_ADMIN" && (
               <DropdownMenuItem onClick={() => navigate("/admin/withdrawal")}>
                 <ShieldCheck className="mr-2 h-4 w-4" strokeWidth={1.75} />
-                Admin prelievi
+                {t("nav.adminWithdrawals")}
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" strokeWidth={1.75} />
-              Esci
+              {t("nav.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

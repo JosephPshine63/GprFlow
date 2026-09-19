@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import i18n from "@/i18n";
 import { TURNSTILE_SITE_KEY, loadTurnstile } from "@/Util/turnstile";
 
 // A token is single use: call reset() on the ref after every submit.
@@ -16,12 +17,13 @@ const TurnstileWidget = forwardRef(({ onToken, onError }, ref) => {
         if (cancelled || !box.current) return;
         widgetId.current = turnstile.render(box.current, {
           sitekey: TURNSTILE_SITE_KEY,
+          language: i18n.language,
           theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
           callback: (token) => callbacks.current.onToken(token),
           "expired-callback": () => callbacks.current.onToken(null),
           "error-callback": () => {
             callbacks.current.onToken(null);
-            callbacks.current.onError?.("Verifica anti-bot non riuscita, riprova.");
+            callbacks.current.onError?.(i18n.t("turnstile.failed"));
           },
         });
       })

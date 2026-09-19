@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LogOut, MoreHorizontal } from "lucide-react";
@@ -19,6 +20,7 @@ const tabClass = ({ isActive }) =>
   );
 
 const MobileTabBar = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,12 +45,12 @@ const MobileTabBar = () => {
     <>
       <nav
         className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
-        aria-label="Navigazione principale"
+        aria-label={t("nav.main")}
       >
-        {tabs.map(({ name, path, icon: Icon }) => (
+        {tabs.map(({ labelKey, path, icon: Icon }) => (
           <NavLink key={path} to={path} end={path === "/"} className={tabClass}>
             <Icon className="h-5 w-5" strokeWidth={1.75} />
-            {name}
+            {t(labelKey)}
           </NavLink>
         ))}
         <button
@@ -57,17 +59,17 @@ const MobileTabBar = () => {
           className="flex flex-1 flex-col items-center gap-1 py-2 text-[11px] font-medium text-muted-foreground"
         >
           <MoreHorizontal className="h-5 w-5" strokeWidth={1.75} />
-          Altro
+          {t("nav.more")}
         </button>
       </nav>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="bottom" className="rounded-t-2xl">
           <SheetHeader>
-            <SheetTitle className="text-left">Menu</SheetTitle>
+            <SheetTitle className="text-left">{t("nav.menu")}</SheetTitle>
           </SheetHeader>
           <div className="mt-4 grid gap-1">
-            {more.map(({ name, path, icon: Icon }) => (
+            {more.map(({ labelKey, path, icon: Icon }) => (
               <button
                 key={path}
                 type="button"
@@ -75,7 +77,7 @@ const MobileTabBar = () => {
                 className="flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium hover:bg-primary/5"
               >
                 <Icon className="h-5 w-5" strokeWidth={1.75} />
-                {name}
+                {t(labelKey)}
               </button>
             ))}
             <button
@@ -84,7 +86,7 @@ const MobileTabBar = () => {
               className="flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-down hover:bg-down/10"
             >
               <LogOut className="h-5 w-5" strokeWidth={1.75} />
-              Esci
+              {t("nav.logout")}
             </button>
           </div>
         </SheetContent>

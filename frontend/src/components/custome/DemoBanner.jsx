@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlaskConical, X } from "lucide-react";
 
 const STORAGE_KEY = "gprflowDemoBannerDismissed";
@@ -14,6 +15,7 @@ const readDismissed = () => {
 // Fixed above the app. Its height is published as --banner-h so the fixed
 // sidebar and sticky topbar can start below it instead of underneath.
 const DemoBanner = () => {
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(readDismissed);
   const ref = useRef(null);
 
@@ -50,7 +52,7 @@ const DemoBanner = () => {
     <div
       ref={ref}
       role="region"
-      aria-label="Avviso ambiente demo"
+      aria-label={t("banner.label")}
       className="fixed inset-x-0 top-0 z-40 flex items-start gap-3 border-b border-warning/30 bg-warning/15 px-4 py-2 text-sm backdrop-blur-md"
     >
       <FlaskConical
@@ -59,15 +61,13 @@ const DemoBanner = () => {
         aria-hidden="true"
       />
       <p className="flex-1 text-foreground">
-        <strong className="font-semibold">Ambiente demo.</strong> GprFlow è
-        un&apos;app dimostrativa creata per portfolio e CV: è tutto in sandbox,
-        non si può fare trading con denaro reale né eseguire prelievi (payout) o
-        altre operazioni reali.
+        <strong className="font-semibold">{t("banner.title")}</strong>{" "}
+        {t("banner.body")}
       </p>
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Chiudi l'avviso"
+        aria-label={t("banner.dismiss")}
         className="-my-0.5 shrink-0 rounded-full p-1 text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground"
       >
         <X className="h-4 w-4" strokeWidth={1.75} />

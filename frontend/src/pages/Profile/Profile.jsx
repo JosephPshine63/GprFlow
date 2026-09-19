@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyRound, MailCheck, ShieldCheck } from "lucide-react";
 import { enableTwoStepAuthentication, getUser, verifyOtp } from "@/Redux/Auth/Action";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import i18n from "@/i18n";
 import { useToast } from "@/components/ui/use-toast";
 import AppDialog from "@/components/custome/AppDialog";
 import { cn } from "@/lib/utils";
 import AccountVarificationForm from "./AccountVarificationForm";
 import ChangePasswordForm from "./ChangePasswordForm";
-
-const ROLES = { ROLE_ADMIN: "Amministratore", ROLE_USER: "Utente" };
 
 const StateBadge = ({ ok, okLabel, pendingLabel }) => (
   <span
@@ -38,6 +38,7 @@ const Section = ({ icon: Icon, title, badge, description, children }) => (
 );
 
 const Profile = () => {
+  const { t } = useTranslation();
   const user = useSelector((store) => store.auth.user);
   const dispatch = useDispatch();
   const { toast } = useToast();
@@ -50,24 +51,24 @@ const Profile = () => {
   const confirmTwoFactor = async (otp) => {
     await dispatch(enableTwoStepAuthentication({ otp }));
     await dispatch(getUser());
-    toast({ title: "Verifica in due passaggi attivata" });
+    toast({ title: t("profile.toast.twoFactorEnabled") });
   };
 
   const confirmAccount = async (otp) => {
     await dispatch(verifyOtp({ otp }));
     await dispatch(getUser());
-    toast({ title: "Account verificato" });
+    toast({ title: t("profile.toast.accountVerified") });
   };
 
   const rows = [
-    ["Nome", user?.fullName],
-    ["Email", user?.email],
-    ["Ruolo", ROLES[user?.role] ?? user?.role],
+    [t("profile.rows.name"), user?.fullName],
+    [t("profile.rows.email"), user?.email],
+    [t("profile.rows.role"), i18n.exists(`profile.roles.${user?.role}`) ? t(`profile.roles.${user?.role}`) : user?.role],
   ];
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-semibold md:text-3xl">Profilo</h1>
+      <h1 className="text-2xl font-semibold md:text-3xl">{t("profile.title")}</h1>
 
       <section className="surface p-6">
         <div className="flex items-center gap-4">
@@ -94,12 +95,16 @@ const Profile = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <Section
           icon={ShieldCheck}
-          title="Sicurezza"
-          badge={<StateBadge ok={twoFactor} okLabel="2FA attiva" pendingLabel="2FA non attiva" />}
+          title={t("profile.security")}
+          badge={
+            <StateBadge
+              ok={twoFactor}
+              okLabel={t("profile.twoFactorOn")}
+              pendingLabel={t("profile.twoFactorOff")}
+            />
+          }
           description={
-            twoFactor
-              ? "Al login ti chiediamo anche un codice inviato via email."
-              : "Aggiungi un codice via email al login per proteggere meglio il tuo account."
+            twoFactor ? t("profile.twoFactorOnBody") : t("profile.twoFactorOffBody")
           }
         >
           <div className="space-y-2">
@@ -109,7 +114,7 @@ const Profile = () => {
                 onClick={() => setDialog("twoFactor")}
                 className="btn-brand h-11 w-full"
               >
-                Attiva verifica in due passaggi
+                {t("profile.enableTwoFactor")}
               </button>
             )}
             <button
@@ -118,19 +123,23 @@ const Profile = () => {
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-colors hover:bg-accent"
             >
               <KeyRound className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-              Cambia password
+              {t("profile.changePassword")}
             </button>
           </div>
         </Section>
 
         <Section
           icon={MailCheck}
-          title="Stato account"
-          badge={<StateBadge ok={verified} okLabel="Verificato" pendingLabel="Da verificare" />}
+          title={t("profile.accountStatus")}
+          badge={
+            <StateBadge
+              ok={verified}
+              okLabel={t("profile.verified")}
+              pendingLabel={t("profile.unverified")}
+            />
+          }
           description={
-            verified
-              ? "La tua email è verificata."
-              : "Verifica la tua email con un codice a 6 cifre."
+            verified ? t("profile.verifiedBody") : t("profile.unverifiedBody")
           }
         >
           {!verified && (
@@ -139,7 +148,7 @@ const Profile = () => {
               onClick={() => setDialog("verify")}
               className="btn-brand h-11 w-full"
             >
-              Verifica account
+              {t("profile.verifyAccount")}
             </button>
           )}
         </Section>
@@ -148,8 +157,8 @@ const Profile = () => {
       <AppDialog
         open={dialog === "twoFactor"}
         onOpenChange={(open) => !open && setDialog(null)}
-        title="Verifica in due passaggi"
-        description="Conferma la tua email per attivarla."
+        title={t("profile.twoFactorDialog.title")}
+        description={t("profile.twoFactorDialog.description")}
       >
         <AccountVarificationForm onSubmit={confirmTwoFactor} onDone={() => setDialog(null)} />
       </AppDialog>
@@ -157,13 +166,13 @@ const Profile = () => {
       <AppDialog
         open={dialog === "password"}
         onOpenChange={(open) => !open && setDialog(null)}
-        title="Cambia password"
-        description="Ti inviamo un codice via email per confermare il cambio."
+        title={t("profile.passwordDialog.title")}
+        description={t("profile.passwordDialog.description")}
       >
         <ChangePasswordForm
           onDone={() => {
             setDialog(null);
-            toast({ title: "Password aggiornata" });
+            toast({ title: t("profile.toast.passwordUpdated") });
           }}
         />
       </AppDialog>
@@ -171,8 +180,8 @@ const Profile = () => {
       <AppDialog
         open={dialog === "verify"}
         onOpenChange={(open) => !open && setDialog(null)}
-        title="Verifica account"
-        description="Conferma che l'email è tua."
+        title={t("profile.verifyDialog.title")}
+        description={t("profile.verifyDialog.description")}
       >
         <AccountVarificationForm onSubmit={confirmAccount} onDone={() => setDialog(null)} />
       </AppDialog>

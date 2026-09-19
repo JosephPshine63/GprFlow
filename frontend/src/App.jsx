@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./Redux/Auth/Action";
 import AppShell from "./components/layout/AppShell";
@@ -40,6 +41,7 @@ function App() {
 function AppRoutes() {
   const user = useSelector((store) => store.auth.user);
   const dispatch = useDispatch();
+  const { i18n } = useTranslation();
   const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ function AppRoutes() {
 
   if (!user) {
     return (
-      <Routes>
+      <Routes key={i18n.language}>
         <Route element={<Auth />} path="/" />
         <Route element={<Auth />} path="/signup" />
         <Route element={<Auth />} path="/signin" />
@@ -73,7 +75,7 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
+    <Routes key={i18n.language}>
       <Route element={<AppShell />}>
         <Route element={<Home />} path="/" />
         <Route element={<Portfolio />} path="/portfolio" />

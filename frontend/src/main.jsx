@@ -6,15 +6,18 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './Redux/Store.js'
 import ErrorBoundary from './components/custome/ErrorBoundary.jsx'
+import { initI18n } from './i18n'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </BrowserRouter>
-    </ErrorBoundary>
-  </React.StrictMode>,
-)
+initI18n().then(() => {
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </React.StrictMode>,
+  )
+})

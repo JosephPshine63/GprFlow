@@ -25,6 +25,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run lint:emoji
+      - run: npm run i18n:check
       - run: npm run build
 
   backend:

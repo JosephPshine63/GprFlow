@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AlertCircle, Banknote } from "lucide-react";
@@ -17,6 +18,7 @@ import StatusBadge from "@/components/custome/StatusBadge";
 import { formatCurrency, formatDateTime } from "@/Util/format";
 
 const Withdrawal = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { history, loading, error } = useSelector((store) => store.withdrawal);
 
@@ -29,9 +31,9 @@ const Withdrawal = () => {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="text-2xl font-semibold md:text-3xl">Prelievi</h1>
+        <h1 className="text-2xl font-semibold md:text-3xl">{t("withdrawals.title")}</h1>
         <Link to="/wallet" className="text-sm font-medium text-primary hover:underline">
-          Richiedi un prelievo dal wallet
+          {t("withdrawals.request")}
         </Link>
       </div>
 
@@ -45,10 +47,8 @@ const Withdrawal = () => {
         <div className="surface">
           <EmptyState
             icon={error ? AlertCircle : Banknote}
-            title={error ? "Impossibile caricare i prelievi" : "Nessun prelievo"}
-            description={
-              error ?? "Le richieste di prelievo che fai dal wallet compariranno qui."
-            }
+            title={error ? t("withdrawals.loadFailed") : t("withdrawals.emptyTitle")}
+            description={error ?? t("withdrawals.emptyBody")}
           />
         </div>
       ) : (
@@ -56,9 +56,9 @@ const Withdrawal = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="py-4">Data</TableHead>
-                <TableHead className="text-right">Importo</TableHead>
-                <TableHead className="text-right">Stato</TableHead>
+                <TableHead className="py-4">{t("withdrawals.date")}</TableHead>
+                <TableHead className="text-right">{t("withdrawals.amount")}</TableHead>
+                <TableHead className="text-right">{t("withdrawals.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

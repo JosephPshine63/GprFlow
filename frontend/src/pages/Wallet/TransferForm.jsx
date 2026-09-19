@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
@@ -12,6 +13,7 @@ import { formatCurrency } from "@/Util/format";
 const labelClass = "mb-1.5 block text-xs font-medium text-muted-foreground";
 
 const TransferForm = ({ onDone }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { toast } = useToast();
   const wallet = useSelector((store) => store.wallet.userWallet);
@@ -25,11 +27,11 @@ const TransferForm = ({ onDone }) => {
 
   const validate = () => {
     if (form.amount === "") return null;
-    if (!(amount > 0)) return "Inserisci un importo intero maggiore di zero";
-    if (amount > balance) return "Saldo del wallet insufficiente";
-    if (recipient && !/^\d+$/.test(recipient)) return "L'ID wallet è numerico";
+    if (!(amount > 0)) return t("transfer.errors.wholeAmount");
+    if (amount > balance) return t("transfer.errors.insufficient");
+    if (recipient && !/^\d+$/.test(recipient)) return t("transfer.errors.idNumeric");
     if (recipient && recipient === String(wallet?.id)) {
-      return "Non puoi trasferire al tuo stesso wallet";
+      return t("transfer.errors.self");
     }
     return null;
   };
@@ -52,8 +54,11 @@ const TransferForm = ({ onDone }) => {
       );
       dispatch(getWalletTransactions());
       toast({
-        title: "Trasferimento inviato",
-        description: `${formatCurrency(amount)} al wallet ${recipient}`,
+        title: t("transfer.toast.title"),
+        description: t("transfer.toast.description", {
+          amount: formatCurrency(amount),
+          wallet: recipient,
+        }),
       });
       onDone();
     } catch (err) {
@@ -68,7 +73,7 @@ const TransferForm = ({ onDone }) => {
 
       <div>
         <label htmlFor="transfer-amount" className={labelClass}>
-          Importo in USD
+          {t("transfer.amountUsd")}
         </label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -94,19 +99,19 @@ const TransferForm = ({ onDone }) => {
           role={problem ? "alert" : undefined}
           className={problem ? "mt-2 text-sm text-down" : "mt-2 text-sm text-muted-foreground"}
         >
-          {problem ?? `Disponibile: ${formatCurrency(balance)}`}
+          {problem ?? t("transfer.available", { amount: formatCurrency(balance) })}
         </p>
       </div>
 
       <div>
         <label htmlFor="transfer-wallet" className={labelClass}>
-          ID wallet destinatario
+          {t("transfer.recipient")}
         </label>
         <Input
           id="transfer-wallet"
           name="walletId"
           inputMode="numeric"
-          placeholder="Es. 12"
+          placeholder={t("transfer.recipientPlaceholder")}
           value={form.walletId}
           onChange={update}
           className="h-11"
@@ -115,12 +120,12 @@ const TransferForm = ({ onDone }) => {
 
       <div>
         <label htmlFor="transfer-purpose" className={labelClass}>
-          Causale (facoltativa)
+          {t("transfer.purpose")}
         </label>
         <Input
           id="transfer-purpose"
           name="purpose"
-          placeholder="Es. regalo"
+          placeholder={t("transfer.purposePlaceholder")}
           maxLength={120}
           value={form.purpose}
           onChange={update}
@@ -134,7 +139,7 @@ const TransferForm = ({ onDone }) => {
         className="btn-brand h-12 w-full"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        Invia
+        {t("transfer.submit")}
       </button>
     </form>
   );

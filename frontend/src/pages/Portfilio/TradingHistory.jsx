@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -20,16 +21,17 @@ import { calculateProfite } from "@/Util/calculateProfite";
 import { formatCurrency, formatDateTime, formatNumber } from "@/Util/format";
 import { cn } from "@/lib/utils";
 
-const TYPE = {
-  BUY: { label: "Acquisto", tone: "bg-up/10 text-up" },
-  SELL: { label: "Vendita", tone: "bg-down/10 text-down" },
+const TYPE_TONE = {
+  BUY: "bg-up/10 text-up",
+  SELL: "bg-down/10 text-down",
 };
 
 const TypeBadge = ({ type }) => {
-  const meta = TYPE[type] ?? { label: type, tone: "bg-secondary text-muted-foreground" };
+  const { t } = useTranslation();
+  const tone = TYPE_TONE[type] ?? "bg-secondary text-muted-foreground";
   return (
-    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-semibold", meta.tone)}>
-      {meta.label}
+    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-semibold", tone)}>
+      {TYPE_TONE[type] ? t(`history.types.${type}`) : type}
     </span>
   );
 };
@@ -67,6 +69,7 @@ const CoinCell = ({ row }) => (
 );
 
 const TradingHistory = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((store) => store.order);
 
@@ -97,7 +100,7 @@ const TradingHistory = () => {
       <div className="surface">
         <EmptyState
           icon={ReceiptText}
-          title="Impossibile caricare lo storico"
+          title={t("history.loadFailed")}
           description={error}
         >
           <button
@@ -105,7 +108,7 @@ const TradingHistory = () => {
             onClick={() => dispatch(getAllOrdersForUser())}
             className="btn-brand h-11"
           >
-            Riprova
+            {t("history.retry")}
           </button>
         </EmptyState>
       </div>
@@ -117,8 +120,8 @@ const TradingHistory = () => {
       <div className="surface">
         <EmptyState
           icon={ReceiptText}
-          title="Nessun ordine"
-          description="Quando acquisti o vendi un asset, l'ordine compare qui."
+          title={t("history.emptyTitle")}
+          description={t("history.emptyBody")}
         />
       </div>
     );
@@ -130,13 +133,13 @@ const TradingHistory = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Data</TableHead>
-              <TableHead>Asset</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead className="text-right">Quantità</TableHead>
-              <TableHead className="text-right">Prezzo</TableHead>
-              <TableHead className="text-right">Totale</TableHead>
-              <TableHead className="text-right">Profitto/Perdita</TableHead>
+              <TableHead>{t("history.date")}</TableHead>
+              <TableHead>{t("history.asset")}</TableHead>
+              <TableHead>{t("history.type")}</TableHead>
+              <TableHead className="text-right">{t("history.quantity")}</TableHead>
+              <TableHead className="text-right">{t("history.price")}</TableHead>
+              <TableHead className="text-right">{t("history.total")}</TableHead>
+              <TableHead className="text-right">{t("history.pnl")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -178,15 +181,15 @@ const TradingHistory = () => {
             </div>
             <p className="mt-2 text-xs text-muted-foreground">{formatDateTime(row.date)}</p>
             <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <dt className="text-muted-foreground">Quantità</dt>
+              <dt className="text-muted-foreground">{t("history.quantity")}</dt>
               <dd className="text-right tabular-nums">{formatNumber(row.quantity)}</dd>
-              <dt className="text-muted-foreground">Prezzo</dt>
+              <dt className="text-muted-foreground">{t("history.price")}</dt>
               <dd className="text-right tabular-nums">{formatCurrency(row.unitPrice)}</dd>
-              <dt className="text-muted-foreground">Totale</dt>
+              <dt className="text-muted-foreground">{t("history.total")}</dt>
               <dd className="text-right font-medium tabular-nums">
                 {formatCurrency(row.total)}
               </dd>
-              <dt className="text-muted-foreground">Profitto/Perdita</dt>
+              <dt className="text-muted-foreground">{t("history.pnl")}</dt>
               <dd className="text-right">
                 <Pnl pnl={row.pnl} />
               </dd>

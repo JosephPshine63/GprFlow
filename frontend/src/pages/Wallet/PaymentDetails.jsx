@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { CreditCard, Landmark } from "lucide-react";
 import { getPaymentDetails } from "@/Redux/Withdrawal/Action";
@@ -8,6 +9,7 @@ import { describePayout } from "@/Util/payoutFormats";
 import PaymentDetailsForm from "./PaymentDetailsForm";
 
 const PaymentDetails = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const details = useSelector((store) => store.withdrawal.paymentDetails);
   const [open, setOpen] = useState(false);
@@ -21,7 +23,7 @@ const PaymentDetails = () => {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-semibold md:text-3xl">Dati di pagamento</h1>
+      <h1 className="text-2xl font-semibold md:text-3xl">{t("paymentDetails.title")}</h1>
 
       {details ? (
         <section className="surface p-6">
@@ -31,7 +33,7 @@ const PaymentDetails = () => {
             </span>
             <div>
               <h2 className="text-lg font-semibold">{payout.title}</h2>
-              <p className="text-sm text-muted-foreground">Metodo per i prelievi</p>
+              <p className="text-sm text-muted-foreground">{t("paymentDetails.methodFor")}</p>
             </div>
           </div>
           <dl className="mt-5 divide-y text-sm">
@@ -47,11 +49,11 @@ const PaymentDetails = () => {
         <div className="surface">
           <EmptyState
             icon={Landmark}
-            title="Nessun metodo collegato"
-            description="Aggiungi un conto bancario o una carta per poter richiedere i prelievi."
+            title={t("paymentDetails.emptyTitle")}
+            description={t("paymentDetails.emptyBody")}
           >
             <button type="button" onClick={() => setOpen(true)} className="btn-brand h-11">
-              Aggiungi dati di pagamento
+              {t("paymentDetails.add")}
             </button>
           </EmptyState>
         </div>
@@ -61,8 +63,8 @@ const PaymentDetails = () => {
         <AppDialog
           open
           onOpenChange={setOpen}
-          title="Dati di pagamento"
-          description="Dove vengono accreditati i prelievi."
+          title={t("paymentDetails.title")}
+          description={t("paymentDetails.dialogDescription")}
         >
           <PaymentDetailsForm onDone={() => setOpen(false)} />
         </AppDialog>

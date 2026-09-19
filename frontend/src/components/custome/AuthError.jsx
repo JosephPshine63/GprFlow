@@ -1,15 +1,17 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { AlertCircle } from "lucide-react";
 
 // Backend errors arrive as { error: "..." }, a plain string, or an Error.
-const messageOf = (error) => {
+const messageOf = (error, fallback) => {
   if (!error) return null;
   if (typeof error === "string") return error;
-  return error.error || error.message || "Si è verificato un errore.";
+  return error.error || error.message || fallback;
 };
 
 const AuthError = ({ error }) => {
-  const message = messageOf(error);
+  const { t } = useTranslation();
+  const message = messageOf(error, t("common.genericError"));
   if (!message) return null;
   return (
     <div

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowUp, Github, Globe, Linkedin, Mail, MessageCircle, X } from "lucide-react";
 import { sendMessage } from "@/Redux/Chat/Action";
@@ -31,6 +32,7 @@ const Contacts = () => (
 );
 
 const ChatWidget = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { messages, loading, error } = useSelector((store) => store.chatBot);
   const fullName = useSelector((store) => store.auth.user?.fullName);
@@ -63,18 +65,18 @@ const ChatWidget = () => {
     <>
       {open && (
         <section
-          aria-label="Assistente crypto"
+          aria-label={t("chat.label")}
           className="fixed inset-x-3 bottom-36 z-50 flex h-[60vh] animate-slide-in flex-col overflow-hidden rounded-2xl border bg-popover shadow-2xl md:inset-x-auto md:bottom-24 md:right-6 md:h-[34rem] md:w-[26rem]"
         >
           <header className="flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-2">
               <BrandMark className="h-5" />
-              <p className="font-heading font-bold">Assistente</p>
+              <p className="font-heading font-bold">{t("chat.title")}</p>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Chiudi assistente"
+              aria-label={t("chat.close")}
               className="rounded-full p-1.5 text-muted-foreground hover:bg-primary/5 hover:text-foreground"
             >
               <X className="h-4 w-4" strokeWidth={1.75} />
@@ -84,11 +86,12 @@ const ChatWidget = () => {
           <div className="thin-scroll flex flex-1 flex-col gap-3 overflow-y-auto p-4">
             <div className="max-w-[85%] self-start rounded-2xl rounded-bl-sm bg-secondary px-4 py-2.5 text-sm">
               <p>
-                {`Ciao${fullName ? ` ${fullName.split(" ")[0]}` : ""}, chiedimi prezzi, market cap e altro sulle crypto.`}
+                {fullName
+                  ? t("chat.greetingNamed", { name: fullName.split(" ")[0] })
+                  : t("chat.greeting")}
               </p>
               <p className="mt-3 text-muted-foreground">
-                GprFlow è un progetto dimostrativo sviluppato da {DEVELOPER.name}. Se ti interessa il
-                lavoro, scrivimi:
+                {t("chat.about", { developer: DEVELOPER.name })}
               </p>
               <Contacts />
             </div>
@@ -111,7 +114,7 @@ const ChatWidget = () => {
             {loading && (
               <div
                 className="flex gap-1 self-start rounded-2xl rounded-bl-sm bg-secondary px-4 py-3"
-                aria-label="L'assistente sta scrivendo"
+                aria-label={t("chat.typing")}
               >
                 {[0, 1, 2].map((i) => (
                   <span
@@ -127,7 +130,7 @@ const ChatWidget = () => {
                 role="alert"
                 className="max-w-[85%] self-start rounded-2xl rounded-bl-sm border border-down/30 bg-down/10 px-4 py-2.5 text-sm text-down"
               >
-                L&apos;assistente non risponde in questo momento. Riprova tra poco.
+                {t("chat.error")}
               </div>
             )}
             <div ref={endRef} />
@@ -137,14 +140,14 @@ const ChatWidget = () => {
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Scrivi una domanda"
-              aria-label="Messaggio"
+              placeholder={t("chat.placeholder")}
+              aria-label={t("chat.message")}
               className="h-10 flex-1 rounded-xl border bg-primary/5 px-3 text-sm outline-none placeholder:text-subtle focus:border-primary/50 focus:ring-[3px] focus:ring-primary/10"
             />
             <button
               type="submit"
               disabled={!text.trim() || loading}
-              aria-label="Invia"
+              aria-label={t("chat.send")}
               className="btn-brand h-10 w-10 rounded-full p-0"
             >
               <ArrowUp className="h-4 w-4" strokeWidth={2} />
@@ -159,10 +162,10 @@ const ChatWidget = () => {
           onClick={() => setOpen((o) => !o)}
           aria-label={
             open
-              ? "Chiudi assistente"
+              ? t("chat.close")
               : unread > 0
-                ? `Apri assistente, ${unread} ${unread === 1 ? "nuovo messaggio" : "nuovi messaggi"}`
-                : "Apri assistente"
+                ? t("chat.openUnread", { count: unread })
+                : t("chat.open")
           }
           aria-expanded={open}
           className="btn-brand h-12 w-12 rounded-full p-0 shadow-lg"

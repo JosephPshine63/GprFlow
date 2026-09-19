@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import AuthLayout from "@/components/layout/AuthLayout";
 import SignupForm from "./signup/SignupForm";
@@ -8,19 +9,20 @@ import ForgotPasswordForm from "./ForgotPassword";
 const linkClass = "font-semibold text-primary hover:underline";
 
 const Auth = () => {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const error = useSelector((store) => store.auth.error);
 
   if (pathname === "/signup") {
     return (
       <AuthLayout
-        title="Crea il tuo account"
-        subtitle="Inizia a fare trading in pochi minuti."
+        title={t("auth.signup.title")}
+        subtitle={t("auth.signup.subtitle")}
         footer={
           <>
-            Hai già un account?{" "}
+            {t("auth.signup.haveAccount")}{" "}
             <Link to="/signin" className={linkClass}>
-              Accedi
+              {t("auth.signup.loginLink")}
             </Link>
           </>
         }
@@ -33,11 +35,11 @@ const Auth = () => {
   if (pathname === "/forgot-password") {
     return (
       <AuthLayout
-        title="Recupera la password"
-        subtitle="Ti invieremo un codice via email per reimpostarla."
+        title={t("auth.forgot.title")}
+        subtitle={t("auth.forgot.subtitle")}
         footer={
           <Link to="/signin" className={linkClass}>
-            Torna al login
+            {t("common.backToLogin")}
           </Link>
         }
       >
@@ -48,13 +50,13 @@ const Auth = () => {
 
   return (
     <AuthLayout
-      title="Bentornato"
-      subtitle="Accedi per gestire il tuo portafoglio."
+      title={t("auth.login.title")}
+      subtitle={t("auth.login.subtitle")}
       footer={
         <>
-          Non hai un account?{" "}
+          {t("auth.login.noAccount")}{" "}
           <Link to="/signup" className={linkClass}>
-            Registrati
+            {t("auth.login.signupLink")}
           </Link>
         </>
       }

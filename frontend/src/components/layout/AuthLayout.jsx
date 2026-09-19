@@ -1,14 +1,18 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { LineChart, ShieldCheck, Zap } from "lucide-react";
 import BrandMark from "@/components/custome/BrandMark";
+import LanguageSwitcher from "@/components/custome/LanguageSwitcher";
 
 const highlights = [
-  { icon: LineChart, text: "Mercati e grafici in tempo reale" },
-  { icon: Zap, text: "Ordini di acquisto e vendita immediati" },
-  { icon: ShieldCheck, text: "Verifica in due passaggi sul tuo account" },
+  { icon: LineChart, key: "auth.layout.highlight1" },
+  { icon: Zap, key: "auth.layout.highlight2" },
+  { icon: ShieldCheck, key: "auth.layout.highlight3" },
 ];
 
-const AuthLayout = ({ title, subtitle, footer, children }) => (
+const AuthLayout = ({ title, subtitle, footer, children }) => {
+  const { t } = useTranslation();
+  return (
   <div className="grid min-h-screen bg-background lg:grid-cols-2">
     <aside className="relative hidden overflow-hidden bg-brand p-12 text-white lg:flex lg:flex-col lg:justify-between">
       <div className="flex items-center gap-3">
@@ -18,15 +22,15 @@ const AuthLayout = ({ title, subtitle, footer, children }) => (
 
       <div className="relative z-10 max-w-md">
         <h2 className="font-heading text-4xl font-bold leading-tight">
-          Fai crescere il tuo portafoglio crypto.
+          {t("auth.layout.headline")}
         </h2>
         <ul className="mt-8 space-y-4">
-          {highlights.map(({ icon: Icon, text }) => (
-            <li key={text} className="flex items-center gap-3 text-white/90">
+          {highlights.map(({ icon: Icon, key }) => (
+            <li key={key} className="flex items-center gap-3 text-white/90">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
                 <Icon className="h-5 w-5" strokeWidth={1.75} />
               </span>
-              {text}
+              {t(key)}
             </li>
           ))}
         </ul>
@@ -38,7 +42,8 @@ const AuthLayout = ({ title, subtitle, footer, children }) => (
       </p>
     </aside>
 
-    <main className="flex items-center justify-center px-6 py-10">
+    <main className="relative flex items-center justify-center px-6 py-10">
+      <LanguageSwitcher className="absolute right-4 top-4" />
       <div className="w-full max-w-sm animate-slide-in">
         <div className="mb-8 flex items-center gap-3 lg:hidden">
           <BrandMark className="h-8" />
@@ -57,6 +62,7 @@ const AuthLayout = ({ title, subtitle, footer, children }) => (
       </div>
     </main>
   </div>
-);
+  );
+};
 
 export default AuthLayout;

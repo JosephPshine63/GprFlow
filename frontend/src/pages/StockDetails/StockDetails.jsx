@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,15 +31,16 @@ const Stat = ({ label, value }) => (
 );
 
 const StatsGrid = ({ market }) => {
+  const { t } = useTranslation();
   const stats = [
-    ["Capitalizzazione", formatCompact(market.market_cap?.usd)],
-    ["Volume 24h", formatCompact(market.total_volume?.usd)],
-    ["Massimo 24h", formatCurrency(market.high_24h?.usd)],
-    ["Minimo 24h", formatCurrency(market.low_24h?.usd)],
-    ["Massimo storico", formatCurrency(market.ath?.usd)],
-    ["Variazione 7g", <PriceChange key="7d" value={market.price_change_percentage_7d} />],
-    ["Variazione 30g", <PriceChange key="30d" value={market.price_change_percentage_30d} />],
-    ["Offerta circolante", formatNumber(market.circulating_supply)],
+    [t("stock.marketCap"), formatCompact(market.market_cap?.usd)],
+    [t("stock.volume24h"), formatCompact(market.total_volume?.usd)],
+    [t("stock.high24h"), formatCurrency(market.high_24h?.usd)],
+    [t("stock.low24h"), formatCurrency(market.low_24h?.usd)],
+    [t("stock.ath"), formatCurrency(market.ath?.usd)],
+    [t("stock.change7d"), <PriceChange key="7d" value={market.price_change_percentage_7d} />],
+    [t("stock.change30d"), <PriceChange key="30d" value={market.price_change_percentage_30d} />],
+    [t("stock.circulating"), formatNumber(market.circulating_supply)],
   ];
   return (
     <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -66,6 +68,7 @@ const PageSkeleton = () => (
 );
 
 const StockDetails = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
   const details = useSelector((store) => store.coin.coinDetails);
@@ -93,10 +96,9 @@ const StockDetails = () => {
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-white">
           <SearchX className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" />
         </span>
-        <h1 className="text-xl font-bold">Moneta non disponibile</h1>
+        <h1 className="text-xl font-bold">{t("stock.unavailable")}</h1>
         <p className="text-sm text-muted-foreground">
-          Non è stato possibile caricare i dati di questa moneta. Riprova tra
-          qualche istante.
+          {t("stock.unavailableBody")}
         </p>
         <button
           type="button"
@@ -108,7 +110,7 @@ const StockDetails = () => {
             );
           }}
         >
-          Riprova
+          {t("stock.retry")}
         </button>
       </div>
     );
@@ -154,8 +156,8 @@ const StockDetails = () => {
             aria-pressed={favorite}
             aria-label={
               favorite
-                ? `Rimuovi ${current.name} dalla watchlist`
-                : `Aggiungi ${current.name} alla watchlist`
+                ? t("market.removeFromWatchlist", { name: current.name })
+                : t("market.addToWatchlist", { name: current.name })
             }
             className="flex h-11 w-11 items-center justify-center rounded-xl border text-muted-foreground transition-colors hover:text-warning"
           >
@@ -170,7 +172,7 @@ const StockDetails = () => {
             className="btn-brand h-11 px-5 lg:hidden"
           >
             <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
-            Fai trading
+            {t("stock.trade")}
           </button>
         </div>
       </header>
@@ -181,14 +183,14 @@ const StockDetails = () => {
         </section>
 
         <aside className="surface hidden p-5 lg:block">
-          <h2 className="mb-4 text-lg font-semibold">Ordine</h2>
+          <h2 className="mb-4 text-lg font-semibold">{t("stock.order")}</h2>
           <TradingForm />
         </aside>
       </div>
 
       <section aria-labelledby="stats-title">
         <h2 id="stats-title" className="mb-3 text-lg font-semibold">
-          Statistiche
+          {t("stock.stats")}
         </h2>
         <StatsGrid market={market} />
       </section>
@@ -199,10 +201,8 @@ const StockDetails = () => {
           className="max-h-[90vh] overflow-y-auto rounded-t-2xl lg:hidden"
         >
           <SheetHeader className="mb-4 text-left">
-            <SheetTitle>Ordine {current.symbol?.toUpperCase()}</SheetTitle>
-            <SheetDescription>
-              Acquista o vendi a prezzo di mercato.
-            </SheetDescription>
+            <SheetTitle>{t("stock.orderSymbol", { symbol: current.symbol?.toUpperCase() })}</SheetTitle>
+            <SheetDescription>{t("stock.orderHint")}</SheetDescription>
           </SheetHeader>
           {tradeOpen && <TradingForm />}
         </SheetContent>

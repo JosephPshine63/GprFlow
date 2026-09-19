@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { i18nResolver } from "@/i18n/resolver";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
 import { Loader2 } from "lucide-react";
@@ -27,11 +28,12 @@ import { useToast } from "@/components/ui/use-toast";
 import AuthError from "@/components/custome/AuthError";
 import Chip from "@/components/custome/Chip";
 import {
-  BIC_LABEL,
   COUNTRIES,
-  METHODS,
+  METHOD_KEYS,
   buildPayload,
+  bicLabel,
   formatFor,
+  methodLabel,
   validateBank,
   validateCard,
 } from "@/Util/payoutFormats";
@@ -40,7 +42,7 @@ const formSchema = z
   .object({
     method: z.enum(["BANK_TRANSFER", "CARD"]),
     country: z.string(),
-    accountHolderName: z.string().trim().min(1, "Inserisci l'intestatario"),
+    accountHolderName: z.string().trim().min(1, "payout.errors.holderRequired"),
     bankName: z.string(),
     accountNumber: z.string(),
     confirmAccountNumber: z.string(),
@@ -71,11 +73,12 @@ const TextField = ({ form, name, label, placeholder, autoComplete = "off", descr
 );
 
 const PaymentDetailsForm = ({ onDone }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { toast } = useToast();
   const [error, setError] = useState(null);
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: i18nResolver(formSchema),
     defaultValues: {
       method: "BANK_TRANSFER",
       country: "IT",
@@ -96,7 +99,7 @@ const PaymentDetailsForm = ({ onDone }) => {
     setError(null);
     try {
       await dispatch(addPaymentDetails({ paymentDetails: buildPayload(data) }));
-      toast({ title: "Dati di pagamento salvati" });
+      toast({ title: t("paymentDetails.saved") });
       onDone();
     } catch (err) {
       setError(err.message);
@@ -113,10 +116,10 @@ const PaymentDetailsForm = ({ onDone }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <AuthError error={error} />
 
-        <div role="group" aria-label="Metodo di payout" className="flex gap-2">
-          {Object.entries(METHODS).map(([key, label]) => (
+        <div role="group" aria-label={t("paymentDetails.payoutMethod")} className="flex gap-2">
+          {METHOD_KEYS.map((key) => (
             <Chip key={key} active={method === key} onClick={() => pickMethod(key)}>
-              {label}
+              {methodLabel(key)}
             </Chip>
           ))}
         </div>
@@ -124,8 +127,8 @@ const PaymentDetailsForm = ({ onDone }) => {
         <TextField
           form={form}
           name="accountHolderName"
-          label={method === "CARD" ? "Intestatario della carta" : "Intestatario del conto"}
-          placeholder="Mario Rossi"
+          label={method === "CARD" ? t("paymentDetails.cardHolder") : t("paymentDetails.accountHolder")}
+          placeholder={t("paymentDetails.holderPlaceholder")}
           autoComplete="name"
         />
 
@@ -133,10 +136,10 @@ const PaymentDetailsForm = ({ onDone }) => {
           <TextField
             form={form}
             name="cardNumber"
-            label="Numero di carta"
+            label={t("paymentDetails.cardNumber")}
             placeholder="0000 0000 0000 0000"
             autoComplete="off"
-            description="Salviamo solo il circuito e le ultime 4 cifre, mai il numero completo."
+            description={t("paymentDetails.cardNote")}
           />
         ) : (
           <>
@@ -146,7 +149,7 @@ const PaymentDetailsForm = ({ onDone }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xs font-medium text-muted-foreground">
-                    Paese del conto
+                    {t("paymentDetails.country")}
                   </FormLabel>
                   <Select
                     value={field.value}
@@ -172,7 +175,7 @@ const PaymentDetailsForm = ({ onDone }) => {
                 </FormItem>
               )}
             />
-            <TextField form={form} name="bankName" label="Nome della banca" placeholder="Nome della banca" />
+            <TextField form={form} name="bankName" label={t("paymentDetails.bankName")} placeholder={t("paymentDetails.bankName")} />
             <TextField
               form={form}
               name="accountNumber"
@@ -182,8 +185,10 @@ const PaymentDetailsForm = ({ onDone }) => {
             <TextField
               form={form}
               name="confirmAccountNumber"
-              label={`Conferma ${format.accountLabel === "IBAN" ? "IBAN" : "numero di conto"}`}
-              placeholder="Ripeti il valore"
+              label={t("paymentDetails.confirm", {
+                label: format.isIban ? "IBAN" : t("payout.accountNumber").toLowerCase(),
+              })}
+              placeholder={t("paymentDetails.repeat")}
             />
             {format.code && (
               <TextField
@@ -197,7 +202,7 @@ const PaymentDetailsForm = ({ onDone }) => {
               <TextField
                 form={form}
                 name="swiftBic"
-                label={format.bic === "optional" ? `${BIC_LABEL} (facoltativo)` : BIC_LABEL}
+                label={format.bic === "optional" ? t("payout.bicOptional") : bicLabel()}
                 placeholder="UNCRITMM"
               />
             )}
@@ -206,7 +211,7 @@ const PaymentDetailsForm = ({ onDone }) => {
 
         <button type="submit" disabled={submitting} className="btn-brand h-12 w-full">
           {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          Salva
+          {t("paymentDetails.save")}
         </button>
       </form>
     </Form>

@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 const STATUS = {
-  PENDING: { label: "In attesa", tone: "bg-warning/15 text-warning" },
-  SUCCESS: { label: "Completato", tone: "bg-up/10 text-up" },
-  DECLINE: { label: "Rifiutato", tone: "bg-down/10 text-down" },
+  PENDING: "bg-warning/15 text-warning",
+  SUCCESS: "bg-up/10 text-up",
+  DECLINE: "bg-down/10 text-down",
 };
 
 const StatusBadge = ({ status, className }) => {
-  const { label, tone } = STATUS[status] ?? {
-    label: status ?? "-",
-    tone: "bg-secondary text-muted-foreground",
-  };
+  const { t } = useTranslation();
+  const tone = STATUS[status] ?? "bg-secondary text-muted-foreground";
+  const label = STATUS[status] ? t(`status.${status}`) : status ?? "-";
   return (
     <span
       className={cn(

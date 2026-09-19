@@ -1,0 +1,534 @@
+{
+  "language": {
+    "change": "Change language"
+  },
+  "common": {
+    "close": "Close",
+    "genericError": "Something went wrong.",
+    "backToHome": "Back to Home",
+    "backToLogin": "Back to login"
+  },
+  "nav": {
+    "home": "Home",
+    "portfolio": "Portfolio",
+    "watchlist": "Watchlist",
+    "activity": "Activity",
+    "wallet": "Wallet",
+    "paymentDetails": "Payment details",
+    "withdrawal": "Withdrawal",
+    "profile": "Profile",
+    "admin": "Admin",
+    "adminWithdrawals": "Withdrawals admin",
+    "more": "More",
+    "menu": "Menu",
+    "main": "Main navigation",
+    "logout": "Log out",
+    "userMenu": "User menu",
+    "searchCoin": "Search for a coin"
+  },
+  "theme": {
+    "toLight": "Switch to light theme",
+    "toDark": "Switch to dark theme"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "SUCCESS": "Completed",
+    "DECLINE": "Declined"
+  },
+  "banner": {
+    "label": "Demo environment notice",
+    "title": "Demo environment.",
+    "body": "GprFlow is a demo app built for a portfolio and CV: everything runs in a sandbox, and you cannot trade with real money or make payouts or any other real transactions.",
+    "dismiss": "Dismiss the notice"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred. Reload the page to try again.",
+    "reload": "Reload"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The address does not exist or the page has been moved."
+  },
+  "turnstile": {
+    "failed": "Anti-bot check failed, please try again.",
+    "loadFailed": "Unable to load the anti-bot check."
+  },
+  "auth": {
+    "layout": {
+      "headline": "Grow your crypto portfolio.",
+      "highlight1": "Real-time markets and charts",
+      "highlight2": "Instant buy and sell orders",
+      "highlight3": "Two-step verification on your account"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to manage your portfolio.",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "forgot": "Forgot your password?"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start trading in a few minutes.",
+      "submit": "Sign up",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "passwordPlaceholder": "Password (at least 8 characters)"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "fullName": "Full name",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "verificationCode": "Verification code"
+    },
+    "forgot": {
+      "title": "Recover your password",
+      "subtitle": "We will email you a code to reset it.",
+      "submit": "Send code"
+    },
+    "reset": {
+      "title": "Reset your password",
+      "subtitle": "Enter the code you received by email and choose a new password.",
+      "submit": "Change password"
+    },
+    "twoFactor": {
+      "title": "Two-step verification",
+      "subtitle": "Enter the 6-digit code we emailed you.",
+      "submit": "Verify"
+    },
+    "passwordUpdated": {
+      "title": "Password updated",
+      "subtitle": "Your password has been changed successfully.",
+      "toLogin": "Go to login"
+    }
+  },
+  "validation": {
+    "emailInvalid": "Invalid email address",
+    "passwordMin": "The password must be at least 8 characters",
+    "passwordConfirm": "Confirm the password",
+    "otpLength": "The code must be 6 digits",
+    "passwordMismatch": "The passwords do not match",
+    "nameRequired": "Name is required"
+  },
+  "home": {
+    "greeting": "Hi, {{name}}",
+    "dashboard": "Dashboard",
+    "subtitle": "Overview of your portfolio and the markets.",
+    "totalBalance": "Total balance",
+    "last24h": "last 24h",
+    "available": "Available",
+    "invested": "Invested",
+    "deposit": "Deposit",
+    "viewPortfolio": "View portfolio",
+    "movers": "24h movers",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "markets": "Markets",
+    "all": "All",
+    "top50": "Top 50",
+    "noMarketData": "Market data unavailable",
+    "tryAgainLater": "Try again in a moment.",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  },
+  "market": {
+    "coin": "Coin",
+    "price": "Price",
+    "change24h": "24h",
+    "volume": "Volume",
+    "marketCap": "Market cap",
+    "removeFromWatchlist": "Remove {{name}} from the watchlist",
+    "addToWatchlist": "Add {{name}} to the watchlist"
+  },
+  "search": {
+    "title": "Search",
+    "subtitle": "Find a coin by name or symbol.",
+    "label": "Search for a coin",
+    "placeholder": "Bitcoin, ETH, solana...",
+    "submit": "Search",
+    "emptyTitle": "Search for a coin",
+    "emptyBody": "Type a name or symbol, for example bitcoin or eth.",
+    "failed": "Search failed",
+    "retry": "Try again",
+    "noResults": "No results",
+    "noResultsBody": "No coin found for \"{{term}}\"."
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "subtitle": "The coins you are following.",
+    "remove": "Remove {{name}} from the watchlist",
+    "loadFailed": "Unable to load the watchlist",
+    "retry": "Try again",
+    "emptyTitle": "No coins followed",
+    "emptyBody": "Add a coin to your favorites to keep an eye on it from here.",
+    "explore": "Explore the markets"
+  },
+  "activity": {
+    "title": "Activity",
+    "subtitle": "All your purchases and sales."
+  },
+  "stock": {
+    "unavailable": "Coin unavailable",
+    "unavailableBody": "We could not load the data for this coin. Try again in a moment.",
+    "retry": "Try again",
+    "trade": "Trade",
+    "order": "Order",
+    "orderSymbol": "Order {{symbol}}",
+    "orderHint": "Buy or sell at the market price.",
+    "stats": "Statistics",
+    "marketCap": "Market cap",
+    "volume24h": "24h volume",
+    "high24h": "24h high",
+    "low24h": "24h low",
+    "ath": "All-time high",
+    "change7d": "7d change",
+    "change30d": "30d change",
+    "circulating": "Circulating supply"
+  },
+  "chart": {
+    "range": "Range",
+    "price": "Price",
+    "ranges": {
+      "1": "1D",
+      "7": "1W",
+      "30": "1M",
+      "90": "3M",
+      "180": "6M",
+      "365": "1Y"
+    }
+  },
+  "trade": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "orderType": "Order type",
+    "amountUsd": "Amount in USD",
+    "price": "Price",
+    "youReceive": "You will receive",
+    "youSell": "You will sell",
+    "market": "Market",
+    "availableBalance": "Available balance",
+    "owned": "{{symbol}} owned",
+    "submit": "{{action}} {{symbol}}",
+    "errors": {
+      "enterAmount": "Enter an amount",
+      "insufficientBalance": "Insufficient wallet balance",
+      "insufficientQuantity": "Insufficient quantity available",
+      "tooSmall": "Amount too small"
+    },
+    "toast": {
+      "bought": "Purchase completed",
+      "sold": "Sale completed",
+      "detail": "{{quantity}} {{symbol}} at {{price}}",
+      "failed": "Order not executed",
+      "retry": "Try again in a moment."
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Your assets and order history.",
+    "assetValue": "Asset value",
+    "pnl": "Profit/Loss",
+    "assetsOwned": "Assets owned",
+    "section": "Section",
+    "tabAssets": "Assets",
+    "tabHistory": "History",
+    "loadFailed": "Unable to load the assets",
+    "retry": "Try again",
+    "emptyTitle": "No assets",
+    "emptyBody": "Buy your first coin to see it in your portfolio.",
+    "explore": "Explore the markets",
+    "asset": "Asset",
+    "price": "Price",
+    "quantity": "Quantity",
+    "change24h": "24h",
+    "value": "Value"
+  },
+  "history": {
+    "loadFailed": "Unable to load the history",
+    "retry": "Try again",
+    "emptyTitle": "No orders",
+    "emptyBody": "When you buy or sell an asset, the order shows up here.",
+    "date": "Date",
+    "asset": "Asset",
+    "type": "Type",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "pnl": "Profit/Loss",
+    "types": {
+      "BUY": "Purchase",
+      "SELL": "Sale"
+    }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "loadFailed": "Unable to load the wallet",
+    "retry": "Try again",
+    "balanceLabel": "Balance",
+    "availableBalance": "Available balance",
+    "refresh": "Refresh balance and transactions",
+    "id": "Wallet ID {{id}}",
+    "copyId": "Copy wallet ID",
+    "idCopied": "Wallet ID copied",
+    "copyFailed": "Copy failed",
+    "depositFailed": "Deposit not completed",
+    "actions": {
+      "topup": "Deposit",
+      "withdraw": "Withdraw",
+      "transfer": "Transfer"
+    },
+    "dialogs": {
+      "topup": {
+        "title": "Deposit funds",
+        "description": "Top up the wallet by card through Stripe."
+      },
+      "withdraw": {
+        "title": "Request a withdrawal",
+        "description": "The withdrawal is credited to your account after approval."
+      },
+      "transfer": {
+        "title": "Transfer to another wallet",
+        "description": "Send dollars to another user's wallet."
+      }
+    },
+    "transactions": "Transactions",
+    "noTransactions": "No transactions",
+    "noTransactionsBody": "Deposits, withdrawals and transfers will show up here.",
+    "transactionTypes": {
+      "ADD_MONEY": "Deposit",
+      "WITHDRAWAL": "Withdrawal",
+      "WALLET_TRANSFER": "Transfer",
+      "BUY_ASSET": "Purchase",
+      "SELL_ASSET": "Sale",
+      "other": "Transaction"
+    }
+  },
+  "topup": {
+    "testMode": "Test mode",
+    "testModeBody": "No real charge. On Stripe use this card, with any future expiry date and any CVC.",
+    "copied": "Copied",
+    "copy": "Copy",
+    "amountUsd": "Amount in USD",
+    "invalid": "Enter a whole amount greater than zero",
+    "hint": "Whole amounts, in dollars.",
+    "method": "Payment method",
+    "submit": "Proceed to payment"
+  },
+  "transfer": {
+    "amountUsd": "Amount in USD",
+    "available": "Available: {{amount}}",
+    "recipient": "Recipient wallet ID",
+    "recipientPlaceholder": "E.g. 12",
+    "purpose": "Purpose (optional)",
+    "purposePlaceholder": "E.g. gift",
+    "submit": "Send",
+    "errors": {
+      "wholeAmount": "Enter a whole amount greater than zero",
+      "insufficient": "Insufficient wallet balance",
+      "idNumeric": "The wallet ID is numeric",
+      "self": "You cannot transfer to your own wallet"
+    },
+    "toast": {
+      "title": "Transfer sent",
+      "description": "{{amount}} to wallet {{wallet}}"
+    }
+  },
+  "payout": {
+    "methods": {
+      "BANK_TRANSFER": "Bank transfer",
+      "CARD": "Card"
+    },
+    "otherCountry": "Other country",
+    "accountNumber": "Account number",
+    "accountNumberOrIban": "Account number or IBAN",
+    "accountPlaceholderOther": "Account number",
+    "ifscCode": "IFSC code",
+    "bankCode": "Bank code",
+    "bic": "SWIFT/BIC code",
+    "bicOptional": "SWIFT/BIC code (optional)",
+    "digitsPlaceholder": "9 digits",
+    "rows": {
+      "method": "Method",
+      "holder": "Account holder",
+      "card": "Card",
+      "country": "Country"
+    },
+    "errors": {
+      "accountDigits": "The account number must have {{min}} to {{max}} digits",
+      "ibanInvalid": "Invalid IBAN",
+      "ibanCountry": "The IBAN does not match the selected country",
+      "ibanChecksum": "Invalid IBAN, check the digits",
+      "routing": "The routing number has 9 digits",
+      "sortCode": "The sort code has 6 digits",
+      "ifsc": "The IFSC code has 11 characters",
+      "bsb": "The BSB has 6 digits",
+      "accountLength": "The account number must have 4 to 34 characters",
+      "holderRequired": "Enter the account holder",
+      "bankRequired": "Enter the bank name",
+      "enterIban": "Enter the IBAN",
+      "enterAccount": "Enter the account number",
+      "mismatch": "The values do not match",
+      "enterCode": "Enter {{label}}",
+      "bicRequired": "This country requires the SWIFT/BIC code",
+      "bicInvalid": "Invalid SWIFT/BIC code",
+      "cardInvalid": "Invalid card number"
+    }
+  },
+  "paymentDetails": {
+    "title": "Payment details",
+    "methodFor": "Withdrawal method",
+    "emptyTitle": "No method linked",
+    "emptyBody": "Add a bank account or a card to be able to request withdrawals.",
+    "add": "Add payment details",
+    "dialogDescription": "Where withdrawals are credited.",
+    "saved": "Payment details saved",
+    "payoutMethod": "Payout method",
+    "cardHolder": "Card holder",
+    "accountHolder": "Account holder",
+    "holderPlaceholder": "Jane Doe",
+    "cardNumber": "Card number",
+    "cardNote": "We only store the card network and the last 4 digits, never the full number.",
+    "country": "Account country",
+    "bankName": "Bank name",
+    "confirm": "Confirm {{label}}",
+    "repeat": "Repeat the value",
+    "save": "Save"
+  },
+  "withdraw": {
+    "needMethod": "A payment method is required",
+    "needMethodBody": "Add a bank account or a card to be able to request a withdrawal.",
+    "addDetails": "Add payment details",
+    "wholeAmount": "Enter a whole amount greater than zero",
+    "insufficient": "Insufficient wallet balance",
+    "toast": {
+      "title": "Withdrawal request sent",
+      "description": "{{amount}} awaiting approval"
+    },
+    "available": "Available balance",
+    "amountLabel": "Amount to withdraw (USD)",
+    "max": "Max",
+    "creditTo": "Credited to",
+    "submit": "Withdraw"
+  },
+  "withdrawals": {
+    "title": "Withdrawals",
+    "request": "Request a withdrawal from the wallet",
+    "loadFailed": "Unable to load the withdrawals",
+    "emptyTitle": "No withdrawals",
+    "emptyBody": "The withdrawal requests you make from the wallet will show up here.",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status"
+  },
+  "payment": {
+    "success": {
+      "title": "Deposit completed",
+      "body": "The funds have been added to your wallet.",
+      "balance": "Current balance",
+      "toWallet": "Go to the wallet"
+    },
+    "cancel": {
+      "title": "Payment cancelled",
+      "body": "You have not been charged. You can try again whenever you like.",
+      "toWallet": "Back to the wallet"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "roles": {
+      "ROLE_ADMIN": "Administrator",
+      "ROLE_USER": "User"
+    },
+    "rows": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role"
+    },
+    "security": "Security",
+    "twoFactorOn": "2FA on",
+    "twoFactorOff": "2FA off",
+    "twoFactorOnBody": "At login we also ask for a code sent by email.",
+    "twoFactorOffBody": "Add an email code at login to better protect your account.",
+    "enableTwoFactor": "Enable two-step verification",
+    "changePassword": "Change password",
+    "accountStatus": "Account status",
+    "verified": "Verified",
+    "unverified": "To be verified",
+    "verifiedBody": "Your email is verified.",
+    "unverifiedBody": "Verify your email with a 6-digit code.",
+    "verifyAccount": "Verify account",
+    "twoFactorDialog": {
+      "title": "Two-step verification",
+      "description": "Confirm your email to enable it."
+    },
+    "passwordDialog": {
+      "title": "Change password",
+      "description": "We email you a code to confirm the change."
+    },
+    "verifyDialog": {
+      "title": "Verify account",
+      "description": "Confirm that the email is yours."
+    },
+    "toast": {
+      "twoFactorEnabled": "Two-step verification enabled",
+      "accountVerified": "Account verified",
+      "passwordUpdated": "Password updated"
+    }
+  },
+  "otp": {
+    "sendTo": "We will send a {{length}}-digit code to",
+    "enterCode": "Enter the code we sent to",
+    "send": "Send code",
+    "confirm": "Confirm",
+    "resend": "Send the code again"
+  },
+  "chat": {
+    "label": "Crypto assistant",
+    "title": "Assistant",
+    "close": "Close assistant",
+    "open": "Open assistant",
+    "openUnread_one": "Open assistant, {{count}} new message",
+    "openUnread_other": "Open assistant, {{count}} new messages",
+    "greeting": "Hi, ask me about prices, market cap and more on crypto.",
+    "greetingNamed": "Hi {{name}}, ask me about prices, market cap and more on crypto.",
+    "about": "GprFlow is a demo project built by {{developer}}. If you like the work, get in touch:",
+    "typing": "The assistant is typing",
+    "error": "The assistant is not responding right now. Try again shortly.",
+    "placeholder": "Ask a question",
+    "message": "Message",
+    "send": "Send"
+  },
+  "admin": {
+    "title": "Withdrawal requests",
+    "noPending": "No pending requests.",
+    "pending_one": "{{count}} pending request.",
+    "pending_other": "{{count}} pending requests.",
+    "filterLabel": "Filter by status",
+    "filters": {
+      "ALL": "All",
+      "PENDING": "Pending",
+      "SUCCESS": "Completed",
+      "DECLINE": "Declined"
+    },
+    "manage": "Manage",
+    "accept": "Accept",
+    "decline": "Decline",
+    "accepted": "Withdrawal accepted",
+    "declined": "Withdrawal declined",
+    "failed": "Operation failed",
+    "loadFailed": "Unable to load the requests",
+    "retry": "Try again",
+    "emptyTitle": "No requests",
+    "emptyAll": "Users' withdrawal requests will show up here.",
+    "emptyFiltered": "No requests with this status.",
+    "date": "Date",
+    "user": "User",
+    "amount": "Amount",
+    "status": "Status"
+  }
+}

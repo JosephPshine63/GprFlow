@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { i18nResolver } from "@/i18n/resolver";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { sendResetPassowrdOTP, verifyResetPassowrdOTP } from "@/Redux/Auth/Action";
@@ -26,13 +27,14 @@ import SubmitButton from "@/components/custome/SubmitButton";
 
 // Two steps: email the code, then confirm it together with the new password.
 const ChangePasswordForm = ({ onDone }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const email = useSelector((store) => store.auth.user?.email);
   const [session, setSession] = useState(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const form = useForm({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: i18nResolver(resetPasswordSchema),
     defaultValues: { password: "", confirmPassword: "", otp: "" },
   });
 
@@ -69,12 +71,12 @@ const ChangePasswordForm = ({ onDone }) => {
       <div className="space-y-4">
         <AuthError error={error} />
         <p className="text-sm text-muted-foreground">
-          Invieremo un codice a 6 cifre a{" "}
+          {t("otp.sendTo", { length: 6 })}{" "}
           <span className="font-medium text-foreground">{email}</span>.
         </p>
         <button type="button" onClick={sendCode} disabled={sending} className="btn-brand h-12 w-full">
           {sending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          Invia codice
+          {t("otp.send")}
         </button>
       </div>
     );
@@ -89,7 +91,7 @@ const ChangePasswordForm = ({ onDone }) => {
           name="otp"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Codice di verifica</FormLabel>
+              <FormLabel>{t("auth.fields.verificationCode")}</FormLabel>
               <FormControl>
                 <InputOTP {...field} maxLength={6}>
                   <InputOTPGroup>
@@ -119,9 +121,9 @@ const ChangePasswordForm = ({ onDone }) => {
                   {...field}
                   type="password"
                   autoComplete="new-password"
-                  aria-label="Nuova password"
+                  aria-label={t("auth.fields.newPassword")}
                   className="h-11"
-                  placeholder="Nuova password"
+                  placeholder={t("auth.fields.newPassword")}
                 />
               </FormControl>
               <FormMessage />
@@ -138,23 +140,23 @@ const ChangePasswordForm = ({ onDone }) => {
                   {...field}
                   type="password"
                   autoComplete="new-password"
-                  aria-label="Conferma password"
+                  aria-label={t("auth.fields.confirmPassword")}
                   className="h-11"
-                  placeholder="Conferma password"
+                  placeholder={t("auth.fields.confirmPassword")}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <SubmitButton loading={form.formState.isSubmitting}>Cambia password</SubmitButton>
+        <SubmitButton loading={form.formState.isSubmitting}>{t("profile.changePassword")}</SubmitButton>
         <button
           type="button"
           onClick={sendCode}
           disabled={sending || form.formState.isSubmitting}
           className="w-full text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          Invia di nuovo il codice
+          {t("otp.resend")}
         </button>
       </form>
     </Form>

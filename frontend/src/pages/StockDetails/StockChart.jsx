@@ -1,22 +1,18 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMarketChart } from "@/Redux/Coin/Action";
+import { formatDateTime, formatGrouped } from "@/Util/format";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cssColor, useIsDark } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
-const ranges = [
-  { label: "1G", value: 1 },
-  { label: "1S", value: 7 },
-  { label: "1M", value: 30 },
-  { label: "3M", value: 90 },
-  { label: "6M", value: 180 },
-  { label: "1A", value: 365 },
-];
+const ranges = [1, 7, 30, 90, 180, 365];
 
 const StockChart = ({ coinId, height = 380 }) => {
+  const { t, i18n } = useTranslation();
   const [range, setRange] = useState(ranges[0]);
   const marketChart = useSelector((store) => store.coin.marketChart);
   const dispatch = useDispatch();
@@ -24,9 +20,9 @@ const StockChart = ({ coinId, height = 380 }) => {
 
   useEffect(() => {
     if (coinId) {
-      dispatch(fetchMarketChart({ coinId, days: range.value }));
+      dispatch(fetchMarketChart({ coinId, days: range }));
     }
-  }, [dispatch, coinId, range.value]);
+  }, [dispatch, coinId, range]);
 
   const data = marketChart.data;
   const rising =
@@ -57,11 +53,11 @@ const StockChart = ({ coinId, height = 380 }) => {
       yaxis: {
         labels: {
           style: { colors: cssColor("muted-foreground") },
-          formatter: (v) => `$${Number(v).toLocaleString("en-US")}`,
+          formatter: (v) => `$${formatGrouped(Number(v))}`,
         },
       },
       markers: { size: 0 },
-      tooltip: { theme: dark ? "dark" : "light", x: { format: "dd MMM HH:mm" } },
+      tooltip: { theme: dark ? "dark" : "light", x: { formatter: (ts) => formatDateTime(ts) } },
       fill: {
         type: "gradient",
         gradient: {
@@ -80,21 +76,21 @@ const StockChart = ({ coinId, height = 380 }) => {
 
   return (
     <div>
-      <div className="mb-3 flex flex-wrap gap-1" role="group" aria-label="Intervallo">
-        {ranges.map((item) => (
+      <div className="mb-3 flex flex-wrap gap-1" role="group" aria-label={t("chart.range")}>
+        {ranges.map((days) => (
           <button
-            key={item.label}
+            key={days}
             type="button"
-            onClick={() => setRange(item)}
-            aria-pressed={range.value === item.value}
+            onClick={() => setRange(days)}
+            aria-pressed={range === days}
             className={cn(
               "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-              range.value === item.value
+              range === days
                 ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:bg-primary/5 hover:text-foreground"
             )}
           >
-            {item.label}
+            {t(`chart.ranges.${days}`)}
           </button>
         ))}
       </div>
@@ -102,8 +98,9 @@ const StockChart = ({ coinId, height = 380 }) => {
         <Skeleton className="w-full rounded-xl" style={{ height }} />
       ) : (
         <ReactApexChart
+          key={i18n.language}
           options={options}
-          series={[{ name: "Prezzo", data }]}
+          series={[{ name: t("chart.price"), data }]}
           type="area"
           height={height}
         />

@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "gprflowTheme";
 
 const ThemeToggle = () => {
+  const { t } = useTranslation();
   const [dark, setDark] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
@@ -25,7 +27,7 @@ const ThemeToggle = () => {
       variant="ghost"
       size="icon"
       onClick={toggle}
-      aria-label={dark ? "Passa al tema chiaro" : "Passa al tema scuro"}
+      aria-label={dark ? t("theme.toLight") : t("theme.toDark")}
     >
       {dark ? (
         <Sun className="h-5 w-5" strokeWidth={1.75} />

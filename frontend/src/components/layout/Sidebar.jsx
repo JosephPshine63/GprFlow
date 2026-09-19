@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import BrandMark from "@/components/custome/BrandMark";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ const linkClass = ({ isActive }) =>
   );
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   const role = useSelector((store) => store.auth.user?.role);
   const items = role === "ROLE_ADMIN" ? [...navItems, adminItem] : navItems;
 
@@ -31,17 +33,17 @@ const Sidebar = () => {
       </NavLink>
 
       <nav className="thin-scroll flex-1 space-y-1 overflow-y-auto p-3">
-        {items.map(({ name, path, icon: Icon }) => (
+        {items.map(({ labelKey, path, icon: Icon }) => (
           <NavLink
             key={path}
             to={path}
             end={path === "/"}
             className={linkClass}
-            aria-label={name}
-            title={name}
+            aria-label={t(labelKey)}
+            title={t(labelKey)}
           >
             <Icon className="h-5 w-5 shrink-0" strokeWidth={1.75} />
-            <span className="hidden lg:block">{name}</span>
+            <span className="hidden lg:block">{t(labelKey)}</span>
           </NavLink>
         ))}
       </nav>

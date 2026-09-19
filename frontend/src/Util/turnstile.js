@@ -1,3 +1,5 @@
+import i18n from "@/i18n";
+
 // Cloudflare's always-pass test key; used when nothing else is configured.
 const TEST_SITE_KEY = "1x00000000000000000000AA";
 
@@ -20,7 +22,7 @@ export const loadTurnstile = () => {
     script.onload = () => resolve(window.turnstile);
     script.onerror = () => {
       scriptPromise = undefined;
-      reject(new Error("Impossibile caricare la verifica anti-bot."));
+      reject(new Error(i18n.t("turnstile.loadFailed")));
     };
     document.head.appendChild(script);
   });

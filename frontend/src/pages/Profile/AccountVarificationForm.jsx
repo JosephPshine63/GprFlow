@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
@@ -16,6 +17,7 @@ const OTP_LENGTH = 6;
 // Two steps: ask for the email code, then confirm it. onSubmit gets the code and
 // must reject on failure so the message shows up here.
 const AccountVarificationForm = ({ onSubmit, onDone }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const email = useSelector((store) => store.auth.user?.email);
   const [step, setStep] = useState("send");
@@ -56,12 +58,12 @@ const AccountVarificationForm = ({ onSubmit, onDone }) => {
       <div className="space-y-4">
         <AuthError error={error} />
         <p className="text-sm text-muted-foreground">
-          Invieremo un codice a {OTP_LENGTH} cifre a{" "}
+          {t("otp.sendTo", { length: OTP_LENGTH })}{" "}
           <span className="font-medium text-foreground">{email}</span>.
         </p>
         <button type="button" onClick={sendCode} disabled={busy} className="btn-brand h-12 w-full">
           {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          Invia codice
+          {t("otp.send")}
         </button>
       </div>
     );
@@ -71,7 +73,7 @@ const AccountVarificationForm = ({ onSubmit, onDone }) => {
     <form onSubmit={confirm} className="space-y-5">
       <AuthError error={error} />
       <p className="text-sm text-muted-foreground">
-        Inserisci il codice che abbiamo inviato a{" "}
+        {t("otp.enterCode")}{" "}
         <span className="font-medium text-foreground">{email}</span>.
       </p>
       <div className="flex justify-center">
@@ -95,7 +97,7 @@ const AccountVarificationForm = ({ onSubmit, onDone }) => {
         className="btn-brand h-12 w-full"
       >
         {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        Conferma
+        {t("otp.confirm")}
       </button>
       <button
         type="button"
@@ -103,7 +105,7 @@ const AccountVarificationForm = ({ onSubmit, onDone }) => {
         disabled={busy}
         className="w-full text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
-        Invia di nuovo il codice
+        {t("otp.resend")}
       </button>
     </form>
   );

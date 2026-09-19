@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -28,30 +29,19 @@ import TransferForm from "./TransferForm";
 import WithdrawForm from "./WithdrawForm";
 
 const ACTIONS = [
-  { key: "topup", label: "Deposita", icon: ArrowDownToLine },
-  { key: "withdraw", label: "Preleva", icon: ArrowUpFromLine },
-  { key: "transfer", label: "Trasferisci", icon: ArrowLeftRight },
+  { key: "topup", icon: ArrowDownToLine },
+  { key: "withdraw", icon: ArrowUpFromLine },
+  { key: "transfer", icon: ArrowLeftRight },
 ];
 
-const DIALOGS = {
-  topup: {
-    title: "Deposita fondi",
-    description: "Ricarica il wallet con carta tramite Stripe.",
-    Form: TopupForm,
-  },
-  withdraw: {
-    title: "Richiedi un prelievo",
-    description: "Il prelievo viene accreditato sul tuo conto dopo l'approvazione.",
-    Form: WithdrawForm,
-  },
-  transfer: {
-    title: "Trasferisci a un altro wallet",
-    description: "Invia dollari al wallet di un altro utente.",
-    Form: TransferForm,
-  },
+const FORMS = {
+  topup: TopupForm,
+  withdraw: WithdrawForm,
+  transfer: TransferForm,
 };
 
 const Wallet = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -72,12 +62,12 @@ const Wallet = () => {
     dispatch(depositMoney({ orderId, paymentId, navigate })).catch((err) => {
       toast({
         variant: "destructive",
-        title: "Deposito non completato",
+        title: t("wallet.depositFailed"),
         description: err.message,
       });
       navigate("/wallet", { replace: true });
     });
-  }, [dispatch, navigate, toast, orderId, paymentId]);
+  }, [dispatch, navigate, toast, t, orderId, paymentId]);
 
   useEffect(() => {
     dispatch(getUserWallet());
@@ -93,9 +83,9 @@ const Wallet = () => {
   const copyId = async () => {
     try {
       await navigator.clipboard.writeText(String(wallet.userWallet?.id));
-      toast({ title: "ID wallet copiato" });
+      toast({ title: t("wallet.idCopied") });
     } catch {
-      toast({ variant: "destructive", title: "Copia non riuscita" });
+      toast({ variant: "destructive", title: t("wallet.copyFailed") });
     }
   };
 
@@ -103,32 +93,32 @@ const Wallet = () => {
   const walletFailed = !walletLoaded && !wallet.loading && wallet.error;
   const transactions = wallet.transactions ?? [];
   const closeDialog = () => setDialog(null);
-  const active = dialog ? DIALOGS[dialog] : null;
+  const ActiveForm = dialog ? FORMS[dialog] : null;
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
-      <h1 className="text-2xl font-semibold md:text-3xl">Wallet</h1>
+      <h1 className="text-2xl font-semibold md:text-3xl">{t("wallet.title")}</h1>
 
       {walletFailed ? (
         <div className="surface">
           <EmptyState
             icon={AlertCircle}
-            title="Impossibile caricare il wallet"
+            title={t("wallet.loadFailed")}
             description={wallet.error}
           >
             <button type="button" onClick={refresh} className="btn-brand h-11">
-              Riprova
+              {t("wallet.retry")}
             </button>
           </EmptyState>
         </div>
       ) : (
         <section
-          aria-label="Saldo"
+          aria-label={t("wallet.balanceLabel")}
           className="rounded-2xl bg-brand p-6 text-white shadow-[0_20px_60px_rgba(47,49,149,0.35)]"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-white/70">Saldo disponibile</p>
+              <p className="text-sm text-white/70">{t("wallet.availableBalance")}</p>
               {walletLoaded ? (
                 <p className="mt-1 text-4xl font-semibold tabular-nums md:text-5xl">
                   {formatCurrency(Number(wallet.userWallet.balance))}
@@ -140,7 +130,7 @@ const Wallet = () => {
             <button
               type="button"
               onClick={refresh}
-              aria-label="Aggiorna saldo e movimenti"
+              aria-label={t("wallet.refresh")}
               className="rounded-full p-2 text-white/80 transition-colors hover:bg-white/15 hover:text-white"
             >
               <RefreshCw
@@ -152,11 +142,11 @@ const Wallet = () => {
 
           {walletLoaded && (
             <div className="mt-3 flex items-center gap-1.5 text-sm text-white/70">
-              <span>ID wallet {wallet.userWallet.id}</span>
+              <span>{t("wallet.id", { id: wallet.userWallet.id })}</span>
               <button
                 type="button"
                 onClick={copyId}
-                aria-label="Copia ID wallet"
+                aria-label={t("wallet.copyId")}
                 className="rounded-full p-1 transition-colors hover:bg-white/15 hover:text-white"
               >
                 <Copy className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -165,7 +155,7 @@ const Wallet = () => {
           )}
 
           <div className="mt-6 grid grid-cols-3 gap-3">
-            {ACTIONS.map(({ key, label, icon: Icon }) => (
+            {ACTIONS.map(({ key, icon: Icon }) => (
               <button
                 key={key}
                 type="button"
@@ -174,7 +164,7 @@ const Wallet = () => {
                 className="flex flex-col items-center gap-2 rounded-xl bg-white/15 py-3.5 text-sm font-semibold transition-colors hover:bg-white/25 disabled:pointer-events-none disabled:opacity-50"
               >
                 <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                {label}
+                {t(`wallet.actions.${key}`)}
               </button>
             ))}
           </div>
@@ -183,7 +173,7 @@ const Wallet = () => {
 
       <section aria-labelledby="wallet-history">
         <h2 id="wallet-history" className="mb-3 text-lg font-semibold">
-          Movimenti
+          {t("wallet.transactions")}
         </h2>
 
         {transactions.length === 0 && wallet.loading ? (
@@ -196,8 +186,8 @@ const Wallet = () => {
           <div className="surface">
             <EmptyState
               icon={ReceiptText}
-              title="Nessun movimento"
-              description="Depositi, prelievi e trasferimenti compariranno qui."
+              title={t("wallet.noTransactions")}
+              description={t("wallet.noTransactionsBody")}
             />
           </div>
         ) : (
@@ -237,14 +227,14 @@ const Wallet = () => {
         )}
       </section>
 
-      {active && (
+      {ActiveForm && (
         <AppDialog
           open
           onOpenChange={(open) => !open && closeDialog()}
-          title={active.title}
-          description={active.description}
+          title={t(`wallet.dialogs.${dialog}.title`)}
+          description={t(`wallet.dialogs.${dialog}.description`)}
         >
-          <active.Form onDone={closeDialog} />
+          <ActiveForm onDone={closeDialog} />
         </AppDialog>
       )}
     </div>

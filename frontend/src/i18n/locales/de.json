@@ -1,0 +1,534 @@
+{
+  "language": {
+    "change": "Sprache ändern"
+  },
+  "common": {
+    "close": "Schließen",
+    "genericError": "Es ist ein Fehler aufgetreten.",
+    "backToHome": "Zurück zur Startseite",
+    "backToLogin": "Zurück zur Anmeldung"
+  },
+  "nav": {
+    "home": "Startseite",
+    "portfolio": "Portfolio",
+    "watchlist": "Beobachtungsliste",
+    "activity": "Aktivität",
+    "wallet": "Geldbörse",
+    "paymentDetails": "Zahlungsdetails",
+    "withdrawal": "Rücktritt",
+    "profile": "Profil",
+    "admin": "Admin",
+    "adminWithdrawals": "Verwaltung von Auszahlungen",
+    "more": "Mehr",
+    "menu": "Menü",
+    "main": "Hauptnavigation",
+    "logout": "Abmelden",
+    "userMenu": "Benutzermenü",
+    "searchCoin": "Nach einer Münze suchen"
+  },
+  "theme": {
+    "toLight": "Zum hellen Design wechseln",
+    "toDark": "Zum dunklen Design wechseln"
+  },
+  "status": {
+    "PENDING": "Ausstehend",
+    "SUCCESS": "Abgeschlossen",
+    "DECLINE": "Abgelehnt"
+  },
+  "banner": {
+    "label": "Hinweis zur Demo-Umgebung",
+    "title": "Demo-Umgebung.",
+    "body": "GprFlow Es handelt sich um eine Demo-App, die für ein Portfolio und einen Lebenslauf entwickelt wurde: Alles läuft in einer Sandbox, und Sie können weder mit echtem Geld handeln noch Auszahlungen vornehmen oder sonstige echte Transaktionen durchführen.",
+    "dismiss": "Die Meldung schließen"
+  },
+  "errorBoundary": {
+    "title": "Es ist ein Fehler aufgetreten",
+    "body": "Es ist ein unerwarteter Fehler aufgetreten. Bitte laden Sie die Seite neu, um es erneut zu versuchen.",
+    "reload": "Neu laden"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "body": "Die Adresse existiert nicht oder die Seite wurde verschoben."
+  },
+  "turnstile": {
+    "failed": "Die Anti-Bot-Prüfung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "loadFailed": "Die Anti-Bot-Prüfung konnte nicht geladen werden."
+  },
+  "auth": {
+    "layout": {
+      "headline": "Erweitern Sie Ihr Krypto-Portfolio.",
+      "highlight1": "Echtzeit-Märkte und Charts",
+      "highlight2": "Sofortige Kauf- und Verkaufsaufträge",
+      "highlight3": "Zweistufige Authentifizierung für Ihr Konto"
+    },
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melden Sie sich an, um Ihr Portfolio zu verwalten.",
+      "submit": "Anmelden",
+      "noAccount": "Haben Sie noch kein Konto?",
+      "signupLink": "Registrieren",
+      "forgot": "Haben Sie Ihr Passwort vergessen?"
+    },
+    "signup": {
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Beginnen Sie in wenigen Minuten mit dem Handel.",
+      "submit": "Registrieren",
+      "haveAccount": "Haben Sie bereits ein Konto?",
+      "loginLink": "Anmelden",
+      "passwordPlaceholder": "Passwort (mindestens 8 Zeichen)"
+    },
+    "fields": {
+      "email": "E-Mail",
+      "password": "Passwort",
+      "fullName": "Vollständiger Name",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "verificationCode": "Bestätigungscode"
+    },
+    "forgot": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Wir senden Ihnen per E-Mail einen Code zu, mit dem Sie das Passwort zurücksetzen können.",
+      "submit": "Code senden"
+    },
+    "reset": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie den Code ein, den Sie per E-Mail erhalten haben, und wählen Sie ein neues Passwort.",
+      "submit": "Passwort ändern"
+    },
+    "twoFactor": {
+      "title": "Zweistufige Authentifizierung",
+      "subtitle": "Geben Sie den 6-stelligen Code ein, den wir Ihnen per E-Mail zugesandt haben.",
+      "submit": "Überprüfen"
+    },
+    "passwordUpdated": {
+      "title": "Passwort aktualisiert",
+      "subtitle": "Ihr Passwort wurde erfolgreich geändert.",
+      "toLogin": "Zur Anmeldung"
+    }
+  },
+  "validation": {
+    "emailInvalid": "Ungültige E-Mail-Adresse",
+    "passwordMin": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "passwordConfirm": "Bestätigen Sie das Passwort",
+    "otpLength": "Der Code muss aus 6 Ziffern bestehen",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein",
+    "nameRequired": "Der Name ist ein Pflichtfeld"
+  },
+  "home": {
+    "greeting": "Hallo, {{name}}",
+    "dashboard": "Dashboard",
+    "subtitle": "Überblick über Ihr Portfolio und die Märkte.",
+    "totalBalance": "Gesamtbetrag",
+    "last24h": "in den letzten 24 Stunden",
+    "available": "Verfügbar",
+    "invested": "Investiert",
+    "deposit": "Einzahlung",
+    "viewPortfolio": "Portfolio anzeigen",
+    "movers": "24-Stunden-Umzugsdienst",
+    "gainers": "Aufsteiger",
+    "losers": "Verlierer",
+    "markets": "Märkte",
+    "all": "Alle",
+    "top50": "Top 50",
+    "noMarketData": "Marktdaten nicht verfügbar",
+    "tryAgainLater": "Bitte versuchen Sie es in einem Moment erneut.",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite {{page}}"
+  },
+  "market": {
+    "coin": "Münze",
+    "price": "Preis",
+    "change24h": "24 Stunden",
+    "volume": "Umfang",
+    "marketCap": "Marktkapitalisierung",
+    "removeFromWatchlist": "{{name}} aus der Beobachtungsliste entfernen",
+    "addToWatchlist": "Fügen Sie „{{name}}“ zur Beobachtungsliste hinzu"
+  },
+  "search": {
+    "title": "Suche",
+    "subtitle": "Suchen Sie eine Münze nach Namen oder Symbol.",
+    "label": "Nach einer Münze suchen",
+    "placeholder": "Bitcoin, ETH, Solana...",
+    "submit": "Suche",
+    "emptyTitle": "Nach einer Münze suchen",
+    "emptyBody": "Geben Sie einen Namen oder ein Symbol ein, zum Beispiel „Bitcoin“ oder „ETH“.",
+    "failed": "Die Suche war erfolglos",
+    "retry": "Bitte versuchen Sie es erneut",
+    "noResults": "Keine Ergebnisse",
+    "noResultsBody": "Es wurde keine Münze mit der Aufschrift „{{term}}“ gefunden."
+  },
+  "watchlist": {
+    "title": "Beobachtungsliste",
+    "subtitle": "Die Coins, die Sie verfolgen.",
+    "remove": "{{name}} aus der Beobachtungsliste entfernen",
+    "loadFailed": "Die Beobachtungsliste kann nicht geladen werden",
+    "retry": "Bitte versuchen Sie es erneut",
+    "emptyTitle": "Es folgten keine Münzen",
+    "emptyBody": "Fügen Sie eine Münze zu Ihren Favoriten hinzu, um sie von hier aus im Auge zu behalten.",
+    "explore": "Entdecken Sie die Märkte"
+  },
+  "activity": {
+    "title": "Aktivität",
+    "subtitle": "Alle Ihre Käufe und Verkäufe."
+  },
+  "stock": {
+    "unavailable": "Münze nicht verfügbar",
+    "unavailableBody": "Die Daten für diese Münze konnten nicht geladen werden. Bitte versuchen Sie es in Kürze erneut.",
+    "retry": "Bitte versuchen Sie es erneut",
+    "trade": "Handel",
+    "order": "Bestellung",
+    "orderSymbol": "Bestellen Sie „{{symbol}}“",
+    "orderHint": "Kaufen oder verkaufen Sie zum Marktpreis.",
+    "stats": "Statistiken",
+    "marketCap": "Marktkapitalisierung",
+    "volume24h": "24-Stunden-Umsatz",
+    "high24h": "24-Stunden-Höchstwert",
+    "low24h": "24-Stunden-Tiefststand",
+    "ath": "Allzeithoch",
+    "change7d": "7d-Änderung",
+    "change30d": "30-Tage-Änderung",
+    "circulating": "Umlaufende Menge"
+  },
+  "chart": {
+    "range": "Reichweite",
+    "price": "Preis",
+    "ranges": {
+      "1": "1D",
+      "7": "1 W",
+      "30": "1 Mio.",
+      "90": "3M",
+      "180": "6M",
+      "365": "1 Jahr"
+    }
+  },
+  "trade": {
+    "buy": "Kaufen",
+    "sell": "Verkaufen",
+    "orderType": "Auftragsart",
+    "amountUsd": "Betrag in „USD“",
+    "price": "Preis",
+    "youReceive": "Sie erhalten",
+    "youSell": "Sie werden verkaufen",
+    "market": "Markt",
+    "availableBalance": "Verfügbares Guthaben",
+    "owned": "{{symbol}} im Besitz von",
+    "submit": "{{action}} {{symbol}}",
+    "errors": {
+      "enterAmount": "Bitte geben Sie einen Betrag ein",
+      "insufficientBalance": "Unzureichendes Guthaben auf dem Wallet",
+      "insufficientQuantity": "Nicht genügend verfügbar",
+      "tooSmall": "Der Betrag ist zu gering"
+    },
+    "toast": {
+      "bought": "Kauf abgeschlossen",
+      "sold": "Verkauf abgeschlossen",
+      "detail": "{{quantity}} {{symbol}} unter {{price}}",
+      "failed": "Auftrag nicht ausgeführt",
+      "retry": "Bitte versuchen Sie es in einem Moment erneut."
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Ihr Guthaben und Ihre Bestellhistorie.",
+    "assetValue": "Vermögenswert",
+    "pnl": "Gewinn/Verlust",
+    "assetsOwned": "Vermögenswerte im Besitz",
+    "section": "Abschnitt",
+    "tabAssets": "Vermögenswerte",
+    "tabHistory": "Geschichte",
+    "loadFailed": "Die Assets können nicht geladen werden",
+    "retry": "Bitte versuchen Sie es erneut",
+    "emptyTitle": "Keine Vermögenswerte",
+    "emptyBody": "Kaufen Sie Ihre erste Münze, um sie in Ihrem Portfolio zu sehen.",
+    "explore": "Entdecken Sie die Märkte",
+    "asset": "Vermögenswert",
+    "price": "Preis",
+    "quantity": "Anzahl",
+    "change24h": "24 Stunden",
+    "value": "Wert"
+  },
+  "history": {
+    "loadFailed": "Der Verlauf kann nicht geladen werden",
+    "retry": "Bitte versuchen Sie es erneut",
+    "emptyTitle": "Keine Bestellungen",
+    "emptyBody": "Wenn Sie einen Vermögenswert kaufen oder verkaufen, wird die Order hier angezeigt.",
+    "date": "Datum",
+    "asset": "Vermögenswert",
+    "type": "Typ",
+    "quantity": "Anzahl",
+    "price": "Preis",
+    "total": "Gesamt",
+    "pnl": "Gewinn/Verlust",
+    "types": {
+      "BUY": "Kauf",
+      "SELL": "Ausverkauf"
+    }
+  },
+  "wallet": {
+    "title": "Geldbörse",
+    "loadFailed": "Die Wallet kann nicht geladen werden",
+    "retry": "Bitte versuchen Sie es erneut",
+    "balanceLabel": "Saldo",
+    "availableBalance": "Verfügbares Guthaben",
+    "refresh": "Kontostand und Transaktionen aktualisieren",
+    "id": "Wallet-ID{{id}}",
+    "copyId": "Wallet-ID kopieren",
+    "idCopied": "Wallet-ID kopiert",
+    "copyFailed": "Das Kopieren ist fehlgeschlagen",
+    "depositFailed": "Einzahlung nicht abgeschlossen",
+    "actions": {
+      "topup": "Einzahlung",
+      "withdraw": "Abheben",
+      "transfer": "Übertragung"
+    },
+    "dialogs": {
+      "topup": {
+        "title": "Geld einzahlen",
+        "description": "Laden Sie das Wallet per Karte über Stripe auf."
+      },
+      "withdraw": {
+        "title": "Eine Auszahlung beantragen",
+        "description": "Die Auszahlung wird Ihrem Konto nach der Genehmigung gutgeschrieben."
+      },
+      "transfer": {
+        "title": "Überweisung auf eine andere Geldbörse",
+        "description": "Senden Sie Dollar an die Wallet eines anderen Nutzers."
+      }
+    },
+    "transactions": "Transaktionen",
+    "noTransactions": "Keine Transaktionen",
+    "noTransactionsBody": "Einzahlungen, Auszahlungen und Überweisungen werden hier angezeigt.",
+    "transactionTypes": {
+      "ADD_MONEY": "Einzahlung",
+      "WITHDRAWAL": "Rücktritt",
+      "WALLET_TRANSFER": "Übertragung",
+      "BUY_ASSET": "Kauf",
+      "SELL_ASSET": "Ausverkauf",
+      "other": "Transaktion"
+    }
+  },
+  "topup": {
+    "testMode": "Testmodus",
+    "testModeBody": "Keine tatsächlichen Gebühren. Verwenden Sie diese Karte auf Stripe – unabhängig vom Ablaufdatum und der CVC.",
+    "copied": "Kopiert",
+    "copy": "Kopieren",
+    "amountUsd": "Betrag in „USD“",
+    "invalid": "Geben Sie eine ganze Zahl größer als Null ein",
+    "hint": "Ganze Beträge in Dollar.",
+    "method": "Zahlungsart",
+    "submit": "Zur Kasse gehen"
+  },
+  "transfer": {
+    "amountUsd": "Betrag inUSD",
+    "available": "Verfügbar unter: {{amount}}",
+    "recipient": "ID der Empfänger-Wallet",
+    "recipientPlaceholder": "Beispiel 12",
+    "purpose": "Zweck (optional)",
+    "purposePlaceholder": "z. B. Geschenk",
+    "submit": "Senden",
+    "errors": {
+      "wholeAmount": "Geben Sie eine ganze Zahl größer als Null ein",
+      "insufficient": "Unzureichendes Guthaben auf dem Wallet",
+      "idNumeric": "Die Wallet-ID besteht aus Ziffern",
+      "self": "Sie können keine Beträge auf Ihre eigene Geldbörse überweisen"
+    },
+    "toast": {
+      "title": "Überweisung gesendet",
+      "description": "{{amount}} an die Wallet-Adresse {{wallet}}"
+    }
+  },
+  "payout": {
+    "methods": {
+      "BANK_TRANSFER": "Banküberweisung",
+      "CARD": "Karte"
+    },
+    "otherCountry": "Anderes Land",
+    "accountNumber": "Kontonummer",
+    "accountNumberOrIban": "Kontonummer oder IBAN",
+    "accountPlaceholderOther": "Kontonummer",
+    "ifscCode": "IFSC Code",
+    "bankCode": "Bankleitzahl",
+    "bic": "SWIFT/BIC Code",
+    "bicOptional": "SWIFT/BIC Code (optional)",
+    "digitsPlaceholder": "9 Ziffern",
+    "rows": {
+      "method": "Verfahren",
+      "holder": "Kontoinhaber",
+      "card": "Karte",
+      "country": "Land"
+    },
+    "errors": {
+      "accountDigits": "Die Kontonummer muss zwischen {{min}} und {{max}} Ziffern umfassen.",
+      "ibanInvalid": "Ungültiges IBAN",
+      "ibanCountry": "Die „IBAN“ stimmt nicht mit dem ausgewählten Land überein",
+      "ibanChecksum": "Ungültige „IBAN“ – Bitte überprüfen Sie die Ziffern.",
+      "routing": "Die Bankleitzahl besteht aus 9 Ziffern",
+      "sortCode": "Die Bankleitzahl besteht aus 6 Ziffern",
+      "ifsc": "Der Code „IFSC“ besteht aus 11 Zeichen",
+      "bsb": "Die „BSB“ besteht aus 6 Ziffern",
+      "accountLength": "Die Kontonummer muss aus 4 bis 34 Zeichen bestehen",
+      "holderRequired": "Geben Sie den Kontoinhaber ein",
+      "bankRequired": "Geben Sie den Namen der Bank ein",
+      "enterIban": "Nehmen Sie an der „IBAN“ teil",
+      "enterAccount": "Bitte geben Sie die Kontonummer ein",
+      "mismatch": "Die Werte stimmen nicht überein",
+      "enterCode": "Rufen Sie {{label}} auf",
+      "bicRequired": "In diesem Land ist die Angabe der „SWIFT/BIC“-Nummer erforderlich",
+      "bicInvalid": "Ungültiger Code für „SWIFT/BIC“",
+      "cardInvalid": "Ungültige Kartennummer"
+    }
+  },
+  "paymentDetails": {
+    "title": "Zahlungsdetails",
+    "methodFor": "Auszahlungsmethode",
+    "emptyTitle": "Es ist keine Methode verknüpft",
+    "emptyBody": "Fügen Sie ein Bankkonto oder eine Karte hinzu, um Auszahlungen beantragen zu können.",
+    "add": "Zahlungsdaten hinzufügen",
+    "dialogDescription": "Wo Auszahlungen gutgeschrieben werden.",
+    "saved": "Zahlungsdaten gespeichert",
+    "payoutMethod": "Auszahlungsmethode",
+    "cardHolder": "Kartenhalter",
+    "accountHolder": "Kontoinhaber",
+    "holderPlaceholder": "Jane Doe",
+    "cardNumber": "Kartennummer",
+    "cardNote": "Wir speichern lediglich das Kartennetzwerk und die letzten vier Ziffern, niemals die vollständige Nummer.",
+    "country": "Land des Kontos",
+    "bankName": "Name der Bank",
+    "confirm": "Bestätigen Sie „{{label}}“",
+    "repeat": "Geben Sie den Wert erneut ein",
+    "save": "Speichern"
+  },
+  "withdraw": {
+    "needMethod": "Eine Zahlungsmethode ist erforderlich",
+    "needMethodBody": "Fügen Sie ein Bankkonto oder eine Karte hinzu, um eine Auszahlung beantragen zu können.",
+    "addDetails": "Zahlungsdaten hinzufügen",
+    "wholeAmount": "Geben Sie eine ganze Zahl größer als Null ein",
+    "insufficient": "Unzureichendes Guthaben auf dem Wallet",
+    "toast": {
+      "title": "Auszahlungsantrag gesendet",
+      "description": "{{amount}} zur Genehmigung vorgelegt"
+    },
+    "available": "Verfügbares Guthaben",
+    "amountLabel": "",
+    "max": "Max",
+    "creditTo": "Quelle:",
+    "submit": "Abheben"
+  },
+  "withdrawals": {
+    "title": "Auszahlungen",
+    "request": "Eine Auszahlung aus der Wallet beantragen",
+    "loadFailed": "Die Auszahlungen können nicht geladen werden",
+    "emptyTitle": "Keine Abhebungen",
+    "emptyBody": "Die von Ihnen über die Wallet eingereichten Auszahlungsanträge werden hier angezeigt.",
+    "date": "Datum",
+    "amount": "Betrag",
+    "status": "Status"
+  },
+  "payment": {
+    "success": {
+      "title": "Einzahlung abgeschlossen",
+      "body": "Der Betrag wurde Ihrem Wallet gutgeschrieben.",
+      "balance": "Aktueller Saldo",
+      "toWallet": "Zur Geldbörse gehen"
+    },
+    "cancel": {
+      "title": "Zahlung storniert",
+      "body": "Es wurden Ihnen keine Kosten in Rechnung gestellt. Sie können es jederzeit erneut versuchen.",
+      "toWallet": "Zurück zur Geldbörse"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "roles": {
+      "ROLE_ADMIN": "Administrator",
+      "ROLE_USER": "Benutzer"
+    },
+    "rows": {
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle"
+    },
+    "security": "Sicherheit",
+    "twoFactorOn": "2FA auf",
+    "twoFactorOff": "2FA aus",
+    "twoFactorOnBody": "Bei der Anmeldung bitten wir Sie außerdem um die Eingabe eines Codes, der Ihnen per E-Mail zugesandt wurde.",
+    "twoFactorOffBody": "Fügen Sie bei der Anmeldung einen E-Mail-Code hinzu, um Ihr Konto besser zu schützen.",
+    "enableTwoFactor": "Zweistufige Authentifizierung aktivieren",
+    "changePassword": "Passwort ändern",
+    "accountStatus": "Kontostatus",
+    "verified": "Verifiziert",
+    "unverified": "Muss noch überprüft werden",
+    "verifiedBody": "Ihre E-Mail-Adresse wurde bestätigt.",
+    "unverifiedBody": "Bitte bestätigen Sie Ihre E-Mail-Adresse mit einem 6-stelligen Code.",
+    "verifyAccount": "Konto verifizieren",
+    "twoFactorDialog": {
+      "title": "Zweistufige Authentifizierung",
+      "description": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um sie zu aktivieren."
+    },
+    "passwordDialog": {
+      "title": "Passwort ändern",
+      "description": "Wir senden Ihnen per E-Mail einen Code zur Bestätigung der Änderung zu."
+    },
+    "verifyDialog": {
+      "title": "Konto verifizieren",
+      "description": "Bitte bestätigen Sie, dass es sich um Ihre E-Mail-Adresse handelt."
+    },
+    "toast": {
+      "twoFactorEnabled": "Zweistufige Verifizierung aktiviert",
+      "accountVerified": "Konto verifiziert",
+      "passwordUpdated": "Passwort aktualisiert"
+    }
+  },
+  "otp": {
+    "sendTo": "Wir senden Ihnen einen {{length}}-stelligen Code an",
+    "enterCode": "Geben Sie den Code ein, den wir an",
+    "send": "Code senden",
+    "confirm": "Bestätigen",
+    "resend": "Bitte senden Sie den Code erneut"
+  },
+  "chat": {
+    "label": "Krypto-Assistent",
+    "title": "Assistent",
+    "close": "Enger Mitarbeiter",
+    "open": "Open Assistant",
+    "openUnread_one": "Open Assistant, {{count}} – Neue Nachricht",
+    "openUnread_other": "Open Assistant, {{count}} – neue Nachrichten",
+    "greeting": "Guten Tag, fragen Sie mich gerne nach Kursen, Marktkapitalisierung und weiteren Themen rund um Kryptowährungen.",
+    "greetingNamed": "Hallo {{name}}, fragen Sie mich nach Kursen, Marktkapitalisierung und weiteren Informationen zu Kryptowährungen.",
+    "about": "GprFlow ist ein von {{developer}} erstelltes Demoprojekt. Falls Ihnen die Arbeit gefällt, nehmen Sie bitte Kontakt auf:",
+    "typing": "Die Assistentin tippt gerade",
+    "error": "Der Assistent reagiert derzeit nicht. Bitte versuchen Sie es in Kürze erneut.",
+    "placeholder": "Stellen Sie eine Frage",
+    "message": "Nachricht",
+    "send": "Senden"
+  },
+  "admin": {
+    "title": "Auszahlungsanträge",
+    "noPending": "Es liegen keine ausstehenden Anfragen vor.",
+    "pending_one": "{{count}} Ausstehende Anfrage.",
+    "pending_other": "{{count}} ausstehende Anfragen.",
+    "filterLabel": "Nach Status filtern",
+    "filters": {
+      "ALL": "Alle",
+      "PENDING": "Ausstehend",
+      "SUCCESS": "Abgeschlossen",
+      "DECLINE": "Abgelehnt"
+    },
+    "manage": "Verwalten",
+    "accept": "Akzeptieren",
+    "decline": "Rückgang",
+    "accepted": "Rücktritt akzeptiert",
+    "declined": "Der Antrag auf Rücknahme wurde abgelehnt",
+    "failed": "Der Vorgang ist fehlgeschlagen",
+    "loadFailed": "Die Anfragen können nicht geladen werden",
+    "retry": "Bitte versuchen Sie es erneut",
+    "emptyTitle": "Keine Anfragen",
+    "emptyAll": "Die Auszahlungsanträge der Nutzer werden hier angezeigt.",
+    "emptyFiltered": "Es liegen keine Anfragen mit diesem Status vor.",
+    "date": "Datum",
+    "user": "Benutzer",
+    "amount": "Betrag",
+    "status": "Status"
+  }
+}

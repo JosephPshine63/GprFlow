@@ -2,7 +2,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { i18nResolver } from "@/i18n/resolver";
 import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "@/Redux/Auth/Action";
@@ -19,17 +20,18 @@ import SubmitButton from "@/components/custome/SubmitButton";
 import TurnstileWidget from "@/components/custome/TurnstileWidget";
 
 const formSchema = z.object({
-  fullName: z.string().nonempty("Il nome è obbligatorio"),
-  email: z.string().email("Indirizzo email non valido"),
-  password: z.string().min(8, "La password deve avere almeno 8 caratteri"),
+  fullName: z.string().nonempty("validation.nameRequired"),
+  email: z.string().email("validation.emailInvalid"),
+  password: z.string().min(8, "validation.passwordMin"),
 });
 
 const SignupForm = ({ error }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector((store) => store.auth.loading);
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: i18nResolver(formSchema),
     defaultValues: { email: "", password: "", fullName: "" },
   });
 
@@ -57,9 +59,9 @@ const SignupForm = ({ error }) => {
                 <Input
                   {...field}
                   autoComplete="name"
-                  aria-label="Nome e cognome"
+                  aria-label={t("auth.fields.fullName")}
                   className="h-11"
-                  placeholder="Nome e cognome"
+                  placeholder={t("auth.fields.fullName")}
                 />
               </FormControl>
               <FormMessage />
@@ -76,9 +78,9 @@ const SignupForm = ({ error }) => {
                   {...field}
                   type="email"
                   autoComplete="email"
-                  aria-label="Email"
+                  aria-label={t("auth.fields.email")}
                   className="h-11"
-                  placeholder="Email"
+                  placeholder={t("auth.fields.email")}
                 />
               </FormControl>
               <FormMessage />
@@ -95,9 +97,9 @@ const SignupForm = ({ error }) => {
                   {...field}
                   type="password"
                   autoComplete="new-password"
-                  aria-label="Password"
+                  aria-label={t("auth.fields.password")}
                   className="h-11"
-                  placeholder="Password (minimo 8 caratteri)"
+                  placeholder={t("auth.signup.passwordPlaceholder")}
                 />
               </FormControl>
               <FormMessage />
@@ -105,7 +107,7 @@ const SignupForm = ({ error }) => {
           )}
         />
         <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setCaptchaError} />
-        <SubmitButton loading={loading} disabled={!captcha}>Registrati</SubmitButton>
+        <SubmitButton loading={loading} disabled={!captcha}>{t("auth.signup.submit")}</SubmitButton>
       </form>
     </Form>
   );

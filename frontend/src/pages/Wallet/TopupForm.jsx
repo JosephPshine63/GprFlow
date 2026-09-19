@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Check, Copy, Loader2 } from "lucide-react";
@@ -15,6 +16,7 @@ const TEST_MODE =
   (window.__RUNTIME_CONFIG__?.STRIPE_TEST_MODE ?? import.meta.env.VITE_STRIPE_TEST_MODE) === "true";
 
 const TestCardHint = () => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -29,10 +31,9 @@ const TestCardHint = () => {
 
   return (
     <div className="rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
-      <p className="font-medium text-warning">Modalità test</p>
+      <p className="font-medium text-warning">{t("topup.testMode")}</p>
       <p className="mt-1 text-muted-foreground">
-        Nessun addebito reale. Su Stripe usa questa carta, con una scadenza futura e un CVC
-        qualsiasi.
+        {t("topup.testModeBody")}
       </p>
       <div className="mt-2 flex items-center justify-between gap-3">
         <code className="select-all font-mono text-base tabular-nums">{TEST_CARD}</code>
@@ -46,7 +47,7 @@ const TestCardHint = () => {
           ) : (
             <Copy className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           )}
-          <span aria-live="polite">{copied ? "Copiato" : "Copia"}</span>
+          <span aria-live="polite">{copied ? t("topup.copied") : t("topup.copy")}</span>
         </button>
       </div>
     </div>
@@ -54,6 +55,7 @@ const TestCardHint = () => {
 };
 
 const TopupForm = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [amount, setAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -85,7 +87,7 @@ const TopupForm = () => {
           htmlFor="topup-amount"
           className="mb-1.5 block text-xs font-medium text-muted-foreground"
         >
-          Importo in USD
+          {t("topup.amountUsd")}
         </label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -121,12 +123,12 @@ const TopupForm = () => {
           role={invalid ? "alert" : undefined}
           className={invalid ? "mt-2 text-sm text-down" : "mt-2 text-sm text-muted-foreground"}
         >
-          {invalid ? "Inserisci un importo intero maggiore di zero" : "Importi interi, in dollari."}
+          {invalid ? t("topup.invalid") : t("topup.hint")}
         </p>
       </div>
 
       <div className="flex items-center justify-between rounded-xl border px-4 py-3">
-        <span className="text-sm text-muted-foreground">Metodo di pagamento</span>
+        <span className="text-sm text-muted-foreground">{t("topup.method")}</span>
         <img
           src="/brand/stripe.svg"
           alt="Stripe"
@@ -142,7 +144,7 @@ const TopupForm = () => {
         className="btn-brand h-12 w-full"
       >
         {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        Procedi al pagamento
+        {t("topup.submit")}
       </button>
     </form>
   );

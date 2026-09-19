@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { i18nResolver } from "@/i18n/resolver";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
 import { sendResetPassowrdOTP } from "@/Redux/Auth/Action";
@@ -18,14 +19,15 @@ import SubmitButton from "@/components/custome/SubmitButton";
 import TurnstileWidget from "@/components/custome/TurnstileWidget";
 
 const formSchema = z.object({
-  email: z.string().email("Indirizzo email non valido"),
+  email: z.string().email("validation.emailInvalid"),
 });
 
 const ForgotPasswordForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: i18nResolver(formSchema),
     defaultValues: { email: "" },
   });
 
@@ -64,9 +66,9 @@ const ForgotPasswordForm = () => {
                   {...field}
                   type="email"
                   autoComplete="email"
-                  aria-label="Email"
+                  aria-label={t("auth.fields.email")}
                   className="h-11"
-                  placeholder="Email"
+                  placeholder={t("auth.fields.email")}
                 />
               </FormControl>
               <FormMessage />
@@ -75,7 +77,7 @@ const ForgotPasswordForm = () => {
         />
         <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setError} />
         <SubmitButton loading={form.formState.isSubmitting} disabled={!captcha}>
-          Invia codice
+          {t("auth.forgot.submit")}
         </SubmitButton>
       </form>
     </Form>
