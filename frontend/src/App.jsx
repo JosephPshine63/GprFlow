@@ -15,14 +15,24 @@ import Watchlist from "./pages/Watchlist/Watchlist";
 import TwoFactorAuth from "./pages/Auth/TwoFactorAuth";
 import ResetPasswordForm from "./pages/Auth/ResetPassword";
 import PasswordUpdateSuccess from "./pages/Auth/PasswordUpdateSuccess";
-import LoginWithGoogle from "./pages/Auth/LoginWithGoogle.";
+import LoginWithGoogle from "./pages/Auth/LoginWithGoogle";
 import Withdrawal from "./pages/Wallet/Withdrawal";
 import PaymentDetails from "./pages/Wallet/PaymentDetails";
 import WithdrawalAdmin from "./Admin/Withdrawal/WithdrawalAdmin";
 import Activity from "./pages/Activity/Activity";
 import SearchCoin from "./pages/Search/Search";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
+  return (
+    <>
+      <AppRoutes />
+      <Toaster />
+    </>
+  );
+}
+
+function AppRoutes() {
   const user = useSelector((store) => store.auth.user);
   const dispatch = useDispatch();
   const [sessionChecked, setSessionChecked] = useState(false);

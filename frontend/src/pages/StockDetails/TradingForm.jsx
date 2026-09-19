@@ -1,173 +1,206 @@
-import { getAssetDetails } from "@/Redux/Assets/Action";
-import { payOrder } from "@/Redux/Order/Action";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
-
-import { Input } from "@/components/ui/input";
-import { DotIcon } from "@radix-ui/react-icons";
-import { DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
+import { getAssetDetails } from "@/Redux/Assets/Action";
+import { payOrder } from "@/Redux/Order/Action";
+import { getUserWallet } from "@/Redux/Wallet/Action";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { formatCurrency, formatNumber } from "@/Util/format";
+import { cn } from "@/lib/utils";
+
+const PERCENTS = [25, 50, 75, 100];
+
+const round8 = (v) => Number(v.toFixed(8));
 
 const TradingForm = () => {
-  const { coin, asset, wallet } = useSelector((store) => store);
-  const [quantity, setQuantity] = useState(0);
-  const [amount, setAmount] = useState(0);
   const dispatch = useDispatch();
+  const { toast } = useToast();
+  const coinDetails = useSelector((store) => store.coin.coinDetails);
+  const assetDetails = useSelector((store) => store.asset.assetDetails);
+  const balance = useSelector((store) => store.wallet.userWallet?.balance) ?? 0;
   const [orderType, setOrderType] = useState("BUY");
+  const [amount, setAmount] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleOnChange = (e) => {
-    const amount = e.target.value;
-    setAmount(amount);
-    const volume = calculateBuyCost(amount, coin.coinDetails.market_data.current_price.usd);
-    setQuantity(volume);
+  const coinId = coinDetails?.id;
+  const price = coinDetails?.market_data?.current_price?.usd;
+  const symbol = coinDetails?.symbol?.toUpperCase();
+  const owned = assetDetails?.quantity ?? 0;
+  const isBuy = orderType === "BUY";
+
+  useEffect(() => {
+    if (coinId) dispatch(getAssetDetails({ coinId }));
+  }, [dispatch, coinId]);
+
+  const available = isBuy ? balance : owned * (price ?? 0);
+  const value = Number(amount) || 0;
+  const rawQuantity = price > 0 ? round8(value / price) : 0;
+  // selling the whole position must not exceed the owned quantity by float error
+  const quantity =
+    !isBuy && rawQuantity > owned && rawQuantity - owned < 1e-6
+      ? owned
+      : rawQuantity;
+
+  const validate = () => {
+    if (!(value > 0)) return "Inserisci un importo";
+    if (isBuy && value > balance) return "Saldo del wallet insufficiente";
+    if (!isBuy && quantity > owned) return "Quantità disponibile insufficiente";
+    if (!(quantity > 0)) return "Importo troppo piccolo";
+    return null;
+  };
+  const error = validate();
+  const showError = error && value > 0;
+
+  const switchType = (type) => {
+    setOrderType(type);
+    setAmount("");
   };
 
-  function calculateBuyCost(amountUSD, cryptoPrice) {
-    let volume = amountUSD / cryptoPrice;
+  const applyPercent = (percent) => {
+    const next = (available * percent) / 100;
+    setAmount(next > 0 ? String(Math.floor(next * 100) / 100) : "");
+  };
 
-    let decimalPlaces = Math.max(
-      2,
-      cryptoPrice.toString().split(".")[0].length
-    );
-
-    return volume.toFixed(decimalPlaces);
-  }
-
-  const handleBuyCrypto = () => {
-    dispatch(
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (error || submitting) return;
+    setSubmitting(true);
+    const order = await dispatch(
       payOrder({
-        amount,
-        orderData: {
-          coinId: coin.coinDetails?.id,
-          quantity,
-          orderType,
-        },
+        amount: value,
+        orderData: { coinId, quantity, orderType },
       })
     );
+    setSubmitting(false);
+    if (order) {
+      toast({
+        title: isBuy ? "Acquisto completato" : "Vendita completata",
+        description: `${formatNumber(quantity)} ${symbol} a ${formatCurrency(price)}`,
+      });
+      setAmount("");
+      dispatch(getUserWallet());
+      dispatch(getAssetDetails({ coinId }));
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Ordine non eseguito",
+        description: "Riprova tra qualche istante.",
+      });
+    }
   };
 
-  useEffect(()=>{
-    dispatch(getAssetDetails({coinId:coin.coinDetails.id}))
-
-  },[])
-
-
   return (
-    <div className="space-y-10 p-5">
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div
+        role="tablist"
+        aria-label="Tipo di ordine"
+        className="grid grid-cols-2 gap-1 rounded-xl bg-secondary p-1"
+      >
+        {[
+          { type: "BUY", label: "Acquista", active: "bg-up text-background" },
+          { type: "SELL", label: "Vendi", active: "bg-down text-background" },
+        ].map(({ type, label, active }) => (
+          <button
+            key={type}
+            type="button"
+            role="tab"
+            aria-selected={orderType === type}
+            onClick={() => switchType(type)}
+            className={cn(
+              "rounded-lg py-2 text-sm font-semibold transition-colors",
+              orderType === type
+                ? active
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div>
-        <div className=" flex gap-4 items-center justify-between">
+        <label
+          htmlFor="trade-amount"
+          className="mb-1.5 block text-xs font-medium text-muted-foreground"
+        >
+          Importo in USD
+        </label>
+        <div className="relative">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            $
+          </span>
           <Input
-            className="py-7 focus:outline-none "
-            placeholder="enter amount..."
-            onChange={handleOnChange}
+            id="trade-amount"
             type="number"
+            inputMode="decimal"
+            min="0"
+            step="any"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            aria-invalid={showError ? "true" : undefined}
+            aria-describedby="trade-error"
+            className="h-12 pl-7 text-lg tabular-nums"
           />
-          <div>
-            <p className="border text-2xl flex justify-center items-center w-36 h-14 rounded-md">
-              {quantity}
-            </p>
-          </div>
         </div>
-        {orderType == "SELL"?
-          (asset.assetDetails?.quantity * coin.coinDetails?.current_price <
-            amount) && (
-            <h1 className="text-red-800 text-center pt-4">
-              Insufficient quantity to sell
-            </h1>
-          ):(quantity * coin.coinDetails?.market_data.current_price.usd >
-            wallet.userWallet?.balance) && (
-            <h1 className="text-red-800 text-center pt-4">
-              Insufficient Wallet Balance To Buy
-            </h1>
-          )}
-      </div>
-
-      <div className="flex gap-5 items-center">
-        <div>
-          <Avatar>
-            <AvatarImage src={coin.coinDetails?.image.large} />
-          </Avatar>
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <p>{coin.coinDetails?.symbol?.toUpperCase()}</p>
-            <DotIcon className="text-gray-400" />
-            <p className="text-gray-400">{coin.coinDetails?.name}</p>
-          </div>
-          <div className="flex items-end gap-2">
-            <p className="text-xl font-bold">
-              {coin.coinDetails?.market_data.current_price.usd}
-            </p>
-            <p
-              className={`${
-                coin.coinDetails?.market_data.market_cap_change_24h < 0
-                  ? "text-red-600"
-                  : "text-green-600"
-              }`}
+        <div className="mt-2 flex gap-1.5">
+          {PERCENTS.map((percent) => (
+            <button
+              key={percent}
+              type="button"
+              onClick={() => applyPercent(percent)}
+              disabled={!(available > 0)}
+              className="flex-1 rounded-full border py-1 text-xs font-semibold text-muted-foreground transition-colors hover:bg-primary/5 hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
             >
-              <span className="">
-                {coin.coinDetails?.market_data.market_cap_change_24h}
-              </span>
-              <span>
-                ({coin.coinDetails?.market_data.market_cap_change_percentage_24h}%)
-              </span>
-            </p>
-          </div>
+              {percent}%
+            </button>
+          ))}
         </div>
+        <p id="trade-error" role="alert" className="mt-2 min-h-5 text-sm text-down">
+          {showError ? error : ""}
+        </p>
       </div>
 
-      <div className="flex items-center justify-between">
-        <p>Order Type</p>
-        <p>Market Order</p>
-      </div>
-      <div className="flex items-center justify-between">
-        <p>{orderType == "BUY" ? "Available Case" : "Available Quantity"}</p>
-        <div>
-          {orderType == "BUY" ? (
-            <div className="flex items-center ">
-              <DollarSign />
-
-              <span className="text-2xl font-semibold">
-                {wallet.userWallet?.balance}
-              </span>
-            </div>
-          ) : (
-            <p>{asset.assetDetails?.quantity || 0}</p>
-          )}
+      <dl className="space-y-2 rounded-xl border p-3 text-sm">
+        <div className="flex justify-between">
+          <dt className="text-muted-foreground">Prezzo</dt>
+          <dd className="font-medium tabular-nums">{formatCurrency(price)}</dd>
         </div>
-      </div>
-      <div className="">
-        <DialogClose className="w-full">
-          <Button
-          onClick={handleBuyCrypto}
-          className={`w-full py-6 ${
-            orderType == "SELL" ? "bg-red-600 text-white" : ""
-          }`}
-          disabled={
-            quantity==0 ||
-            (orderType == "SELL" && !asset.assetDetails?.quantity) ||
-            (orderType == "SELL" ?
-              (asset.assetDetails?.quantity * coin.coinDetails?.market_data.current_price.usd <
-                amount):quantity * coin.coinDetails?.market_data.current_price.usd >
-                wallet.userWallet?.balance)
-          }
-        >
-          {orderType}
-        </Button>
-        </DialogClose>
-        
+        <div className="flex justify-between">
+          <dt className="text-muted-foreground">
+            {isBuy ? "Riceverai" : "Venderai"}
+          </dt>
+          <dd className="font-medium tabular-nums">
+            {formatNumber(quantity)} {symbol}
+          </dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-muted-foreground">Tipo di ordine</dt>
+          <dd className="font-medium">Market</dd>
+        </div>
+        <div className="flex justify-between border-t pt-2">
+          <dt className="text-muted-foreground">
+            {isBuy ? "Saldo disponibile" : `${symbol} posseduti`}
+          </dt>
+          <dd className="font-medium tabular-nums">
+            {isBuy ? formatCurrency(balance) : `${formatNumber(owned)} ${symbol}`}
+          </dd>
+        </div>
+      </dl>
 
-        <Button
-          onClick={() => setOrderType(orderType == "BUY" ? "SELL" : "BUY")}
-          className="w-full mt-5 text-xl"
-          variant="link"
-        >
-          {orderType == "BUY" ? "Or Sell" : "Or Buy"}
-        </Button>
-      </div>
-    </div>
+      <button
+        type="submit"
+        disabled={Boolean(error) || submitting}
+        className={cn(
+          "inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-background transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-40",
+          isBuy ? "bg-up" : "bg-down"
+        )}
+      >
+        {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+        {isBuy ? "Acquista" : "Vendi"} {symbol}
+      </button>
+    </form>
   );
 };
 
