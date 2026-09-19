@@ -6,8 +6,13 @@ export const payOrder = ({ orderData, amount }) => async (dispatch) => {
   try {
     const response = await api.post('/api/orders/pay', orderData);
     dispatch({ type: types.PAY_ORDER_SUCCESS, payload: response.data, amount });
+    return response.data;
   } catch (error) {
-    dispatch({ type: types.PAY_ORDER_FAILURE, error: error.message });
+    dispatch({
+      type: types.PAY_ORDER_FAILURE,
+      error: error.response?.data?.message || error.message,
+    });
+    return null;
   }
 };
 

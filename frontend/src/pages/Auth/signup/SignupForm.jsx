@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
+import GoogleButton from "@/components/custome/GoogleButton";
 
 const formSchema = z.object({
   fullName: z.string().nonempty("Il nome è obbligatorio"),
@@ -97,6 +98,7 @@ const SignupForm = ({ error }) => {
           )}
         />
         <SubmitButton loading={loading}>Registrati</SubmitButton>
+        <GoogleButton />
       </form>
     </Form>
   );

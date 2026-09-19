@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
+import GoogleButton from "@/components/custome/GoogleButton";
 
 const formSchema = z.object({
   email: z.string().email("Indirizzo email non valido"),
@@ -86,6 +87,7 @@ const LoginForm = ({ error }) => {
           </Link>
         </div>
         <SubmitButton loading={loading}>Accedi</SubmitButton>
+        <GoogleButton />
       </form>
     </Form>
   );
