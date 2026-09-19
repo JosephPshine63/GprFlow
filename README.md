@@ -19,6 +19,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 - JWT authentication + optional 2FA (OTP via email)
 - Forgot/reset password flow (OTP via email)
 - Gemini AI chatbot for crypto Q&A
+- Per-IP rate limiting and Cloudflare Turnstile on signup, signin and password reset
 - Admin panel for withdrawal approval/rejection
 
 ---
@@ -36,6 +37,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 | Payments | Stripe |
 | External APIs | CoinGecko, Gemini AI, Resend |
 | Email | Resend (REST API) |
+| Bot protection | Cloudflare Turnstile |
 | Build | Maven |
 
 ### Frontend
@@ -61,7 +63,7 @@ fronted by a single API gateway:
 
 | Service | Port | Owns |
 |---|---|---|
-| `gateway` | `8080` (host `8087` in Compose) | Single entry point for the frontend. Routes by path prefix to the service that owns it. |
+| `gateway` | `8080` (host `8087` in Compose) | Single entry point for the frontend. Routes by path prefix to the service that owns it, and applies rate limiting, a request body cap and Turnstile verification. |
 | `monolith` | `5454` | What's left of the original API: a public health-check endpoint (`HomeController`). No DB. |
 | `coin-service` | `5455` | Coin/market-data domain (CoinGecko integration). |
 | `chatbot-service` | `5456` | Gemini AI chatbot. Stateless, no database. |
@@ -86,6 +88,20 @@ token. `ledger-service` and `user-service` have no JWT-validation logic of their
 trust those headers, so they must never be reached except through the gateway (they don't
 publish a port in Docker Compose, so this is already enforced there). `auth-service` and
 `coin-service` validate JWTs themselves with the same secret as the gateway.
+
+**Abuse protection:** the gateway also runs, before routing, a per-client-IP rate limit (auth
+paths 20/min, chatbot 15/min, everything else 300/min; `RATE_LIMIT_*` variables), a 1 MB body cap
+(`MAX_BODY_BYTES`) and a Cloudflare Turnstile check on `POST /auth/signup`, `/auth/signin` and
+`/auth/users/reset-password/send-otp`. The frontend sends the widget token in the
+`X-Turnstile-Token` header. The client IP comes from `CF-Connecting-IP` only when the request
+arrives from a private or loopback peer (i.e. through the tunnel). The default Turnstile keys are
+Cloudflare's always-pass test keys, so the flow works but nothing is blocked until real keys are
+set (see [Configuration Reference](#configuration-reference)). The check fails closed: if the
+gateway can't reach Cloudflare, those three endpoints reject every request, and
+`TURNSTILE_ENABLED=false` switches it off.
+
+**Email verification:** the `verified` flag on a user is informational only. It is shown on the
+profile page but no service enforces it, so an unverified user can trade, top up and withdraw.
 
 **Database:** one PostgreSQL 15 instance shared by all services, split by schema —
 `coin` (coin-service), `ledger` (ledger-service), `auth` (auth-service), `users` (user-service).
@@ -209,7 +225,7 @@ example files and fill in real values:
 
 | File | Used by |
 |---|---|
-| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, Resend, Stripe/CoinGecko/Gemini keys, seed admin account, `TUNNEL_TOKEN` |
+| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, `STRIPE_TEST_MODE`, Turnstile keys (`TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_ENABLED`), Resend, Stripe/CoinGecko/Gemini keys, seed admin account, `TUNNEL_TOKEN` |
 | `backend/auth-service/.env.example`, `backend/user-service/.env.example` | Bare `mvn spring-boot:run` for those services |
 | `frontend/.env.example` | `VITE_API_BASE_URL` for `npm run dev` |
 
@@ -248,7 +264,10 @@ API_BASE_URL=https://api.yourdomain.com
 ```
 
 Also fill in your real Resend, Stripe, CoinGecko, and Gemini credentials, and set
-`ADMIN_PASSWORD` (the seed admin account is created on first boot).
+`ADMIN_PASSWORD` (the seed admin account is created on first boot). To actually enforce the
+captcha, create a Turnstile widget in the Cloudflare dashboard (hostname = your frontend domain)
+and set `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY`; keep `STRIPE_TEST_MODE=false` outside
+demos with `sk_test_` keys.
 
 You'll typically want **two public hostnames** — one for the frontend, one for the API — because
 the frontend calls `API_BASE_URL` as an absolute URL and the bundled nginx doesn't do
@@ -331,11 +350,15 @@ git pull
 docker compose up -d --build
 ```
 
-The repo ships `.github/workflows/deploy.yml`, which does exactly this on every push to `main`:
-the runner joins a Tailscale network (OAuth client in `TS_OAUTH_CLIENT_ID` /
-`TS_OAUTH_CLIENT_SECRET`), SSHes into the server with `DEPLOY_SSH_KEY`, and runs
-`git pull && docker compose up --build -d` in `~/Applications/GprFlow`. There is no staging
-step and no test gate, so a push to `main` is a production deploy.
+The repo ships `.github/workflows/ci.yml`. On pull requests and pushes to `main` it runs the
+frontend checks (`npm run lint:emoji`, `npm run build`) and `mvn test` for each backend service.
+On a push to `main`, and only if those pass, the `deploy` job joins a Tailscale network (OAuth
+client in `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_CLIENT_SECRET`), SSHes into the server with
+`DEPLOY_SSH_KEY`, and runs `git pull --ff-only && docker compose up --build -d` in
+`~/Applications/GprFlow`. It then curls the gateway on `localhost:8087`; if the build or that
+health check fails it resets the checkout to the previous commit and rebuilds (schema changes
+made by `ddl-auto=update` are not rolled back). There is no staging step, so a push to `main` is
+a production deploy.
 
 ---
 
@@ -373,6 +396,11 @@ above — they're listed here to track, not already resolved:
   gateway — true today because they publish no host ports in Compose, but worth re-checking any
   time the
   Compose file changes.
+- **Turnstile ships with test keys.** Until real keys are set the captcha blocks nothing; only
+  the rate limit protects signup and signin. Since the check fails closed, keep
+  `TURNSTILE_ENABLED=false` in mind as the way out if the server can't reach
+  `challenges.cloudflare.com`.
+- **Email verification is not enforced.** See the note under Architecture.
 - **No health checks beyond `db`.** Other services use `depends_on` without
   `condition: service_healthy`, so a cold `docker compose up` can show transient connection
   errors for a few seconds until every Spring service finishes starting. Not a functional
@@ -394,8 +422,9 @@ npm run lint
 
 `ledger-service` additionally has Testcontainers-backed integration tests covering the wallet
 trading flow, wallet concurrency, and withdrawal flow (`src/test/java/dev/pioruocco/**/*IntegrationTest.java`).
-Other backend modules currently only have the default Spring Boot context-load test. There is no
-frontend test suite (only `npm run lint`).
+`gateway` has unit tests for its filters (rate limiting, body cap, Turnstile). The remaining
+modules have little or nothing beyond the default Spring Boot context-load test. There is no
+frontend test suite; CI runs `npm run lint:emoji` and `npm run build`.
 
 ---
 
