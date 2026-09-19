@@ -1,4 +1,5 @@
 import api from "@/Api/api";
+import { apiErrorMessage } from "@/Util/apiError";
 import * as types from "./ActionTypes";
 
 export const getUserWallet = () => async (dispatch) => {
@@ -33,9 +34,12 @@ export const depositMoney =
         },
       });
       dispatch({ type: types.DEPOSIT_MONEY_SUCCESS, payload: response.data });
-      navigate("/wallet");
+      navigate("/payment/success", { replace: true });
+      return response.data;
     } catch (error) {
-      dispatch({ type: types.DEPOSIT_MONEY_FAILURE, error: error.message });
+      const message = apiErrorMessage(error);
+      dispatch({ type: types.DEPOSIT_MONEY_FAILURE, error: message });
+      throw new Error(message);
     }
   };
 
@@ -48,10 +52,14 @@ export const paymentHandler =
         `/api/payment/${paymentMethod}/amount/${amount}`,
         null
       );
+      // the page leaves for the payment provider; the reducer must not take
+      // the payment link as a wallet
       window.location.href = response.data.payment_url;
-      dispatch({ type: types.DEPOSIT_MONEY_SUCCESS, payload: response.data });
+      return response.data;
     } catch (error) {
-      dispatch({ type: types.DEPOSIT_MONEY_FAILURE, error: error.message });
+      const message = apiErrorMessage(error);
+      dispatch({ type: types.DEPOSIT_MONEY_FAILURE, error: message });
+      throw new Error(message);
     }
   };
 
@@ -65,7 +73,10 @@ export const transferMoney =
         reqData
       );
       dispatch({ type: types.TRANSFER_MONEY_SUCCESS, payload: response.data });
+      return response.data;
     } catch (error) {
-      dispatch({ type: types.TRANSFER_MONEY_FAILURE, error: error.message });
+      const message = apiErrorMessage(error);
+      dispatch({ type: types.TRANSFER_MONEY_FAILURE, error: message });
+      throw new Error(message);
     }
   };

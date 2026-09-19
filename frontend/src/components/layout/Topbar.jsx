@@ -27,7 +27,7 @@ const Topbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
+    <header className="sticky top-[var(--banner-h,0px)] z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
       <Link to="/" className="md:hidden" aria-label="GprFlow">
         <BrandMark className="h-7" />
       </Link>

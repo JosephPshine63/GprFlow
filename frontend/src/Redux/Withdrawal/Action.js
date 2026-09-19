@@ -1,4 +1,5 @@
 import api from '@/Api/api';
+import { apiErrorMessage } from '@/Util/apiError';
 import {
   WITHDRAWAL_REQUEST,
   WITHDRAWAL_SUCCESS,
@@ -25,8 +26,11 @@ export const withdrawalRequest = ({ amount }) => async dispatch => {
   try {
     const response = await api.post(`/api/withdrawal/${amount}`, null);
     dispatch({ type: WITHDRAWAL_SUCCESS, payload: response.data });
+    return response.data;
   } catch (error) {
-    dispatch({ type: WITHDRAWAL_FAILURE, payload: error.message });
+    const message = apiErrorMessage(error);
+    dispatch({ type: WITHDRAWAL_FAILURE, payload: message });
+    throw new Error(message);
   }
 };
 
@@ -65,8 +69,11 @@ export const addPaymentDetails = ({ paymentDetails }) => async dispatch => {
   try {
     const response = await api.post(`/api/payment-details`, paymentDetails);
     dispatch({ type: ADD_PAYMENT_DETAILS_SUCCESS, payload: response.data });
+    return response.data;
   } catch (error) {
-    dispatch({ type: ADD_PAYMENT_DETAILS_FAILURE, payload: error.message });
+    const message = apiErrorMessage(error);
+    dispatch({ type: ADD_PAYMENT_DETAILS_FAILURE, payload: message });
+    throw new Error(message);
   }
 };
 

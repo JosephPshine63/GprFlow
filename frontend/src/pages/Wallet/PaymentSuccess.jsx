@@ -1,52 +1,33 @@
-import { getUserWallet } from '@/Redux/Wallet/Action'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { DollarSignIcon, WalletIcon } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { CheckCircle2 } from "lucide-react";
+import { formatCurrency } from "@/Util/format";
 
 const PaymentSuccess = () => {
-  const dispatch = useDispatch();
-  const { wallet } = useSelector((store) => store);
+  const balance = useSelector((store) => store.wallet.userWallet?.balance);
 
-  const handleFetchUserWallet = () => {
-    dispatch(getUserWallet());
-  };
   return (
-    <div className='flex flex-col justify-center items-center h-screen'>
-      <h1 className='text-2xl font-semibold pb-5'>Paymet Added Successfully</h1>
-       <Card className="w-[50%]">
-          <CardHeader className="pb-9 ">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-5">
-                <WalletIcon className="h-8 w-8" />
-                <CardTitle className="text-2xl">My Balance</CardTitle>
-              </div>
-              <div>
-                <Button
-                  onClick={handleFetchUserWallet}
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                >
-                  <ReloadIcon className="w-6 h-6" />
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center ">
-              <DollarSignIcon />
-
-              <span className="text-2xl font-semibold">
-                {wallet.userWallet?.balance}
-              </span>
-            </div>
-
-          </CardContent>
-        </Card>
+    <div className="mx-auto flex max-w-md flex-col items-center py-16 text-center">
+      <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-up/10 text-up">
+        <CheckCircle2 className="h-8 w-8" strokeWidth={1.75} aria-hidden="true" />
+      </span>
+      <h1 className="mt-5 text-2xl font-semibold">Deposito completato</h1>
+      <p className="mt-2 text-muted-foreground">
+        I fondi sono stati aggiunti al tuo wallet.
+      </p>
+      {balance !== undefined && (
+        <p className="mt-6 text-sm text-muted-foreground">
+          Saldo attuale
+          <span className="mt-1 block text-3xl font-semibold tabular-nums text-foreground">
+            {formatCurrency(Number(balance))}
+          </span>
+        </p>
+      )}
+      <Link to="/wallet" className="btn-brand mt-8 h-11 px-6">
+        Vai al wallet
+      </Link>
     </div>
-  )
-}
+  );
+};
 
-export default PaymentSuccess
+export default PaymentSuccess;

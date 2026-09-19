@@ -1,165 +1,110 @@
+/* eslint-disable react/prop-types */
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useDispatch } from "react-redux";
+import { Loader2 } from "lucide-react";
+import { addPaymentDetails } from "@/Redux/Withdrawal/Action";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import AuthError from "@/components/custome/AuthError";
 
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
-import { addPaymentDetails } from "@/Redux/Withdrawal/Action";
+const formSchema = z
+  .object({
+    accountHolderName: z.string().trim().min(1, "Inserisci l'intestatario del conto"),
+    ifsc: z
+      .string()
+      .trim()
+      .refine((v) => v === "" || v.length === 11, "Il codice IFSC ha 11 caratteri"),
+    accountNumber: z.string().trim().min(1, "Inserisci il numero di conto"),
+    confirmAccountNumber: z.string(),
+    bankName: z.string().trim().min(1, "Inserisci il nome della banca"),
+  })
+  .refine((data) => data.accountNumber === data.confirmAccountNumber, {
+    path: ["confirmAccountNumber"],
+    message: "I numeri di conto non coincidono",
+  });
 
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+const FIELDS = [
+  { name: "accountHolderName", label: "Intestatario del conto", placeholder: "Mario Rossi", autoComplete: "name" },
+  { name: "bankName", label: "Nome della banca", placeholder: "YES Bank" },
+  { name: "ifsc", label: "Codice IFSC (facoltativo)", placeholder: "Solo per conti indiani" },
+  { name: "accountNumber", label: "Numero di conto", placeholder: "000000005602", autoComplete: "off" },
+  { name: "confirmAccountNumber", label: "Conferma numero di conto", placeholder: "Ripeti il numero di conto", autoComplete: "off" },
+];
 
-const formSchema = yup.object().shape({
-  accountHolderName: yup.string().required("Account holder name is required"),
-  ifscCode: yup.string().length(11, "IFSC code must be 11 characters"),
-  accountNumber: yup.string().required("Account number is required"),
-  confirmAccountNumber: yup.string().test({
-    name: "match",
-    message: "Account numbers do not match",
-    test: function (value) {
-      return value === this.parent.accountNumber;
-    },
-  }),
-  bankName: yup.string().required("Bank name is required"),
-});
-
-const PaymentDetailsForm = () => {
+const PaymentDetailsForm = ({ onDone }) => {
   const dispatch = useDispatch();
-  const { auth } = useSelector((store) => store);
+  const { toast } = useToast();
+  const [error, setError] = useState(null);
   const form = useForm({
-    resolver: yupResolver(formSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       accountHolderName: "",
+      bankName: "",
       ifsc: "",
       accountNumber: "",
-      bankName: "",
+      confirmAccountNumber: "",
     },
   });
-  const onSubmit = (data) => {
-    dispatch(
-      addPaymentDetails({ paymentDetails: data })
-    );
-    console.log("payment details form", data);
+  const submitting = form.formState.isSubmitting;
+
+  const onSubmit = async (data) => {
+    const paymentDetails = { ...data };
+    delete paymentDetails.confirmAccountNumber;
+    setError(null);
+    try {
+      await dispatch(addPaymentDetails({ paymentDetails }));
+      toast({ title: "Dati di pagamento salvati" });
+      onDone();
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
   return (
-    <div className="px-10 py-2">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <AuthError error={error} />
+        {FIELDS.map(({ name, label, placeholder, autoComplete }) => (
           <FormField
+            key={name}
             control={form.control}
-            name="accountHolderName"
+            name={name}
             render={({ field }) => (
               <FormItem>
-                <Label>Account holder name</Label>
+                <FormLabel className="text-xs font-medium text-muted-foreground">
+                  {label}
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="code with dev.pioruocco"
+                    autoComplete={autoComplete}
+                    className="h-11"
+                    placeholder={placeholder}
                   />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
+        ))}
 
-          <FormField
-            control={form.control}
-            name="ifsc"
-            render={({ field }) => (
-              <FormItem>
-                <Label>IFSC Code</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    name="ifsc"
-                    className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="YESB0000009"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="accountNumber"
-            type="password"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Account Number</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="*********5602"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirmAccountNumber"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Confirm Account Number</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="Confirm Account Number"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="bankName"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Bank Name</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="YES Bank"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {!auth.loading ? (
-            <Button type="submit" className="w-full  py-5">
-              SUBMIT
-            </Button>
-          ) : (
-            <Skeleton className="w-full py-5" />
-          )}
-        </form>
-      </Form>
-    </div>
+        <button type="submit" disabled={submitting} className="btn-brand h-12 w-full">
+          {submitting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+          Salva
+        </button>
+      </form>
+    </Form>
   );
 };
 

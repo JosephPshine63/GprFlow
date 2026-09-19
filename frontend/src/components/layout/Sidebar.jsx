@@ -18,7 +18,7 @@ const Sidebar = () => {
   const items = role === "ROLE_ADMIN" ? [...navItems, adminItem] : navItems;
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card md:flex lg:w-60">
+    <aside className="fixed bottom-0 left-0 top-[var(--banner-h,0px)] z-40 hidden w-16 flex-col border-r bg-card md:flex lg:w-60">
       <NavLink
         to="/"
         className="flex h-16 items-center justify-center gap-3 border-b px-4 lg:justify-start"

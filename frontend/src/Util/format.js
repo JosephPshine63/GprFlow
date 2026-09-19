@@ -30,6 +30,26 @@ export const formatCompact = (v) => (isNum(v) ? compact.format(v) : "-");
 
 export const formatNumber = (v) => (isNum(v) ? number.format(v) : "-");
 
+const dateOnly = /^\d{4}-\d{2}-\d{2}$/;
+
+// LocalDate strings ("2026-09-19") must not shift day with the viewer's timezone.
+export const formatDate = (v) => {
+  if (!v) return "-";
+  const date = new Date(v);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("it-IT", {
+    dateStyle: "medium",
+    ...(typeof v === "string" && dateOnly.test(v) ? { timeZone: "UTC" } : {}),
+  });
+};
+
+export const formatDateTime = (v) => {
+  if (!v) return "-";
+  const date = new Date(v);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleString("it-IT", { dateStyle: "medium", timeStyle: "short" });
+};
+
 export const formatPercent = (v) => {
   if (!isNum(v)) return "-";
   return `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`;

@@ -1,242 +1,252 @@
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  AlertCircle,
+  ArrowDownToLine,
+  ArrowLeftRight,
+  ArrowUpFromLine,
+  Copy,
+  RefreshCw,
+  ReceiptText,
+} from "lucide-react";
 import {
   depositMoney,
   getUserWallet,
   getWalletTransactions,
 } from "@/Redux/Wallet/Action";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  CopyIcon,
-  DownloadIcon,
-  ReloadIcon,
-  ShuffleIcon,
-  UpdateIcon,
-  UploadIcon,
-} from "@radix-ui/react-icons";
-import { DollarSign, WalletIcon } from "lucide-react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { getPaymentDetails } from "@/Redux/Withdrawal/Action";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import AppDialog from "@/components/custome/AppDialog";
+import EmptyState from "@/components/custome/EmptyState";
+import { formatCurrency, formatDate } from "@/Util/format";
+import { describeTransaction } from "@/Util/walletTransaction";
+import { cn } from "@/lib/utils";
 import TopupForm from "./TopupForm";
 import TransferForm from "./TransferForm";
 import WithdrawForm from "./WithdrawForm";
-import { getPaymentDetails } from "@/Redux/Withdrawal/Action";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import SpinnerBackdrop from "@/components/custome/SpinnerBackdrop";
 
+const ACTIONS = [
+  { key: "topup", label: "Deposita", icon: ArrowDownToLine },
+  { key: "withdraw", label: "Preleva", icon: ArrowUpFromLine },
+  { key: "transfer", label: "Trasferisci", icon: ArrowLeftRight },
+];
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+const DIALOGS = {
+  topup: {
+    title: "Deposita fondi",
+    description: "Ricarica il wallet con carta tramite Stripe.",
+    Form: TopupForm,
+  },
+  withdraw: {
+    title: "Richiedi un prelievo",
+    description: "Il prelievo viene accreditato sul tuo conto dopo l'approvazione.",
+    Form: WithdrawForm,
+  },
+  transfer: {
+    title: "Trasferisci a un altro wallet",
+    description: "Invia dollari al wallet di un altro utente.",
+    Form: TransferForm,
+  },
+};
 
 const Wallet = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate();
-  const { wallet } = useSelector((store) => store);
-  const query = useQuery();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { search } = useLocation();
+  const { order_id: routeOrderId } = useParams();
+  const wallet = useSelector((store) => store.wallet);
+  const [dialog, setDialog] = useState(null);
+  const depositStarted = useRef(false);
+
+  const query = new URLSearchParams(search);
   const paymentId = query.get("session_id");
-  const orderId = query.get("order_id");
-  const {order_id}=useParams();
+  const orderId = query.get("order_id") || routeOrderId;
+
+  // Stripe sends the user back here with the checkout session in the URL.
+  useEffect(() => {
+    if (!orderId || !paymentId || depositStarted.current) return;
+    depositStarted.current = true;
+    dispatch(depositMoney({ orderId, paymentId, navigate })).catch((err) => {
+      toast({
+        variant: "destructive",
+        title: "Deposito non completato",
+        description: err.message,
+      });
+      navigate("/wallet", { replace: true });
+    });
+  }, [dispatch, navigate, toast, orderId, paymentId]);
 
   useEffect(() => {
-    if ((orderId || order_id) && paymentId) {
-      dispatch(
-        depositMoney({
-          orderId: orderId || order_id,
-          paymentId,
-          navigate,
-        })
-      );
-    }
-  }, [paymentId, orderId]);
-
-  useEffect(() => {
-    handleFetchUserWallet();
-    hanldeFetchWalletTransactions();
-    dispatch(getPaymentDetails());
-  }, []);
-
-  const handleFetchUserWallet = () => {
     dispatch(getUserWallet());
-  };
+    dispatch(getWalletTransactions());
+    dispatch(getPaymentDetails());
+  }, [dispatch]);
 
-  const hanldeFetchWalletTransactions = () => {
+  const refresh = () => {
+    dispatch(getUserWallet());
     dispatch(getWalletTransactions());
   };
 
-  function copyToClipboard(text) {
-    // Create a new element
-    const element = document.createElement("textarea");
-    element.value = text;
-    document.body.appendChild(element);
-
-    // Select the text content
-    element.select();
-
-    // Try copying the selection using Async Clipboard API
+  const copyId = async () => {
     try {
-      const copied = navigator.clipboard.writeText(text);
-      copied.then(
-        () => {
-          console.log("Text copied to clipboard!");
-        },
-        (err) => {
-          console.error("Failed to copy text: ", err);
-        }
-      );
-    } catch (err) {
-      console.error(
-        "Failed to copy text (fallback to deprecated execCommand): ",
-        err
-      );
+      await navigator.clipboard.writeText(String(wallet.userWallet?.id));
+      toast({ title: "ID wallet copiato" });
+    } catch {
+      toast({ variant: "destructive", title: "Copia non riuscita" });
     }
+  };
 
-    // Cleanup
-    document.body.removeChild(element);
-  }
+  const walletLoaded = Boolean(wallet.userWallet?.id);
+  const walletFailed = !walletLoaded && !wallet.loading && wallet.error;
+  const transactions = wallet.transactions ?? [];
+  const closeDialog = () => setDialog(null);
+  const active = dialog ? DIALOGS[dialog] : null;
 
-  console.log("order _ id", order_id);
-  if(wallet.loading){
-    return <SpinnerBackdrop/>
-  }
-  
   return (
-    <div className="flex flex-col items-center">
-      <div className="pt-10 w-full lg:w-[60%]">
-        <Card>
-          <CardHeader className="pb-9 ">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-5">
-                <WalletIcon className="h-8 w-8" />
-                <div>
-                  <CardTitle className="text-2xl">My Wallet</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <p className="text-gray-200 text-sm">
-                      #FAVHJY{wallet.userWallet?.id}
-                    </p>
+    <div className="mx-auto max-w-3xl space-y-8">
+      <h1 className="text-2xl font-semibold md:text-3xl">Wallet</h1>
 
-                    <CopyIcon
-                      onClick={() => copyToClipboard(wallet.userWallet?.id)}
-                      className="cursor-pointer hover:text-slate-300"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <ReloadIcon
-                  onClick={handleFetchUserWallet}
-                  className="w-6 h-6 cursor-pointer hover:text-gray-400"
-                />
-              </div>
+      {walletFailed ? (
+        <div className="surface">
+          <EmptyState
+            icon={AlertCircle}
+            title="Impossibile caricare il wallet"
+            description={wallet.error}
+          >
+            <button type="button" onClick={refresh} className="btn-brand h-11">
+              Riprova
+            </button>
+          </EmptyState>
+        </div>
+      ) : (
+        <section
+          aria-label="Saldo"
+          className="rounded-2xl bg-brand p-6 text-white shadow-[0_20px_60px_rgba(47,49,149,0.35)]"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm text-white/70">Saldo disponibile</p>
+              {walletLoaded ? (
+                <p className="mt-1 text-4xl font-semibold tabular-nums md:text-5xl">
+                  {formatCurrency(Number(wallet.userWallet.balance))}
+                </p>
+              ) : (
+                <Skeleton className="mt-2 h-11 w-48 bg-white/20" />
+              )}
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center ">
-              <DollarSign />
-
-              <span className="text-2xl font-semibold">
-                {wallet.userWallet?.balance}
-              </span>
-            </div>
-
-            <div className="flex gap-7 mt-5">
-              <Dialog className="">
-                <DialogTrigger>
-                  <div className="h-24 w-24 hover:text-gray-400 cursor-pointer flex flex-col items-center justify-center rounded-md shadow-slate-800 shadow-md">
-                    <UploadIcon />
-                    <span className="text-sm mt-2 ">Add Money</span>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="p-10">
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-2xl">
-                      Top Up Your Wallet
-                    </DialogTitle>
-                    <TopupForm />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-
-              <Dialog>
-                <DialogTrigger>
-                  <div className="h-24 w-24 hover:text-gray-400 cursor-pointer flex flex-col items-center justify-center rounded-md shadow-slate-800 shadow-md">
-                    <DownloadIcon />
-                    <span className="text-sm mt-2">Withdraw</span>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="p-10">
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-xl">
-                      Request Withdrawal
-                    </DialogTitle>
-                    <WithdrawForm />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-
-              <Dialog>
-                <DialogTrigger>
-                  <div className="h-24 w-24 hover:text-gray-400 cursor-pointer flex flex-col items-center justify-center rounded-md shadow-slate-800 shadow-md">
-                    <ShuffleIcon />
-                    <span className="text-sm mt-2">Transer</span>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="p-10">
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-xl">
-                      Transfer To Other Wallet
-                    </DialogTitle>
-                    <TransferForm />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </CardContent>
-        </Card>
-        <div className="py-5 pt-10">
-          <div className="flex gap-2 items-center pb-5">
-            <h1 className="text-2xl font-semibold">History</h1>
-            <UpdateIcon
-              onClick={hanldeFetchWalletTransactions}
-              className="p-0 h-7 w-7 cursor-pointer hover:text-gray-400"
-            />
+            <button
+              type="button"
+              onClick={refresh}
+              aria-label="Aggiorna saldo e movimenti"
+              className="rounded-full p-2 text-white/80 transition-colors hover:bg-white/15 hover:text-white"
+            >
+              <RefreshCw
+                className={cn("h-5 w-5", wallet.loading && "animate-spin")}
+                strokeWidth={1.75}
+              />
+            </button>
           </div>
 
-          {/* <Separator /> */}
-          <div className="space-y-5">
-            {wallet.transactions?.map((item, index) => (
-              <div key={index}>
-                <Card className="lg:w-[50] px-5 py-2 flex justify-between items-center">
-                  <div className="flex items-center gap-5">
-                    <Avatar>
-                      <AvatarFallback>
-                        <ShuffleIcon />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-1">
-                      <h1>{item.type || item.purpose}</h1>
-                      <p className="text-sm text-gray-500">{item.date}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="flex items-center">
-                      {/* <DollarSign className="h-4 w-4" /> */}
-                      <span className={`${item.amount>0?"text-green-500":"text-red-500"}`}>{item.amount} USD</span>
-                    </p>
-                  </div>
-                </Card>
-              </div>
+          {walletLoaded && (
+            <div className="mt-3 flex items-center gap-1.5 text-sm text-white/70">
+              <span>ID wallet {wallet.userWallet.id}</span>
+              <button
+                type="button"
+                onClick={copyId}
+                aria-label="Copia ID wallet"
+                className="rounded-full p-1 transition-colors hover:bg-white/15 hover:text-white"
+              >
+                <Copy className="h-3.5 w-3.5" strokeWidth={1.75} />
+              </button>
+            </div>
+          )}
+
+          <div className="mt-6 grid grid-cols-3 gap-3">
+            {ACTIONS.map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setDialog(key)}
+                disabled={!walletLoaded}
+                className="flex flex-col items-center gap-2 rounded-xl bg-white/15 py-3.5 text-sm font-semibold transition-colors hover:bg-white/25 disabled:pointer-events-none disabled:opacity-50"
+              >
+                <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                {label}
+              </button>
             ))}
           </div>
-        </div>
-      </div>
-     
+        </section>
+      )}
+
+      <section aria-labelledby="wallet-history">
+        <h2 id="wallet-history" className="mb-3 text-lg font-semibold">
+          Movimenti
+        </h2>
+
+        {transactions.length === 0 && wallet.loading ? (
+          <div className="space-y-2">
+            {[0, 1, 2].map((i) => (
+              <Skeleton key={i} className="h-16 w-full rounded-2xl" />
+            ))}
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="surface">
+            <EmptyState
+              icon={ReceiptText}
+              title="Nessun movimento"
+              description="Depositi, prelievi e trasferimenti compariranno qui."
+            />
+          </div>
+        ) : (
+          <ul className="space-y-2">
+            {[...transactions]
+              .sort((a, b) => (b.id ?? 0) - (a.id ?? 0))
+              .map((item, index) => {
+              const { label, icon: Icon, direction, value } = describeTransaction(item);
+              return (
+                <li
+                  key={item.id ?? index}
+                  className="surface flex items-center gap-3 px-4 py-3"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                    <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{label}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {formatDate(item.date)}
+                      {item.purpose ? ` - ${item.purpose}` : ""}
+                    </p>
+                  </div>
+                  <p
+                    className={cn(
+                      "shrink-0 font-semibold tabular-nums",
+                      direction > 0 ? "text-up" : "text-down"
+                    )}
+                  >
+                    {direction > 0 ? "+" : "-"}
+                    {formatCurrency(value)}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      {active && (
+        <AppDialog
+          open
+          onOpenChange={(open) => !open && closeDialog()}
+          title={active.title}
+          description={active.description}
+        >
+          <active.Form onDone={closeDialog} />
+        </AppDialog>
+      )}
     </div>
   );
 };

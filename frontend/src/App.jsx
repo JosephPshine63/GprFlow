@@ -18,15 +18,21 @@ import PasswordUpdateSuccess from "./pages/Auth/PasswordUpdateSuccess";
 import LoginWithGoogle from "./pages/Auth/LoginWithGoogle";
 import Withdrawal from "./pages/Wallet/Withdrawal";
 import PaymentDetails from "./pages/Wallet/PaymentDetails";
+import PaymentSuccess from "./pages/Wallet/PaymentSuccess";
+import PaymentCancel from "./pages/Wallet/PaymentCancel";
 import WithdrawalAdmin from "./Admin/Withdrawal/WithdrawalAdmin";
 import Activity from "./pages/Activity/Activity";
 import SearchCoin from "./pages/Search/Search";
+import DemoBanner from "./components/custome/DemoBanner";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
     <>
-      <AppRoutes />
+      <DemoBanner />
+      <div className="pt-[var(--banner-h,0px)]">
+        <AppRoutes />
+      </div>
       <Toaster />
     </>
   );
@@ -78,6 +84,8 @@ function AppRoutes() {
         <Route element={<Withdrawal />} path="/withdrawal" />
         <Route element={<PaymentDetails />} path="/payment-details" />
         <Route element={<Wallet />} path="/wallet/:order_id" />
+        <Route element={<PaymentSuccess />} path="/payment/success" />
+        <Route element={<PaymentCancel />} path="/payment/cancel" />
         <Route element={<StockDetails />} path="/market/:id" />
         <Route element={<Watchlist />} path="/watchlist" />
         <Route element={<Profile />} path="/profile" />
