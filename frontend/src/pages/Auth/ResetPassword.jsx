@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyResetPassowrdOTP } from "@/Redux/Auth/Action";
 import AuthLayout from "@/components/layout/AuthLayout";
@@ -23,20 +23,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-const formSchema = yup.object({
-  password: yup
-    .string()
-    .min(8, "La password deve avere almeno 8 caratteri")
-    .required("La password è obbligatoria"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Le password non coincidono")
-    .required("Conferma la password"),
-  otp: yup
-    .string()
-    .min(6, "Il codice deve avere 6 cifre")
-    .required("Il codice è obbligatorio"),
-});
+const formSchema = z
+  .object({
+    password: z.string().min(8, "La password deve avere almeno 8 caratteri"),
+    confirmPassword: z.string().min(1, "Conferma la password"),
+    otp: z.string().length(6, "Il codice deve avere 6 cifre"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Le password non coincidono",
+  });
 
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
@@ -44,7 +40,7 @@ const ResetPasswordForm = () => {
   const { session } = useParams();
   const error = useSelector((store) => store.auth.error);
   const form = useForm({
-    resolver: yupResolver(formSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: { confirmPassword: "", password: "", otp: "" },
   });
 

@@ -16,10 +16,11 @@ npm run dev            # http://localhost:5173
 ```bash
 npm run build     # build di produzione in dist/
 npm run preview   # serve la build locale
-npm run lint      # ESLint, --max-warnings 0
+npm run lint      # controllo emoji + ESLint, --max-warnings 0
+npm run lint:emoji  # solo controllo emoji (e' quello che gira in CI)
 ```
 
-Non c'è una test suite: l'unico controllo automatico è `npm run lint`.
+Non c'è una test suite. La CI esegue `lint:emoji` e `build`; l'ESLint completo ha ancora errori preesistenti, quindi sul codice nuovo si lancia sui soli file toccati (`npx eslint --ext js,jsx <file>`).
 
 ## Collegamento al backend
 
@@ -47,22 +48,35 @@ Poiché il cookie è `Secure; SameSite=Strict`, in produzione frontend e API dev
 ```
 src/
 ├── App.jsx            # Auth gate + tabella delle rotte (vedi sotto)
-├── main.jsx           # Entry point (Provider Redux + BrowserRouter)
+├── main.jsx           # Entry point (ErrorBoundary, BrowserRouter, Provider Redux)
 ├── Api/api.js         # Istanza Axios
 ├── Redux/             # Una cartella per dominio: ActionTypes.js, Action.js, Reducer.js
 │   └── Store.js       # legacy_createStore + redux-thunk
 ├── pages/             # Componenti di pagina, una cartella ciascuna
 │   ├── Auth/  Home/  StockDetails/  Portfilio/  Wallet/  Watchlist/
-│   ├── Activity/  Profile/  Search/  Navbar/  SideBar/  Notfound/
+│   ├── Activity/  Profile/  Search/  Notfound/
 ├── Admin/Withdrawal/  # Pannello admin (approvazione prelievi)
 ├── components/
 │   ├── ui/            # shadcn/ui: NON modificare a mano, rigenerare con la CLI shadcn
-│   └── custome/       # CustomeToast, SpinnerBackdrop
-├── Util/              # Funzioni pure (date, profitto, watchlist, mascheratura IBAN…)
+│   ├── layout/        # AppShell, Sidebar, Topbar, MobileTabBar, AuthLayout
+│   └── custome/       # componenti dell'app: PriceChange, CoinLogo, EmptyState, StatusBadge, AppDialog, ChatWidget, ErrorBoundary...
+├── Util/              # Funzioni pure (format.js, stripEmoji, watchlist, mascheratura IBAN...)
 └── lib/utils.js       # helper `cn()` per le classi Tailwind
 ```
 
-Nota: i nomi `Portfilio/`, `custome/`, `readbaleTimestamp.js` e simili contengono refusi storici ma sono quelli usati negli import: non rinominarli in un commit che fa altro.
+Nota: i nomi `Portfilio/`, `custome/` e simili contengono refusi storici ma sono quelli usati negli import: non rinominarli in un commit che fa altro.
+
+## Design system
+
+Palette "Pio Indigo", dark di default. I token sono variabili HSL shadcn in `src/index.css` (`:root` = light, `.dark` = dark); la classe `dark` sta su `<html>` e la imposta uno script pre-paint in `index.html` (chiave `localStorage` `gprflowTheme`), il toggle e' `ThemeToggle`.
+
+- Colori di trading: `text-up` / `text-down` / `text-warning`, mai `text-red-*` o `text-green-*`. Le variazioni di prezzo si mostrano con `<PriceChange/>`.
+- Gradiente brand: `bg-brand`; classi di componente `.btn-brand`, `.surface`, `.brand-mark` in `index.css`. Il logo (`public/brand/logo-mark.png`) e' una maschera CSS (`<BrandMark/>`), quindi prende il gradiente del tema.
+- Numeri e date: sempre tramite `src/Util/format.js` (`formatCurrency`, `formatCompact`, `formatPercent`, `formatDateTime`...).
+- Stati: skeleton in caricamento, `<EmptyState/>` per vuoto ed errore con "Riprova".
+- Nessuna emoji nel codice UI: icone da `lucide-react`, monete con `<CoinLogo/>` (fallback a iniziali). `scripts/check-no-emoji.mjs` fa fallire il lint se ne trova; le risposte del chatbot passano da `stripEmoji`.
+- Testi dell'interfaccia in italiano.
+- Un render error non gestito mostra la schermata di `ErrorBoundary`; le rotte inesistenti mostrano `Notfound` (404).
 
 Alias di percorso: `@` → `src/` (configurato in `jsconfig.json` e `vite.config.js`).
 
@@ -91,7 +105,7 @@ Endpoint usati dai thunk (tutti via gateway):
 - **Autenticato (`ROLE_USER`):** `/`, `/portfolio`, `/activity`, `/wallet`, `/wallet/:order_id` (ritorno da Stripe), `/withdrawal`, `/payment-details`, `/market/:id`, `/watchlist`, `/profile`, `/search`.
 - **Solo `ROLE_ADMIN`:** `/admin/withdrawal`.
 
-L'array `routes` in cima a `App.jsx` alimenta `shouldShowNavbar` (Navbar nascosta nelle pagine non elencate): aggiungendo una rotta autenticata va aggiornato anche quello.
+Le rotte autenticate sono figlie del layout `AppShell` (sidebar, topbar, tab bar mobile); non serve registrarle altrove. Le rotte sconosciute finiscono su `Notfound`.
 
 ## Docker
 
