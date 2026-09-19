@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { invoices } from "../Home/AssetTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,

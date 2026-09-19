@@ -34,8 +34,8 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 | ORM | Spring Data JPA / Hibernate |
 | Database | PostgreSQL 15 |
 | Payments | Stripe |
-| External APIs | CoinGecko, Gemini AI |
-| Email | Gmail SMTP |
+| External APIs | CoinGecko, Gemini AI, Resend |
+| Email | Resend (REST API) |
 | Build | Maven |
 
 ### Frontend
@@ -56,30 +56,40 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 ## Architecture
 
 The backend is being split, one domain at a time, from a Spring Boot monolith into
-independent services. Today the stack is five Spring Boot processes plus the frontend,
-all fronted by a single API gateway:
+independent services. Today the stack is seven Spring Boot processes plus the frontend, all
+fronted by a single API gateway:
 
 | Service | Port | Owns |
 |---|---|---|
-| `gateway` | `8080` | Single entry point for the frontend. Routes by path prefix to the service below that owns it. |
-| `monolith` | `5454` | Auth, User, PaymentDetails (saved payment methods), Verification (email OTP), Watchlist. Everything not yet extracted. |
+| `gateway` | `8080` (host `8087` in Compose) | Single entry point for the frontend. Routes by path prefix to the service that owns it. |
+| `monolith` | `5454` | What's left of the original API: a public health-check endpoint (`HomeController`). No DB. |
 | `coin-service` | `5455` | Coin/market-data domain (CoinGecko integration). |
 | `chatbot-service` | `5456` | Gemini AI chatbot. Stateless, no database. |
 | `ledger-service` | `5457` | Wallet, Order, Asset, Payment, Withdrawal. |
+| `auth-service` | `5458` | Signup/signin, Google OAuth2, email OTP (2FA, verification, password reset). Owns the `User` entity and issues the JWTs. |
+| `user-service` | `5459` | User profile, Watchlist, PaymentDetails (saved payment methods). |
 
 **Routing:** the gateway forwards `/api/coins/**` → coin-service, `/chat/**` → chatbot-service,
 `/api/wallet/**`, `/api/orders/**`, `/api/payment/**`, `/api/withdrawal/**`,
-`/api/admin/withdrawal/**`, `/api/assets/**` → ledger-service, and everything else through to
-the monolith. For the paths above, the gateway validates the JWT itself once and forwards the
-caller's identity to the downstream service as `X-User-Id` / `X-User-Role` / `X-User-Email` /
-`X-User-Full-Name` headers instead of the raw token — `ledger-service` in particular has no
-JWT-validation logic of its own and fully trusts those headers, so it must never be reached
-except through the gateway (it doesn't publish a port in Docker Compose, so this is already
-enforced there).
+`/api/admin/withdrawal/**`, `/api/assets/**` → ledger-service, `/auth/**`, `/login/oauth2/**`,
+`/api/users/profile`, `/api/users/enable-two-factor/**`, `/api/users/verification/**` →
+auth-service, `/api/users/{id}`, `/api/users/email/{email}`, `/api/watchlist/**`,
+`/api/payment-details` → user-service, and everything else through to the monolith. Route order
+in `application.yml` matters: auth-service's `/api/users/profile` must come before user-service's
+`/api/users/{id}`, or the latter swallows it.
+
+**Authentication:** auth-service sets the JWT in an `HttpOnly; Secure; SameSite=Strict` `jwt`
+cookie; the frontend sends it with `withCredentials` and never reads it from JavaScript. For the
+protected path prefixes the gateway validates the JWT once and forwards the caller's identity as
+`X-User-Id` / `X-User-Role` / `X-User-Email` / `X-User-Full-Name` headers instead of the raw
+token. `ledger-service` and `user-service` have no JWT-validation logic of their own and fully
+trust those headers, so they must never be reached except through the gateway (they don't
+publish a port in Docker Compose, so this is already enforced there). `auth-service` and
+`coin-service` validate JWTs themselves with the same secret as the gateway.
 
 **Database:** one PostgreSQL 15 instance shared by all services, split by schema —
-`public` (monolith), `coin` (coin-service), `ledger` (ledger-service). `chatbot-service` has no
-database. Schema creation currently relies on Hibernate's `ddl-auto=update` under the `dev`
+`coin` (coin-service), `ledger` (ledger-service), `auth` (auth-service), `users` (user-service).
+`monolith` and `chatbot-service` have no database. Schema creation currently relies on Hibernate's `ddl-auto=update` under the `dev`
 profile (see [Production readiness checklist](#production-readiness-checklist)).
 
 ---
@@ -103,7 +113,9 @@ cp .env.example .env   # defaults work out of the box for local dev
 docker compose up --build
 ```
 
-This builds and starts Postgres, all five backend services, and the frontend. Open
+This builds and starts Postgres, the gateway, all six backend services, the frontend, and the
+`cloudflared` tunnel container (which needs `TUNNEL_TOKEN`; comment it out in
+`docker-compose.yml` for a purely local run). Open
 `http://localhost:5173` — the frontend talks to the gateway at `http://localhost:8087`, which
 routes to whichever service owns the request.
 
@@ -120,27 +132,39 @@ cd backend/monolith && mvn spring-boot:run          # http://localhost:5454
 cd backend/coin-service && mvn spring-boot:run       # http://localhost:5455
 cd backend/chatbot-service && mvn spring-boot:run    # http://localhost:5456
 cd backend/ledger-service && mvn spring-boot:run     # http://localhost:5457
+cd backend/auth-service && mvn spring-boot:run       # http://localhost:5458
+cd backend/user-service && mvn spring-boot:run       # http://localhost:5459
 cd backend/gateway && mvn spring-boot:run            # http://localhost:8080
 
 # 3. Run the frontend
 cd frontend && npm install && npm run dev            # http://localhost:5173
 ```
 
-`ledger-service` and `coin-service` need the `dev` Spring profile active locally (it switches
-`ddl-auto` from `validate` to `update` so Hibernate creates their schema), e.g.:
+`ledger-service`, `coin-service`, `auth-service`, and `user-service` need the `dev` Spring
+profile active locally (it switches `ddl-auto` from `validate` to `update` so Hibernate creates
+their schema), e.g.:
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
 ```
 
-By default `frontend/.env.example` (`VITE_API_BASE_URL`) points the frontend straight at the
-monolith (`5454`), bypassing the gateway. That's fine for monolith-only routes; point it at the
-gateway (`8080`) instead if you're testing wallet/order/payment/withdrawal/asset/coin/chat
-routes without running the full Compose stack.
+Two things differ from the defaults when running outside Compose:
 
-Backend secrets for local `mvn spring-boot:run` go in `backend/monolith/.env.example` →
-`backend/monolith/.env` (gitignored); the other services take their env vars directly, with
-working localhost defaults.
+- Compose publishes Postgres on host port **`5441`**, but each service's `DB_URL` default points
+  at `localhost:5432`. Set `DB_URL=jdbc:postgresql://localhost:5441/gprflow?currentSchema=<schema>`
+  (`coin`, `ledger`, `auth`, `users`).
+- `auth-service` calls `user-service` synchronously on signup/signin/OAuth login, and its
+  `USER_SERVICE_URL` default is the Compose DNS name; set it to `http://localhost:5459`.
+  The gateway's service URLs (`COIN_SERVICE_URL`, `AUTH_SERVICE_URL`, …) default to Compose DNS
+  names too, so override them as well if you run the gateway with `mvn`.
+
+`frontend/.env.example` (`VITE_API_BASE_URL`) points the frontend at the gateway on
+`http://localhost:8087`, i.e. the Compose-published gateway. If you run the gateway with `mvn`
+instead, use `http://localhost:8080`.
+
+Local secrets go in each service's `.env` (copy from its `.env.example`; `auth-service` and
+`user-service` have one, gitignored). The other services take env vars directly, with working
+localhost defaults.
 
 ---
 
@@ -148,14 +172,17 @@ working localhost defaults.
 
 ```
 GprFlow/
-├── docker-compose.yml                       # Orchestrates db + all backend services + frontend
-├── db/init/01-schemas.sql                   # Creates the coin/ledger Postgres schemas (fresh volume only)
+├── docker-compose.yml                       # Orchestrates db + backend services + frontend + cloudflared
+├── .github/workflows/deploy.yml             # Push-to-main production deploy (Tailscale + SSH)
+├── db/init/01-schemas.sql                   # Creates the coin/ledger/auth/users Postgres schemas (fresh volume only)
 │
 ├── backend/
-│   ├── monolith/          # Auth, User, PaymentDetails, Verification, Watchlist
+│   ├── monolith/          # Health-check endpoint only
 │   ├── coin-service/      # Coin / market-data domain
 │   ├── chatbot-service/   # Gemini AI chatbot
 │   ├── ledger-service/    # Wallet, Order, Asset, Payment, Withdrawal
+│   ├── auth-service/      # Auth, OAuth2, email OTP, JWT issuing
+│   ├── user-service/      # User profile, Watchlist, PaymentDetails
 │   └── gateway/           # Spring Cloud Gateway — single entry point, JWT validation
 │       └── (each service is an independent Maven project with its own Dockerfile,
 │            following controller/ → service/ → repository/ → model/ under dev.pioruocco)
@@ -182,8 +209,8 @@ example files and fill in real values:
 
 | File | Used by |
 |---|---|
-| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, SMTP, Stripe/CoinGecko/Gemini keys, Google OAuth2 |
-| `backend/monolith/.env.example` | Bare `mvn spring-boot:run` for the monolith |
+| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, Resend, Stripe/CoinGecko/Gemini keys, Google OAuth2, seed admin account, `TUNNEL_TOKEN` |
+| `backend/auth-service/.env.example`, `backend/user-service/.env.example` | Bare `mvn spring-boot:run` for those services |
 | `frontend/.env.example` | `VITE_API_BASE_URL` for `npm run dev` |
 
 Copy each to its `.env` counterpart (gitignored) and edit; never commit the real `.env` files.
@@ -220,7 +247,8 @@ FRONTEND_URL=https://app.yourdomain.com
 API_BASE_URL=https://api.yourdomain.com
 ```
 
-Also fill in your real SMTP, Stripe, CoinGecko, Gemini, and Google OAuth2 credentials.
+Also fill in your real Resend, Stripe, CoinGecko, Gemini, and Google OAuth2 credentials, and set
+`ADMIN_PASSWORD` (the seed admin account is created on first boot).
 
 You'll typically want **two public hostnames** — one for the frontend, one for the API — because
 the frontend calls `API_BASE_URL` as an absolute URL and the bundled nginx doesn't do
@@ -304,6 +332,12 @@ git pull
 docker compose up -d --build
 ```
 
+The repo ships `.github/workflows/deploy.yml`, which does exactly this on every push to `main`:
+the runner joins a Tailscale network (OAuth client in `TS_OAUTH_CLIENT_ID` /
+`TS_OAUTH_CLIENT_SECRET`), SSHes into the server with `DEPLOY_SSH_KEY`, and runs
+`git pull && docker compose up --build -d` in `~/Applications/GprFlow`. There is no staging
+step and no test gate, so a push to `main` is a production deploy.
+
 ---
 
 ## Production readiness checklist
@@ -351,7 +385,7 @@ above — they're listed here to track, not already resolved:
 
 ```bash
 # Any backend service
-cd backend/<service>   # monolith, coin-service, chatbot-service, ledger-service, or gateway
+cd backend/<service>   # monolith, coin-service, chatbot-service, ledger-service, auth-service, user-service, or gateway
 mvn test
 
 # Frontend lint
