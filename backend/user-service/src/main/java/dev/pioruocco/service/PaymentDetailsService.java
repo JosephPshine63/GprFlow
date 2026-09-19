@@ -1,16 +1,10 @@
 package dev.pioruocco.service;
 
+import dev.pioruocco.exception.UserException;
 import dev.pioruocco.model.PaymentDetails;
 
 public interface PaymentDetailsService {
-    PaymentDetails addPaymentDetails(String accountNumber,
-                                     String accountHolderName,
-                                     String ifsc,
-                                     String bankName,
-                                     Long userId
-    );
+    PaymentDetails addPaymentDetails(PaymentDetails request, Long userId) throws UserException;
 
     PaymentDetails getUsersPaymentDetails(Long userId);
-
-
 }

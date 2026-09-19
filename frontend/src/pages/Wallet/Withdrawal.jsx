@@ -57,7 +57,6 @@ const Withdrawal = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="py-4">Data</TableHead>
-                <TableHead className="hidden sm:table-cell">Metodo</TableHead>
                 <TableHead className="text-right">Importo</TableHead>
                 <TableHead className="text-right">Stato</TableHead>
               </TableRow>
@@ -66,9 +65,6 @@ const Withdrawal = () => {
               {rows.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="py-4">{formatDateTime(item.date)}</TableCell>
-                  <TableCell className="hidden text-muted-foreground sm:table-cell">
-                    Bonifico bancario
-                  </TableCell>
                   <TableCell className="text-right font-medium tabular-nums">
                     {formatCurrency(Number(item.amount))}
                   </TableCell>

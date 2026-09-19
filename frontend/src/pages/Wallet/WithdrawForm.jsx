@@ -2,14 +2,14 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Landmark, Loader2 } from "lucide-react";
+import { CreditCard, Landmark, Loader2 } from "lucide-react";
 import { getUserWallet, getWalletTransactions } from "@/Redux/Wallet/Action";
 import { withdrawalRequest } from "@/Redux/Withdrawal/Action";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import AuthError from "@/components/custome/AuthError";
 import EmptyState from "@/components/custome/EmptyState";
-import { maskAccountNumber } from "@/Util/maskAccountNumber";
+import { describePayout } from "@/Util/payoutFormats";
 import { parseWholeAmount } from "@/Util/amount";
 import { formatCurrency } from "@/Util/format";
 
@@ -27,8 +27,8 @@ const WithdrawForm = ({ onDone }) => {
     return (
       <EmptyState
         icon={Landmark}
-        title="Serve un conto bancario"
-        description="Aggiungi i dati di pagamento per poter richiedere un prelievo."
+        title="Serve un metodo di pagamento"
+        description="Aggiungi un conto bancario o una carta per poter richiedere un prelievo."
         className="py-6"
       >
         <button
@@ -44,6 +44,9 @@ const WithdrawForm = ({ onDone }) => {
       </EmptyState>
     );
   }
+
+  const payout = describePayout(paymentDetails);
+  const PayoutIcon = payout.method === "CARD" ? CreditCard : Landmark;
 
   const value = parseWholeAmount(amount);
   const problem =
@@ -131,12 +134,12 @@ const WithdrawForm = ({ onDone }) => {
         <p className="mb-1.5 text-xs font-medium text-muted-foreground">Accredito su</p>
         <div className="flex items-center gap-3 rounded-xl border px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
-            <Landmark className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+            <PayoutIcon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="truncate font-semibold">{paymentDetails.bankName}</p>
+            <p className="truncate font-semibold">{payout.title}</p>
             <p className="text-xs tabular-nums text-muted-foreground">
-              {maskAccountNumber(paymentDetails.accountNumber ?? "")}
+              {payout.masked}
             </p>
           </div>
         </div>

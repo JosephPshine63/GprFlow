@@ -155,7 +155,6 @@ const WithdrawalAdmin = () => {
                 <TableRow>
                   <TableHead className="py-4">Data</TableHead>
                   <TableHead>Utente</TableHead>
-                  <TableHead>Metodo</TableHead>
                   <TableHead className="text-right">Importo</TableHead>
                   <TableHead className="text-right">Stato</TableHead>
                   <TableHead className="w-32" />
@@ -170,7 +169,6 @@ const WithdrawalAdmin = () => {
                     <TableCell className="max-w-[16rem]">
                       <UserCell user={item.user} />
                     </TableCell>
-                    <TableCell className="text-muted-foreground">Bonifico bancario</TableCell>
                     <TableCell className="text-right font-medium tabular-nums">
                       {formatCurrency(Number(item.amount))}
                     </TableCell>

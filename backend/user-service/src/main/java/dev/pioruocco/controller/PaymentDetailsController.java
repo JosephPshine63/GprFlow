@@ -1,5 +1,6 @@
 package dev.pioruocco.controller;
 
+import dev.pioruocco.exception.UserException;
 import dev.pioruocco.model.PaymentDetails;
 import dev.pioruocco.service.PaymentDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,9 @@ public class PaymentDetailsController {
     @PostMapping("/payment-details")
     public ResponseEntity<PaymentDetails> addPaymentDetails(
             @RequestBody PaymentDetails paymentDetailsRequest,
-            @RequestHeader("X-User-Id") Long userId) {
+            @RequestHeader("X-User-Id") Long userId) throws UserException {
 
-        PaymentDetails paymentDetails = paymentDetailsService.addPaymentDetails(
-                paymentDetailsRequest.getAccountNumber(),
-                paymentDetailsRequest.getAccountHolderName(),
-                paymentDetailsRequest.getIfsc(),
-                paymentDetailsRequest.getBankName(),
-                userId
-        );
+        PaymentDetails paymentDetails = paymentDetailsService.addPaymentDetails(paymentDetailsRequest, userId);
         return new ResponseEntity<>(paymentDetails, HttpStatus.CREATED);
     }
 
