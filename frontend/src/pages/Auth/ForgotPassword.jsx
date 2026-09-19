@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
+import TurnstileWidget from "@/components/custome/TurnstileWidget";
 
 const formSchema = z.object({
   email: z.string().email("Indirizzo email non valido"),
@@ -29,6 +30,8 @@ const ForgotPasswordForm = () => {
   });
 
   const [error, setError] = useState(null);
+  const [captcha, setCaptcha] = useState(null);
+  const widget = useRef(null);
 
   const onSubmit = async (data) => {
     setError(null);
@@ -38,10 +41,12 @@ const ForgotPasswordForm = () => {
           sendTo: data.email,
           navigate,
           verificationType: "EMAIL",
+          captchaToken: captcha,
         })
       );
     } catch (err) {
       setError(err.message);
+      widget.current?.reset();
     }
   };
 
@@ -68,7 +73,10 @@ const ForgotPasswordForm = () => {
             </FormItem>
           )}
         />
-        <SubmitButton loading={form.formState.isSubmitting}>Invia codice</SubmitButton>
+        <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setError} />
+        <SubmitButton loading={form.formState.isSubmitting} disabled={!captcha}>
+          Invia codice
+        </SubmitButton>
       </form>
     </Form>
   );

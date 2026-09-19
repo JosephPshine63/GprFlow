@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Talks to user-service's internal-only endpoints (never routed through the gateway) so that
  * auth-service — which no longer stores fullName — can create the matching profile row on
- * signup/OAuth2-first-login/seed, and look fullName back up before signing a JWT or serving
+ * signup/seed, and look fullName back up before signing a JWT or serving
  * GET /api/users/profile. Same hand-rolled RestTemplate pattern as CoinClient.
  */
 @Component

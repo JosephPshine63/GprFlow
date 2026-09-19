@@ -16,7 +16,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 - Portfolio view with per-asset profit/loss and full trading history
 - Wallet: deposit via Stripe, withdraw, transfer between users
 - Watchlist for saved coins
-- JWT authentication + optional 2FA (OTP via email) + Google OAuth2 social login
+- JWT authentication + optional 2FA (OTP via email)
 - Forgot/reset password flow (OTP via email)
 - Gemini AI chatbot for crypto Q&A
 - Admin panel for withdrawal approval/rejection
@@ -30,7 +30,7 @@ A full-stack cryptocurrency trading platform. Users can buy/sell crypto, manage 
 |---|---|
 | Language | Java 17+ |
 | Framework | Spring Boot 3.2.4, Spring Cloud Gateway |
-| Security | Spring Security, JWT (jjwt 0.11), OAuth2 (Google) |
+| Security | Spring Security, JWT (jjwt 0.11) |
 | ORM | Spring Data JPA / Hibernate |
 | Database | PostgreSQL 15 |
 | Payments | Stripe |
@@ -66,12 +66,12 @@ fronted by a single API gateway:
 | `coin-service` | `5455` | Coin/market-data domain (CoinGecko integration). |
 | `chatbot-service` | `5456` | Gemini AI chatbot. Stateless, no database. |
 | `ledger-service` | `5457` | Wallet, Order, Asset, Payment, Withdrawal. |
-| `auth-service` | `5458` | Signup/signin, Google OAuth2, email OTP (2FA, verification, password reset). Owns the `User` entity and issues the JWTs. |
+| `auth-service` | `5458` | Signup/signin, email OTP (2FA, verification, password reset). Owns the `User` entity and issues the JWTs. |
 | `user-service` | `5459` | User profile, Watchlist, PaymentDetails (saved payment methods). |
 
 **Routing:** the gateway forwards `/api/coins/**` → coin-service, `/chat/**` → chatbot-service,
 `/api/wallet/**`, `/api/orders/**`, `/api/payment/**`, `/api/withdrawal/**`,
-`/api/admin/withdrawal/**`, `/api/assets/**` → ledger-service, `/auth/**`, `/login/oauth2/**`,
+`/api/admin/withdrawal/**`, `/api/assets/**` → ledger-service, `/auth/**`,
 `/api/users/profile`, `/api/users/enable-two-factor/**`, `/api/users/verification/**` →
 auth-service, `/api/users/{id}`, `/api/users/email/{email}`, `/api/watchlist/**`,
 `/api/payment-details` → user-service, and everything else through to the monolith. Route order
@@ -153,7 +153,7 @@ Two things differ from the defaults when running outside Compose:
 - Compose publishes Postgres on host port **`5441`**, but each service's `DB_URL` default points
   at `localhost:5432`. Set `DB_URL=jdbc:postgresql://localhost:5441/gprflow?currentSchema=<schema>`
   (`coin`, `ledger`, `auth`, `users`).
-- `auth-service` calls `user-service` synchronously on signup/signin/OAuth login, and its
+- `auth-service` calls `user-service` synchronously on signup/signin, and its
   `USER_SERVICE_URL` default is the Compose DNS name; set it to `http://localhost:5459`.
   The gateway's service URLs (`COIN_SERVICE_URL`, `AUTH_SERVICE_URL`, …) default to Compose DNS
   names too, so override them as well if you run the gateway with `mvn`.
@@ -181,7 +181,7 @@ GprFlow/
 │   ├── coin-service/      # Coin / market-data domain
 │   ├── chatbot-service/   # Gemini AI chatbot
 │   ├── ledger-service/    # Wallet, Order, Asset, Payment, Withdrawal
-│   ├── auth-service/      # Auth, OAuth2, email OTP, JWT issuing
+│   ├── auth-service/      # Auth, email OTP, JWT issuing
 │   ├── user-service/      # User profile, Watchlist, PaymentDetails
 │   └── gateway/           # Spring Cloud Gateway — single entry point, JWT validation
 │       └── (each service is an independent Maven project with its own Dockerfile,
@@ -209,7 +209,7 @@ example files and fill in real values:
 
 | File | Used by |
 |---|---|
-| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, Resend, Stripe/CoinGecko/Gemini keys, Google OAuth2, seed admin account, `TUNNEL_TOKEN` |
+| `.env.example` (repo root) | `docker compose up` — DB credentials, `JWT_SECRET`, `FRONTEND_URL`, `API_BASE_URL`, Resend, Stripe/CoinGecko/Gemini keys, seed admin account, `TUNNEL_TOKEN` |
 | `backend/auth-service/.env.example`, `backend/user-service/.env.example` | Bare `mvn spring-boot:run` for those services |
 | `frontend/.env.example` | `VITE_API_BASE_URL` for `npm run dev` |
 
@@ -247,7 +247,7 @@ FRONTEND_URL=https://app.yourdomain.com
 API_BASE_URL=https://api.yourdomain.com
 ```
 
-Also fill in your real Resend, Stripe, CoinGecko, Gemini, and Google OAuth2 credentials, and set
+Also fill in your real Resend, Stripe, CoinGecko, and Gemini credentials, and set
 `ADMIN_PASSWORD` (the seed admin account is created on first boot).
 
 You'll typically want **two public hostnames** — one for the frontend, one for the API — because
@@ -268,10 +268,9 @@ frontend at your real domain.
 `auth-service` is the one exception to "the gateway is the only service that terminates CORS": it
 validates its own JWTs independently (see the trust-model note in `CLAUDE.md`) and enforces its
 **own** CORS list in `backend/auth-service/src/main/java/dev/pioruocco/config/AppConfig.java`
-(`corsConfigurationSource()`), separate from the gateway's. Requests to `/auth/**` and
-`/login/oauth2/**` pass through the gateway but are still CORS-checked again at auth-service
-itself, so your frontend origin needs adding to **both** lists — missing this one specifically
-breaks signin/signup/OAuth from the browser while everything else works, which makes it an easy
+(`corsConfigurationSource()`), separate from the gateway's. Requests to `/auth/**` pass through the
+gateway but are still CORS-checked again at auth-service itself, so your frontend origin needs adding to **both** lists — missing this one specifically
+breaks signin/signup from the browser while everything else works, which makes it an easy
 thing to half-fix and move on from.
 
 This is a one-time step per domain, not something you need to repeat on every deploy — but it
@@ -306,7 +305,7 @@ service from `docker-compose.yml`.
 
 ### 5. Update third-party redirect URLs
 
-Google OAuth2 (Google Cloud Console) and any Stripe webhook or redirect URLs need to be
+Any Stripe webhook or redirect URLs need to be
 updated to point at your new public domain — they were previously configured for `localhost`.
 
 ### 6. Build and start
@@ -417,4 +416,4 @@ frontend test suite (only `npm run lint`).
 
 ## Author
 
-**Giuseppe Pio Ruocco** — [GitHub](https://github.com/pioruocco) · dev.pioruocco@gmail.com
+**Giuseppe Pio Ruocco** — [GitHub](https://github.com/JosephPshine63) · [LinkedIn](https://www.linkedin.com/in/giuseppe-pio-ruocco-7b4367267/) · [Portfolio](https://josephpshine63.github.io/portfolio/) · dev.pioruocco@gmail.com

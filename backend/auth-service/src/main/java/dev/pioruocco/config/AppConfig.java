@@ -22,9 +22,6 @@ import java.util.List;
 public class AppConfig {
 
     @Autowired
-    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
-    @Autowired
     private JwtProvider jwtProvider;
 
     @Bean
@@ -36,12 +33,6 @@ public class AppConfig {
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().permitAll()
                 )
-                .oauth2Login(oauth -> {
-                    oauth.loginPage("/login/google");
-                    oauth.authorizationEndpoint(authorization ->
-                            authorization.baseUri("/login/oauth2/authorization"));
-                    oauth.successHandler(oAuth2LoginSuccessHandler);
-                })
                 .addFilterBefore(new JwtTokenValidator(jwtProvider), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));

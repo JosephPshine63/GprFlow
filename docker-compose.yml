@@ -93,11 +93,8 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       RESEND_API_KEY: ${RESEND_API_KEY:-your resend api key}
       RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-GprFlow <noreply@gprflow.trade>}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your id}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your secret}
       USER_SERVICE_URL: http://user-service:5459
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@gprflow.trade}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change-me-before-first-boot}
@@ -141,6 +138,8 @@ services:
       AUTH_SERVICE_URL: http://auth-service:5458
       USER_SERVICE_URL: http://user-service:5459
       JWT_SECRET: ${JWT_SECRET:-wpembytrwcvnryxksdbqwjebruyGHyudqgwveytrtrCSnwifoesarjbwe}
+      TURNSTILE_ENABLED: ${TURNSTILE_ENABLED:-true}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-1x0000000000000000000000000000000AA}
     ports:
       - "8087:8080"
 
@@ -154,6 +153,7 @@ services:
     environment:
       API_BASE_URL: ${API_BASE_URL:-http://localhost:8087}
       STRIPE_TEST_MODE: ${STRIPE_TEST_MODE:-false}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-1x00000000000000000000AA}
     ports:
       - "5173:80"
 

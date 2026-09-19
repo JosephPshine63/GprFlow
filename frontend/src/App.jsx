@@ -15,7 +15,6 @@ import Watchlist from "./pages/Watchlist/Watchlist";
 import TwoFactorAuth from "./pages/Auth/TwoFactorAuth";
 import ResetPasswordForm from "./pages/Auth/ResetPassword";
 import PasswordUpdateSuccess from "./pages/Auth/PasswordUpdateSuccess";
-import LoginWithGoogle from "./pages/Auth/LoginWithGoogle";
 import Withdrawal from "./pages/Wallet/Withdrawal";
 import PaymentDetails from "./pages/Wallet/PaymentDetails";
 import PaymentSuccess from "./pages/Wallet/PaymentSuccess";
@@ -62,7 +61,6 @@ function AppRoutes() {
         <Route element={<Auth />} path="/signup" />
         <Route element={<Auth />} path="/signin" />
         <Route element={<Auth />} path="/forgot-password" />
-        <Route element={<LoginWithGoogle />} path="/login-with-google" />
         <Route element={<ResetPasswordForm />} path="/reset-password/:session" />
         <Route
           element={<PasswordUpdateSuccess />}

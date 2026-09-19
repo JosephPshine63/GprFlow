@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import dev.pioruocco.response.AuthResponse;
 import dev.pioruocco.service.*;
 import dev.pioruocco.utils.OtpUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 
 
 @RestController
@@ -158,13 +156,6 @@ public class AuthController {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-
-    @GetMapping("/login/google")
-    public void redirectToGoogle(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        // Redirect to the Google OAuth2 authorization URI
-        response.sendRedirect("/login/oauth2/authorization/google");
-    }
 
     @PostMapping("/two-factor/otp/{otp}")
     public ResponseEntity<AuthResponse> verifySigningOtp(

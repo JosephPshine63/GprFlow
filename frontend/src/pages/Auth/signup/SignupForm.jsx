@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
-import GoogleButton from "@/components/custome/GoogleButton";
+import TurnstileWidget from "@/components/custome/TurnstileWidget";
 
 const formSchema = z.object({
   fullName: z.string().nonempty("Il nome è obbligatorio"),
@@ -32,15 +33,21 @@ const SignupForm = ({ error }) => {
     defaultValues: { email: "", password: "", fullName: "" },
   });
 
-  const onSubmit = (data) => {
+  const [captcha, setCaptcha] = useState(null);
+  const [captchaError, setCaptchaError] = useState(null);
+  const widget = useRef(null);
+
+  const onSubmit = async (data) => {
     data.navigate = navigate;
-    dispatch(register(data));
+    data.captchaToken = captcha;
+    await dispatch(register(data));
+    widget.current?.reset();
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <AuthError error={error} />
+        <AuthError error={error || captchaError} />
         <FormField
           control={form.control}
           name="fullName"
@@ -97,8 +104,8 @@ const SignupForm = ({ error }) => {
             </FormItem>
           )}
         />
-        <SubmitButton loading={loading}>Registrati</SubmitButton>
-        <GoogleButton />
+        <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setCaptchaError} />
+        <SubmitButton loading={loading} disabled={!captcha}>Registrati</SubmitButton>
       </form>
     </Form>
   );

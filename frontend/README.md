@@ -39,7 +39,7 @@ Il frontend parla **solo con il gateway** (Spring Cloud Gateway), che instrada v
 
 ### Autenticazione
 
-Il JWT è in un cookie `jwt` **HttpOnly** impostato da auth-service al login/signup/OAuth. Il codice JavaScript non lo legge mai e non c'è nessun header `Authorization` né `localStorage`: basta `withCredentials`. Lo stato utente si ricava da `GET /api/users/profile` (thunk `getUser`, chiamato all'avvio in `App.jsx`); se risponde 401 l'utente è considerato non autenticato. Il logout chiama `POST /auth/logout`, che cancella il cookie.
+Il JWT è in un cookie `jwt` **HttpOnly** impostato da auth-service al login/signup. Il codice JavaScript non lo legge mai e non c'è nessun header `Authorization` né `localStorage`: basta `withCredentials`. Lo stato utente si ricava da `GET /api/users/profile` (thunk `getUser`, chiamato all'avvio in `App.jsx`); se risponde 401 l'utente è considerato non autenticato. Il logout chiama `POST /auth/logout`, che cancella il cookie.
 
 Poiché il cookie è `Secure; SameSite=Strict`, in produzione frontend e API devono stare su HTTPS e sullo stesso sito (es. `app.` e `api.` dello stesso dominio), e l'origine del frontend deve essere nelle liste CORS di gateway **e** auth-service (vedi README principale).
 
@@ -101,7 +101,7 @@ Endpoint usati dai thunk (tutti via gateway):
 
 `App.jsx` è il gate di autenticazione: in base a `auth.user` monta due insiemi di rotte diversi.
 
-- **Non autenticato:** `/`, `/signup`, `/signin`, `/forgot-password`, `/login-with-google`, `/reset-password/:session`, `/password-update-successfully`, `/two-factor-auth/:session`.
+- **Non autenticato:** `/`, `/signup`, `/signin`, `/forgot-password`, `/reset-password/:session`, `/password-update-successfully`, `/two-factor-auth/:session`.
 - **Autenticato (`ROLE_USER`):** `/`, `/portfolio`, `/activity`, `/wallet`, `/wallet/:order_id` (ritorno da Stripe), `/withdrawal`, `/payment-details`, `/market/:id`, `/watchlist`, `/profile`, `/search`.
 - **Solo `ROLE_ADMIN`:** `/admin/withdrawal`.
 

@@ -1,11 +1,13 @@
 import * as actionTypes from "./ActionTypes";
 import api from "@/Api/api";
 import { apiErrorMessage } from "@/Util/apiError";
+import { turnstileHeaders } from "@/Util/turnstile";
 
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.REGISTER_REQUEST });
   try {
-    await api.post(`/auth/signup`, userData);
+    const { captchaToken, ...body } = userData;
+    await api.post(`/auth/signup`, body, { headers: turnstileHeaders(captchaToken) });
     await dispatch(getUser());
     userData.navigate("/");
     dispatch({ type: actionTypes.REGISTER_SUCCESS });
@@ -20,7 +22,10 @@ export const register = (userData) => async (dispatch) => {
 export const login = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.LOGIN_REQUEST });
   try {
-    const response = await api.post(`/auth/signin`, userData);
+    const { captchaToken, ...body } = userData;
+    const response = await api.post(`/auth/signin`, body, {
+      headers: turnstileHeaders(captchaToken),
+    });
     const user = response.data;
     if (user.twoFactorAuthEnabled) {
       userData.navigate(`/two-factor-auth/${user.session}`);
@@ -128,13 +133,14 @@ export const enableTwoStepAuthentication = ({ otp }) => {
   };
 };
 
-export const sendResetPassowrdOTP = ({ sendTo, verificationType, navigate }) => {
+export const sendResetPassowrdOTP = ({ sendTo, verificationType, navigate, captchaToken }) => {
   return async (dispatch) => {
     dispatch({ type: actionTypes.SEND_RESET_PASSWORD_OTP_REQUEST });
     try {
       const response = await api.post(
         `/auth/users/reset-password/send-otp`,
-        { sendTo, verificationType }
+        { sendTo, verificationType },
+        { headers: turnstileHeaders(captchaToken) }
       );
       const data = response.data;
       dispatch({

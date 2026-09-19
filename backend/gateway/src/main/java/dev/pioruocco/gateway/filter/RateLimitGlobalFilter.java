@@ -23,7 +23,7 @@ import java.util.List;
 public class RateLimitGlobalFilter implements GlobalFilter, Ordered {
 
     private static final List<String> AUTH_PREFIXES = List.of(
-            "/auth", "/login/oauth2", "/api/users/verification", "/api/users/enable-two-factor");
+            "/auth", "/api/users/verification", "/api/users/enable-two-factor");
 
     private final TokenBucketLimiter limiter = new TokenBucketLimiter();
 
