@@ -36,59 +36,59 @@ public class ChatBotServiceImpl implements ChatBotService {
 
     @Override
     @Async("geminiExecutor")
-    public CompletableFuture<String> simpleChat(String prompt) {
+    public CompletableFuture<String> simpleChat(String prompt, ReplyLanguage language) {
         if (!geminiClient.isEnabled()) {
-            return CompletableFuture.completedFuture("The chat assistant isn't configured right now.");
+            return CompletableFuture.completedFuture(language.notConfigured());
         }
         try {
-            JsonNode response = geminiClient.generateSimple(prompt);
+            JsonNode response = geminiClient.generateSimple(prompt, language);
             String text = geminiClient.extractText(response);
             return CompletableFuture.completedFuture(text != null ? text : "");
         } catch (Exception e) {
             log.warn("Gemini simple chat call failed", e);
-            return CompletableFuture.completedFuture("Sorry, I couldn't process that right now.");
+            return CompletableFuture.completedFuture(language.failed());
         }
     }
 
     @Override
     @Async("geminiExecutor")
-    public CompletableFuture<ApiResponse> getCoinDetails(String prompt) {
+    public CompletableFuture<ApiResponse> getCoinDetails(String prompt, ReplyLanguage language) {
         if (!geminiClient.isEnabled()) {
             return CompletableFuture.completedFuture(
-                    new ApiResponse("The chat assistant isn't configured right now.", false));
+                    new ApiResponse(language.notConfigured(), false));
         }
         try {
-            JsonNode initial = geminiClient.generateInitial(prompt);
+            JsonNode initial = geminiClient.generateInitial(prompt, language);
             JsonNode functionCall = geminiClient.extractFunctionCall(initial);
 
             if (functionCall == null) {
                 String text = geminiClient.extractText(initial);
                 return CompletableFuture.completedFuture(
-                        new ApiResponse(text != null ? text : "I'm not sure how to answer that.", true));
+                        new ApiResponse(text != null ? text : language.unsure(), true));
             }
 
             String currencyName = functionCall.path("args").path("currencyName").asText(null);
             if (currencyName == null || currencyName.isBlank()) {
-                return CompletableFuture.completedFuture(new ApiResponse("Which coin did you mean?", false));
+                return CompletableFuture.completedFuture(new ApiResponse(language.whichCoin(), false));
             }
 
             Optional<CoinDTO> coin = coinGeckoClient.findByNameOrId(currencyName);
             if (coin.isEmpty()) {
                 return CompletableFuture.completedFuture(
-                        new ApiResponse("I couldn't find market data for \"" + currencyName + "\".", false));
+                        new ApiResponse(language.noMarketData(currencyName), false));
             }
 
             JsonNode coinJson = objectMapper.valueToTree(coin.get());
             JsonNode finalResponse = geminiClient.generateWithFunctionResult(
-                    prompt, GeminiClient.COIN_TOOL_NAME, functionCall.path("args"), coinJson);
+                    prompt, language, GeminiClient.COIN_TOOL_NAME, functionCall.path("args"), coinJson);
             String text = geminiClient.extractText(finalResponse);
 
             return CompletableFuture.completedFuture(
-                    new ApiResponse(text != null ? text : "I'm not sure how to answer that.", true));
+                    new ApiResponse(text != null ? text : language.unsure(), true));
         } catch (Exception e) {
             log.warn("Gemini coin chat call failed", e);
             return CompletableFuture.completedFuture(
-                    new ApiResponse("Sorry, I couldn't process that right now.", false));
+                    new ApiResponse(language.failed(), false));
         }
     }
 }

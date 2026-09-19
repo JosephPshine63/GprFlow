@@ -6,9 +6,9 @@ import dev.pioruocco.response.ApiResponse;
 import java.util.concurrent.CompletableFuture;
 
 public interface ChatBotService {
-    CompletableFuture<ApiResponse> getCoinDetails(String prompt);
+    CompletableFuture<ApiResponse> getCoinDetails(String prompt, ReplyLanguage language);
 
     CoinDTO getCoinByName(String coinName);
 
-    CompletableFuture<String> simpleChat(String prompt);
+    CompletableFuture<String> simpleChat(String prompt, ReplyLanguage language);
 }

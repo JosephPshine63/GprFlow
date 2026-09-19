@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import dev.pioruocco.service.ReplyLanguage;
 
 @Component
 public class GeminiClient {
@@ -40,27 +41,27 @@ public class GeminiClient {
         return apiKey != null && !apiKey.isBlank() && !apiKey.equals("your gemini api key");
     }
 
-    public JsonNode generateSimple(String prompt) {
+    public JsonNode generateSimple(String prompt, ReplyLanguage language) {
         ObjectNode body = objectMapper.createObjectNode();
-        setSystemInstruction(body);
+        setSystemInstruction(body, language);
         ArrayNode contents = body.putArray("contents");
         contents.add(userTurn(prompt));
         return call(body);
     }
 
-    public JsonNode generateInitial(String prompt) {
+    public JsonNode generateInitial(String prompt, ReplyLanguage language) {
         ObjectNode body = objectMapper.createObjectNode();
-        setSystemInstruction(body);
+        setSystemInstruction(body, language);
         ArrayNode contents = body.putArray("contents");
         contents.add(userTurn(prompt));
         body.set("tools", coinToolDeclaration());
         return call(body);
     }
 
-    public JsonNode generateWithFunctionResult(String prompt, String functionName,
+    public JsonNode generateWithFunctionResult(String prompt, ReplyLanguage language, String functionName,
                                                 JsonNode functionArgs, JsonNode functionResultContent) {
         ObjectNode body = objectMapper.createObjectNode();
-        setSystemInstruction(body);
+        setSystemInstruction(body, language);
 
         ArrayNode contents = body.putArray("contents");
         contents.add(userTurn(prompt));
@@ -96,9 +97,9 @@ public class GeminiClient {
         return functionCall.isMissingNode() ? null : functionCall;
     }
 
-    private void setSystemInstruction(ObjectNode body) {
+    private void setSystemInstruction(ObjectNode body, ReplyLanguage language) {
         ObjectNode systemInstruction = body.putObject("systemInstruction");
-        systemInstruction.putArray("parts").addObject().put("text", SYSTEM_INSTRUCTION);
+        systemInstruction.putArray("parts").addObject().put("text", SYSTEM_INSTRUCTION + " Always reply in " + language.modelName() + ".");
     }
 
     private ObjectNode userTurn(String prompt) {
