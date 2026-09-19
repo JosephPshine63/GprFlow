@@ -1,6 +1,7 @@
 package dev.pioruocco.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -24,9 +26,15 @@ public class EmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void sendVerificationOtpEmail(String userEmail, String otp) throws EmailSendException {
-        String subject = "Account verification";
-        String html = "<p>Your account verification code is: <strong>" + otp + "</strong></p>";
+    private final MessageSource messages;
+
+    public EmailService(MessageSource messages) {
+        this.messages = messages;
+    }
+
+    public void sendVerificationOtpEmail(String userEmail, String otp, Locale locale) throws EmailSendException {
+        String subject = messages.getMessage("email.otp.subject", null, locale);
+        String html = messages.getMessage("email.otp.body", new Object[]{otp}, locale);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

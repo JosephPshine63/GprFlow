@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -95,7 +96,8 @@ public class VerificationController {
 
     @PostMapping("/auth/users/reset-password/send-otp")
     public ResponseEntity<AuthResponse> sendUpdatePasswordOTP(
-            @RequestBody UpdatePasswordRequest req)
+            @RequestBody UpdatePasswordRequest req,
+            Locale locale)
             throws Exception {
 
         User user = userService.findUserByEmail(req.getSendTo());
@@ -120,7 +122,8 @@ public class VerificationController {
         if (req.getVerificationType().equals(VerificationType.EMAIL)) {
             emailService.sendVerificationOtpEmail(
                     user.getEmail(),
-                    token.getOtp()
+                    token.getOtp(),
+                    locale
             );
         }
 
@@ -161,7 +164,8 @@ public class VerificationController {
     public ResponseEntity<String> sendVerificationOTP(
             @PathVariable VerificationType verificationType,
             @RequestHeader(value = "Authorization", required = false) String authHeader,
-            @CookieValue(value = "jwt", required = false) String jwtCookie)
+            @CookieValue(value = "jwt", required = false) String jwtCookie,
+            Locale locale)
             throws Exception {
 
         String jwt = AuthHeaderResolver.resolveBearerToken(authHeader, jwtCookie);
@@ -175,7 +179,7 @@ public class VerificationController {
 
 
         if (verificationType.equals(VerificationType.EMAIL)) {
-            emailService.sendVerificationOtpEmail(user.getEmail(), verificationCode.getOtp());
+            emailService.sendVerificationOtpEmail(user.getEmail(), verificationCode.getOtp(), locale);
         }
 
 

@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/auth")
@@ -102,7 +102,8 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signing(
             @RequestBody LoginRequest loginRequest,
-            HttpServletResponse response) throws UserException {
+            HttpServletResponse response,
+            Locale locale) throws UserException {
 
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
@@ -130,7 +131,7 @@ public class AuthController {
 
             TwoFactorOTP twoFactorOTP = twoFactorOtpService.createTwoFactorOtp(user, otp, token);
 
-            emailService.sendVerificationOtpEmail(user.getEmail(), otp);
+            emailService.sendVerificationOtpEmail(user.getEmail(), otp, locale);
 
             authResponse.setSession(twoFactorOTP.getId());
             return new ResponseEntity<>(authResponse, HttpStatus.OK);
