@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /signin
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /two-factor-auth/
+Disallow: /password-update-successfully
+
+Sitemap: https://gprflow.trade/sitemap.xml

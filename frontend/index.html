@@ -7,12 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0A0A1A" />
     <title>GprFlow</title>
+    <meta name="description" content="GprFlow is a crypto trading platform demo." />
+    <!-- Every route except the landing pages falls back to this file; scripts/seo-build.mjs emits the indexable landing pages. -->
+    <meta name="robots" content="noindex" />
+    <meta property="og:site_name" content="GprFlow" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .has-session #seo-snapshot { display: none; }
+    </style>
     <script>
       (function () {
         try {
@@ -20,6 +27,8 @@
           var root = document.documentElement;
           if (t === "light") root.classList.remove("dark");
           else root.classList.add("dark");
+          // set by Redux/Auth/Action.js; a signed-in visitor never sees the static landing snapshot
+          if (localStorage.getItem("gprflowSession") === "1") root.classList.add("has-session");
         } catch (e) {}
       })();
     </script>
