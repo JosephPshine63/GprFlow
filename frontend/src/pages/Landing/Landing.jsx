@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Bot,
@@ -49,22 +49,25 @@ const secondaryButton =
 const Landing = ({ lang }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const current = i18n.language;
   const code = lang ?? DEFAULT_LANGUAGE;
 
   useEffect(() => {
-    if (lang && current !== lang) setLanguage(lang);
-  }, [lang, current]);
+    if (lang) setLanguage(lang);
+  }, [lang]);
 
-  // A returning visitor keeps their language: the root page hands them over to its localized twin.
-  if (!lang && current !== DEFAULT_LANGUAGE && isSupportedLanguage(current)) {
+  // A returning visitor keeps their language: the root page hands them over to its localized twin,
+  // unless they just picked English from one (`picked`, see choose).
+  if (!lang && !state?.picked && current !== DEFAULT_LANGUAGE && isSupportedLanguage(current)) {
     return <Navigate to={landingPath(current)} replace />;
   }
 
-  // the language has to be in place before the route changes, or the root page would redirect back
-  const choose = async (next) => {
-    await setLanguage(next);
-    navigate(landingPath(next));
+  // Routes are keyed by language in App.jsx, so this page remounts on every switch and the effect
+  // above would put the old route's language back; navigating first with `picked` avoids the redirect.
+  const choose = (next) => {
+    navigate(landingPath(next), { state: { picked: true } });
+    return setLanguage(next);
   };
 
   return (
