@@ -59,7 +59,8 @@ public class GeminiClient {
     }
 
     public JsonNode generateWithFunctionResult(String prompt, ReplyLanguage language, String functionName,
-                                                JsonNode functionArgs, JsonNode functionResultContent) {
+                                                JsonNode functionArgs, String thoughtSignature,
+                                                JsonNode functionResultContent) {
         ObjectNode body = objectMapper.createObjectNode();
         setSystemInstruction(body, language);
 
@@ -72,10 +73,14 @@ public class GeminiClient {
         ObjectNode functionCall = functionCallPart.putObject("functionCall");
         functionCall.put("name", functionName);
         functionCall.set("args", functionArgs);
+        // Gemini 3 rejects the replayed call without the signature it issued with it.
+        if (thoughtSignature != null) {
+            functionCallPart.put("thoughtSignature", thoughtSignature);
+        }
         contents.add(modelTurn);
 
         ObjectNode functionTurn = objectMapper.createObjectNode();
-        functionTurn.put("role", "function");
+        functionTurn.put("role", "user");
         ObjectNode functionResponsePart = functionTurn.putArray("parts").addObject();
         ObjectNode functionResponse = functionResponsePart.putObject("functionResponse");
         functionResponse.put("name", functionName);
@@ -95,6 +100,10 @@ public class GeminiClient {
     public JsonNode extractFunctionCall(JsonNode response) {
         JsonNode functionCall = response.at("/candidates/0/content/parts/0/functionCall");
         return functionCall.isMissingNode() ? null : functionCall;
+    }
+
+    public String extractThoughtSignature(JsonNode response) {
+        return response.at("/candidates/0/content/parts/0/thoughtSignature").asText(null);
     }
 
     private void setSystemInstruction(ObjectNode body, ReplyLanguage language) {

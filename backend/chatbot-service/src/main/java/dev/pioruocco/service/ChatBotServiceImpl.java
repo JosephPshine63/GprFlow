@@ -80,7 +80,8 @@ public class ChatBotServiceImpl implements ChatBotService {
 
             JsonNode coinJson = objectMapper.valueToTree(coin.get());
             JsonNode finalResponse = geminiClient.generateWithFunctionResult(
-                    prompt, language, GeminiClient.COIN_TOOL_NAME, functionCall.path("args"), coinJson);
+                    prompt, language, GeminiClient.COIN_TOOL_NAME, functionCall.path("args"),
+                    geminiClient.extractThoughtSignature(initial), coinJson);
             String text = geminiClient.extractText(finalResponse);
 
             return CompletableFuture.completedFuture(
