@@ -3,6 +3,17 @@ import api from "@/Api/api";
 import { apiErrorMessage } from "@/Util/apiError";
 import { turnstileHeaders } from "@/Util/turnstile";
 
+// The jwt cookie is HttpOnly, so index.html can't tell if someone is signed in; this flag lets it
+// keep the static landing snapshot hidden for them.
+const setSessionHint = (signedIn) => {
+  try {
+    if (signedIn) localStorage.setItem("gprflowSession", "1");
+    else localStorage.removeItem("gprflowSession");
+  } catch {
+    // storage can be unavailable (private mode); the snapshot just flashes
+  }
+};
+
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: actionTypes.REGISTER_REQUEST });
   try {
@@ -70,7 +81,9 @@ export const getUser = () => {
     try {
       const response = await api.get(`/api/users/profile`);
       dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: response.data });
+      setSessionHint(true);
     } catch (error) {
+      setSessionHint(false);
       dispatch({ type: actionTypes.GET_USER_FAILURE, payload: null });
     }
   };
@@ -193,6 +206,7 @@ export const logout = () => {
     } catch (_) {
       // ignore network errors on logout
     }
+    setSessionHint(false);
     dispatch({ type: actionTypes.LOGOUT });
   };
 };

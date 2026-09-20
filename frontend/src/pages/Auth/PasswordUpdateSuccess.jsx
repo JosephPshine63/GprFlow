@@ -15,7 +15,7 @@ const PasswordUpdateSuccess = () => {
         <CheckCircle2 className="h-14 w-14 text-up" strokeWidth={1.5} />
         <button
           type="button"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/signin")}
           className="btn-brand h-11 w-full"
         >
           {t("auth.passwordUpdated.toLogin")}

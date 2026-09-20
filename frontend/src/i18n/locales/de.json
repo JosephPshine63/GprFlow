@@ -41,6 +41,59 @@
     "body": "GprFlow Es handelt sich um eine Demo-App, die für ein Portfolio und einen Lebenslauf entwickelt wurde: Alles läuft in einer Sandbox, und Sie können weder mit echtem Geld handeln noch Auszahlungen vornehmen oder sonstige echte Transaktionen durchführen.",
     "dismiss": "Die Meldung schließen"
   },
+  "landing": {
+    "metaTitle": "GprFlow - Demo einer Krypto-Handelsplattform",
+    "metaDescription": "Demo einer Krypto-Handelsplattform: Live-Marktdaten und Charts, Kauf- und Verkaufsaufträge, Wallet, Portfolio und KI-Assistent. Nur Sandbox, kein echtes Geld.",
+    "h1": "Handeln Sie mit Kryptowährungen in einer risikofreien Demo-Umgebung",
+    "subtitle": "Entdecken Sie die Märkte in Echtzeit, geben Sie Kauf- und Verkaufsaufträge auf und verfolgen Sie Ihr Portfolio. Alles läuft in einer Sandbox, sodass kein echtes Geld im Spiel ist.",
+    "ctaSignup": "Erstellen Sie Ihr Konto",
+    "ctaSignin": "Anmelden",
+    "languages": "Sprachen",
+    "featuresTitle": "Was Sie tun können",
+    "features": {
+      "markets": {
+        "title": "Echtzeit-Marktdaten",
+        "body": "Kurse und Charts der führenden Kryptowährungen über verschiedene Zeiträume hinweg, bereitgestellt von CoinGecko."
+      },
+      "trading": {
+        "title": "Kaufen und verkaufen",
+        "body": "Platzieren Sie Aufträge über Ihr Guthaben und sehen Sie jeden Trade in Ihrem Verlauf."
+      },
+      "portfolio": {
+        "title": "Portfolioüberwachung",
+        "body": "Verfolgen Sie den Wert Ihrer Bestände sowie den Gewinn oder Verlust bei jedem einzelnen Vermögenswert."
+      },
+      "wallet": {
+        "title": "Wallet",
+        "body": "Laden Sie Ihr Guthaben mit einer Testkarte auf, heben Sie Geld ab und überweisen Sie Beträge an andere Nutzer."
+      },
+      "assistant": {
+        "title": "KI-Assistent",
+        "body": "Fragen Sie den integrierten Chatbot zum Thema Kryptowährungen und erhalten Sie Antworten in Ihrer Sprache."
+      },
+      "security": {
+        "title": "Kontosicherheit",
+        "body": "Zweistufige Verifizierung per E-Mail und Schutz vor Bots bei der Registrierung."
+      }
+    },
+    "stepsTitle": "So funktioniert es",
+    "steps": {
+      "signup": {
+        "title": "Ein Konto erstellen",
+        "body": "Registrieren Sie sich mit Ihrer E-Mail-Adresse – das dauert nur eine Minute."
+      },
+      "topup": {
+        "title": "Testguthaben hinzufügen",
+        "body": "Laden Sie Ihr Wallet mit einer „Stripe“-Testkarte auf."
+      },
+      "trade": {
+        "title": "Beginnen Sie mit dem Handel",
+        "body": "Kaufen und verkaufen Sie Kryptowährungen und beobachten Sie, wie Ihr Portfolio wächst."
+      }
+    },
+    "demoTitle": "Eine Demo, kein echter Handel",
+    "demoBody": "GprFlow ist eine Demo-App, die für ein Portfolio entwickelt wurde: Die Zahlungen laufen im Stripe-Testmodus, und Sie können weder mit echtem Geld handeln noch echte Auszahlungen vornehmen."
+  },
   "errorBoundary": {
     "title": "Es ist ein Fehler aufgetreten",
     "body": "Es ist ein unerwarteter Fehler aufgetreten. Bitte laden Sie die Seite neu, um es erneut zu versuchen.",

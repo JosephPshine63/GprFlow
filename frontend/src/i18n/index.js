@@ -17,6 +17,10 @@ export const LANGUAGES = [
 
 const CODES = LANGUAGES.map((l) => l.code);
 
+// Public landing pages: English lives at the root, every other language under its own prefix.
+export const landingPath = (code) => (code === DEFAULT_LANGUAGE ? "/" : `/${code}`);
+export const isSupportedLanguage = (code) => CODES.includes(code);
+
 const loaders = {
   it: () => import("./locales/it.json"),
   fr: () => import("./locales/fr.json"),
@@ -56,7 +60,9 @@ export const initI18n = async () => {
       interpolation: { escapeValue: false },
       returnNull: false,
       detection: {
-        order: ["localStorage", "navigator"],
+        // the URL prefix of a landing page (/it, /fr, ...) wins over the stored choice
+        order: ["path", "localStorage", "navigator"],
+        lookupFromPathIndex: 0,
         lookupLocalStorage: STORAGE_KEY,
         caches: ["localStorage"],
         convertDetectedLanguage: (lng) => lng.split("-")[0],

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LineChart, ShieldCheck, Zap } from "lucide-react";
 import BrandMark from "@/components/custome/BrandMark";
 import LanguageSwitcher from "@/components/custome/LanguageSwitcher";
+import Seo from "@/components/custome/Seo";
 
 const highlights = [
   { icon: LineChart, key: "auth.layout.highlight1" },
@@ -14,6 +15,7 @@ const AuthLayout = ({ title, subtitle, footer, children }) => {
   const { t } = useTranslation();
   return (
   <div className="grid min-h-screen bg-background lg:grid-cols-2">
+    <Seo robots="noindex" />
     <aside className="relative hidden overflow-hidden bg-brand p-12 text-white lg:flex lg:flex-col lg:justify-between">
       <div className="flex items-center gap-3">
         <BrandMark className="h-9 bg-white [background-image:none]" />

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import BrandMark from "./components/custome/BrandMark";
 import Home from "./pages/Home/Home";
 import Portfolio from "./pages/Portfilio/Portfolio";
 import Auth from "./pages/Auth/Auth";
+import Landing from "./pages/Landing/Landing";
 import StockDetails from "./pages/StockDetails/StockDetails";
 import Profile from "./pages/Profile/Profile";
 import Notfound from "./pages/Notfound/Notfound";
@@ -25,6 +26,10 @@ import Activity from "./pages/Activity/Activity";
 import SearchCoin from "./pages/Search/Search";
 import DemoBanner from "./components/custome/DemoBanner";
 import { Toaster } from "./components/ui/toaster";
+import { DEFAULT_LANGUAGE, LANGUAGES } from "./i18n";
+
+// English is served at the root; the other languages get a landing page under /<code>
+const LOCALIZED_LANDINGS = LANGUAGES.map(({ code }) => code).filter((code) => code !== DEFAULT_LANGUAGE);
 
 function App() {
   return (
@@ -59,7 +64,10 @@ function AppRoutes() {
   if (!user) {
     return (
       <Routes key={i18n.language}>
-        <Route element={<Auth />} path="/" />
+        <Route element={<Landing />} path="/" />
+        {LOCALIZED_LANDINGS.map((code) => (
+          <Route element={<Landing lang={code} />} key={code} path={`/${code}`} />
+        ))}
         <Route element={<Auth />} path="/signup" />
         <Route element={<Auth />} path="/signin" />
         <Route element={<Auth />} path="/forgot-password" />
@@ -76,6 +84,9 @@ function AppRoutes() {
 
   return (
     <Routes key={i18n.language}>
+      {LOCALIZED_LANDINGS.map((code) => (
+        <Route element={<Navigate replace to="/" />} key={code} path={`/${code}`} />
+      ))}
       <Route element={<AppShell />}>
         <Route element={<Home />} path="/" />
         <Route element={<Portfolio />} path="/portfolio" />

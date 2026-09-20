@@ -41,6 +41,59 @@
     "body": "GprFlow is a demo app built for a portfolio and CV: everything runs in a sandbox, and you cannot trade with real money or make payouts or any other real transactions.",
     "dismiss": "Dismiss the notice"
   },
+  "landing": {
+    "metaTitle": "GprFlow - Crypto trading platform demo",
+    "metaDescription": "GprFlow is a crypto trading platform demo: live market data and charts, buy and sell orders, a wallet, a portfolio and an AI assistant. Sandbox only, no real money.",
+    "h1": "Trade crypto in a risk-free demo",
+    "subtitle": "Explore real-time markets, place buy and sell orders, and track your portfolio. Everything runs in a sandbox, so no real money is involved.",
+    "ctaSignup": "Create your account",
+    "ctaSignin": "Sign in",
+    "languages": "Languages",
+    "featuresTitle": "What you can do",
+    "features": {
+      "markets": {
+        "title": "Live market data",
+        "body": "Prices and charts for the top coins across multiple timeframes, powered by CoinGecko."
+      },
+      "trading": {
+        "title": "Buy and sell",
+        "body": "Place orders against your wallet balance and see every trade in your history."
+      },
+      "portfolio": {
+        "title": "Portfolio tracking",
+        "body": "Follow the value of your holdings and the profit or loss on each asset."
+      },
+      "wallet": {
+        "title": "Wallet",
+        "body": "Top up with a test card, withdraw and transfer funds to other users."
+      },
+      "assistant": {
+        "title": "AI assistant",
+        "body": "Ask the built-in chatbot about crypto and get answers in your language."
+      },
+      "security": {
+        "title": "Account security",
+        "body": "Two-step verification by email and bot protection on sign-up."
+      }
+    },
+    "stepsTitle": "How it works",
+    "steps": {
+      "signup": {
+        "title": "Create an account",
+        "body": "Sign up with your email address, it takes a minute."
+      },
+      "topup": {
+        "title": "Add test funds",
+        "body": "Top up your wallet with a Stripe test card."
+      },
+      "trade": {
+        "title": "Start trading",
+        "body": "Buy and sell coins and watch your portfolio grow."
+      }
+    },
+    "demoTitle": "A demo, not a real exchange",
+    "demoBody": "GprFlow is a demo app built for a portfolio: payments run in Stripe test mode, and you cannot trade with real money or make real payouts."
+  },
   "errorBoundary": {
     "title": "Something went wrong",
     "body": "An unexpected error occurred. Reload the page to try again.",

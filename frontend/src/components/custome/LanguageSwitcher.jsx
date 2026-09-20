@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LANGUAGES, setLanguage } from "@/i18n";
 
-const LanguageSwitcher = ({ className }) => {
+const LanguageSwitcher = ({ className, onSelect = setLanguage }) => {
   const { t, i18n } = useTranslation();
 
   return (
@@ -27,7 +27,7 @@ const LanguageSwitcher = ({ className }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40 rounded-xl">
         {LANGUAGES.map(({ code, label }) => (
-          <DropdownMenuItem key={code} onClick={() => setLanguage(code)}>
+          <DropdownMenuItem key={code} onClick={() => onSelect(code)}>
             <span className="flex-1">{label}</span>
             {i18n.language === code && <Check className="h-4 w-4" strokeWidth={1.75} />}
           </DropdownMenuItem>

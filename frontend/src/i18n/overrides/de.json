@@ -25,5 +25,9 @@
   "paymentDetails.confirm": "{{label}} bestätigen",
   "chat.openUnread_one": "Assistenten öffnen, {{count}} neue Nachricht",
   "chat.openUnread_other": "Assistenten öffnen, {{count}} neue Nachrichten",
-  "chat.open": "Assistenten öffnen"
+  "chat.open": "Assistenten öffnen",
+  "landing.metaDescription": "Demo einer Krypto-Handelsplattform: Live-Marktdaten und Charts, Kauf- und Verkaufsaufträge, Wallet, Portfolio und KI-Assistent. Nur Sandbox, kein echtes Geld.",
+  "landing.features.trading.body": "Platzieren Sie Aufträge über Ihr Guthaben und sehen Sie jeden Trade in Ihrem Verlauf.",
+  "landing.features.wallet.title": "Wallet",
+  "landing.demoBody": "GprFlow ist eine Demo-App, die für ein Portfolio entwickelt wurde: Die Zahlungen laufen im Stripe-Testmodus, und Sie können weder mit echtem Geld handeln noch echte Auszahlungen vornehmen."
 }

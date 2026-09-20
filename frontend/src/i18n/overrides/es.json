@@ -19,5 +19,10 @@
   "market.addToWatchlist": "Añadir {{name}} a la lista de seguimiento",
   "market.removeFromWatchlist": "Quitar {{name}} de la lista de seguimiento",
   "watchlist.remove": "Quitar {{name}} de la lista de seguimiento",
-  "chat.openUnread_one": "Abrir el asistente, {{count}} mensaje nuevo"
+  "chat.openUnread_one": "Abrir el asistente, {{count}} mensaje nuevo",
+  "landing.metaDescription": "Demo de una plataforma de trading de cripto: mercados y gráficos en vivo, órdenes de compra y venta, wallet, portfolio y asistente IA. Solo sandbox, sin dinero real.",
+  "landing.features.wallet.title": "Wallet",
+  "landing.features.wallet.body": "Recargue su cuenta con una tarjeta de prueba, retire fondos y realice transferencias a otros usuarios.",
+  "landing.demoTitle": "Una demo, no un exchange real",
+  "landing.demoBody": "GprFlow es una aplicación de demostración creada para un portfolio: los pagos funcionan en modo de prueba de Stripe y no es posible operar con dinero real ni hacer retiradas reales."
 }

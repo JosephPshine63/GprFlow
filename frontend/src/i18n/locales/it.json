@@ -41,6 +41,59 @@
     "body": "GprFlow è un'app dimostrativa creata per portfolio e CV: è tutto in sandbox, non si può fare trading con denaro reale né eseguire prelievi (payout) o altre operazioni reali.",
     "dismiss": "Chiudi l'avviso"
   },
+  "landing": {
+    "metaTitle": "GprFlow - Demo di una piattaforma di trading di criptovalute",
+    "metaDescription": "Demo di una piattaforma di trading di criptovalute: mercati e grafici in tempo reale, ordini, wallet, portfolio e assistente AI. Solo sandbox, nessun denaro reale.",
+    "h1": "Fai trading di criptovalute in una demo senza rischi",
+    "subtitle": "Esplora i mercati in tempo reale, inserisci ordini di acquisto e vendita e monitora il tuo portfolio. Tutto avviene in una sandbox, quindi non è coinvolto denaro reale.",
+    "ctaSignup": "Crea il tuo account",
+    "ctaSignin": "Accedi",
+    "languages": "Lingue",
+    "featuresTitle": "Cosa puoi fare",
+    "features": {
+      "markets": {
+        "title": "Dati di mercato in tempo reale",
+        "body": "Prezzi e grafici delle principali criptovalute su diversi intervalli di tempo, forniti da CoinGecko."
+      },
+      "trading": {
+        "title": "Acquista e vendi",
+        "body": "Inserisci ordini usando il saldo del tuo wallet e consulta ogni operazione nella cronologia."
+      },
+      "portfolio": {
+        "title": "Monitoraggio del portfolio",
+        "body": "Segui il valore delle tue posizioni e l'utile o la perdita di ogni asset."
+      },
+      "wallet": {
+        "title": "Wallet",
+        "body": "Ricarica con una carta di prova, preleva e trasferisci fondi ad altri utenti."
+      },
+      "assistant": {
+        "title": "Assistente AI",
+        "body": "Chiedi al chatbot integrato informazioni sulle criptovalute e ricevi risposte nella tua lingua."
+      },
+      "security": {
+        "title": "Sicurezza dell'account",
+        "body": "Verifica in due passaggi tramite e-mail e protezione dai bot al momento della registrazione."
+      }
+    },
+    "stepsTitle": "Come funziona",
+    "steps": {
+      "signup": {
+        "title": "Crea un account",
+        "body": "Registrati con il tuo indirizzo e-mail: ci vuole solo un minuto."
+      },
+      "topup": {
+        "title": "Aggiungi fondi di prova",
+        "body": "Ricarica il tuo wallet con una carta di prova Stripe."
+      },
+      "trade": {
+        "title": "Inizia a fare trading",
+        "body": "Acquista e vendi monete e guarda crescere il tuo portfolio."
+      }
+    },
+    "demoTitle": "Una demo, non un vero exchange",
+    "demoBody": "GprFlow è un'app dimostrativa creata per un portfolio: i pagamenti funzionano in modalità test di Stripe e non è possibile fare trading con denaro reale né eseguire prelievi reali."
+  },
   "errorBoundary": {
     "title": "Qualcosa è andato storto",
     "body": "Si è verificato un errore imprevisto. Ricarica la pagina per riprovare.",

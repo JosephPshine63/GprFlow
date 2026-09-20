@@ -1,0 +1,23 @@
+{
+  "landing.metaTitle": "GprFlow - Demo di una piattaforma di trading di criptovalute",
+  "landing.metaDescription": "Demo di una piattaforma di trading di criptovalute: mercati e grafici in tempo reale, ordini, wallet, portfolio e assistente AI. Solo sandbox, nessun denaro reale.",
+  "landing.h1": "Fai trading di criptovalute in una demo senza rischi",
+  "landing.subtitle": "Esplora i mercati in tempo reale, inserisci ordini di acquisto e vendita e monitora il tuo portfolio. Tutto avviene in una sandbox, quindi non è coinvolto denaro reale.",
+  "landing.ctaSignup": "Crea il tuo account",
+  "landing.featuresTitle": "Cosa puoi fare",
+  "landing.features.trading.title": "Acquista e vendi",
+  "landing.features.trading.body": "Inserisci ordini usando il saldo del tuo wallet e consulta ogni operazione nella cronologia.",
+  "landing.features.portfolio.title": "Monitoraggio del portfolio",
+  "landing.features.portfolio.body": "Segui il valore delle tue posizioni e l'utile o la perdita di ogni asset.",
+  "landing.features.wallet.title": "Wallet",
+  "landing.features.wallet.body": "Ricarica con una carta di prova, preleva e trasferisci fondi ad altri utenti.",
+  "landing.features.assistant.body": "Chiedi al chatbot integrato informazioni sulle criptovalute e ricevi risposte nella tua lingua.",
+  "landing.steps.signup.title": "Crea un account",
+  "landing.steps.signup.body": "Registrati con il tuo indirizzo e-mail: ci vuole solo un minuto.",
+  "landing.steps.topup.title": "Aggiungi fondi di prova",
+  "landing.steps.topup.body": "Ricarica il tuo wallet con una carta di prova Stripe.",
+  "landing.steps.trade.title": "Inizia a fare trading",
+  "landing.steps.trade.body": "Acquista e vendi monete e guarda crescere il tuo portfolio.",
+  "landing.demoTitle": "Una demo, non un vero exchange",
+  "landing.demoBody": "GprFlow è un'app dimostrativa creata per un portfolio: i pagamenti funzionano in modalità test di Stripe e non è possibile fare trading con denaro reale né eseguire prelievi reali."
+}
