@@ -88,7 +88,7 @@
       },
       "trade": {
         "title": "Beginnen Sie mit dem Handel",
-        "body": "Kaufen und verkaufen Sie Kryptowährungen und beobachten Sie, wie Ihr Portfolio wächst."
+        "body": "Kaufen und verkaufen Sie Kryptowährungen und verfolgen Sie die Entwicklung Ihres Portfolios."
       }
     },
     "demoTitle": "Eine Demo, kein echter Handel",
@@ -109,8 +109,8 @@
   },
   "auth": {
     "layout": {
-      "headline": "Erweitern Sie Ihr Krypto-Portfolio.",
-      "highlight1": "Echtzeit-Märkte und Charts",
+      "headline": "Üben Sie den Krypto-Handel in einer Demo.",
+      "highlight1": "Echtzeit-Marktdaten und Charts",
       "highlight2": "Sofortige Kauf- und Verkaufsaufträge",
       "highlight3": "Zweistufige Authentifizierung für Ihr Konto"
     },
@@ -342,7 +342,7 @@
       },
       "withdraw": {
         "title": "Eine Auszahlung beantragen",
-        "description": "Die Auszahlung wird Ihrem Konto nach der Genehmigung gutgeschrieben."
+        "description": "Simulierte Auszahlung: Der Betrag wird Ihrem Demokonto nach der Genehmigung gutgeschrieben; es erfolgt keine tatsächliche Auszahlung."
       },
       "transfer": {
         "title": "Überweisung an eine andere Wallet",
@@ -438,7 +438,7 @@
     "emptyTitle": "Es ist keine Methode verknüpft",
     "emptyBody": "Fügen Sie ein Bankkonto oder eine Karte hinzu, um Auszahlungen beantragen zu können.",
     "add": "Zahlungsdaten hinzufügen",
-    "dialogDescription": "Wo Auszahlungen gutgeschrieben werden.",
+    "dialogDescription": "Hier werden simulierte Auszahlungen gutgeschrieben. Nur für die Demoversion: Geben Sie keine echten Bank- oder Kartendaten ein.",
     "saved": "Zahlungsdaten gespeichert",
     "payoutMethod": "Auszahlungsmethode",
     "cardHolder": "Kartenhalter",

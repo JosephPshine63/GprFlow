@@ -88,7 +88,7 @@
       },
       "trade": {
         "title": "Commencez à trader",
-        "body": "Achetez et vendez des cryptomonnaies et regardez votre portefeuille s'enrichir."
+        "body": "Achetez et vendez des cryptomonnaies et suivez les performances de votre portefeuille."
       }
     },
     "demoTitle": "Une démo, pas une véritable plateforme d'échange",
@@ -109,8 +109,8 @@
   },
   "auth": {
     "layout": {
-      "headline": "Développez votre portfolio de cryptomonnaies.",
-      "highlight1": "Cours et graphiques en temps réel",
+      "headline": "Entraînez-vous au trading de cryptomonnaies en démo.",
+      "highlight1": "Données de marché en temps réel et graphiques",
       "highlight2": "Ordres d'achat et de vente immédiats",
       "highlight3": "La vérification en deux étapes sur votre compte"
     },
@@ -342,7 +342,7 @@
       },
       "withdraw": {
         "title": "Demander un retrait",
-        "description": "Le retrait est crédité sur votre compte après validation."
+        "description": "Retrait simulé : le montant est crédité sur votre compte démo après validation ; il ne s'agit pas d'un versement réel."
       },
       "transfer": {
         "title": "Transférer vers un autre portefeuille",
@@ -438,7 +438,7 @@
     "emptyTitle": "Aucune méthode associée",
     "emptyBody": "Ajoutez un compte bancaire ou une carte pour pouvoir effectuer des retraits.",
     "add": "Ajouter vos informations de paiement",
-    "dialogDescription": "Où les retraits sont crédités.",
+    "dialogDescription": "Où les retraits simulés sont crédités. Démo uniquement : ne saisissez pas de vraies coordonnées bancaires ou de carte.",
     "saved": "Informations de paiement enregistrées",
     "payoutMethod": "Mode de paiement",
     "cardHolder": "Porte-cartes",

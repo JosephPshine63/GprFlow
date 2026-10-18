@@ -88,7 +88,7 @@
       },
       "trade": {
         "title": "Comience a operar",
-        "body": "Compre y venda monedas y vea cómo crece su cartera."
+        "body": "Compre y venda monedas y realice un seguimiento del rendimiento de su cartera."
       }
     },
     "demoTitle": "Una demo, no un exchange real",
@@ -109,8 +109,8 @@
   },
   "auth": {
     "layout": {
-      "headline": "Amplíe su cartera de criptomonedas.",
-      "highlight1": "Mercados y gráficos en tiempo real",
+      "headline": "Practique el trading de criptomonedas en una cuenta de demostración.",
+      "highlight1": "Datos de mercado en tiempo real y gráficos",
       "highlight2": "Órdenes de compra y venta inmediatas",
       "highlight3": "Verificación en dos pasos en su cuenta"
     },
@@ -342,7 +342,7 @@
       },
       "withdraw": {
         "title": "Solicitar una retirada",
-        "description": "El importe de la retirada se abonará en su cuenta una vez haya sido aprobado."
+        "description": "Retirada simulada: se abona en su cuenta de demostración tras su aprobación; no se trata de un pago real."
       },
       "transfer": {
         "title": "Transferencia a otro monedero",
@@ -438,7 +438,7 @@
     "emptyTitle": "No hay ningún método vinculado",
     "emptyBody": "Añada una cuenta bancaria o una tarjeta para poder solicitar retiradas de fondos.",
     "add": "Añada los datos de pago",
-    "dialogDescription": "Dónde se abonan las retiradas.",
+    "dialogDescription": "Dónde se abonan las retiradas simuladas. Solo es una demo: no introduzca datos bancarios ni de tarjeta reales.",
     "saved": "Datos de pago guardados",
     "payoutMethod": "Método de pago",
     "cardHolder": "Portatarjetas",

@@ -17,7 +17,11 @@
   "landing.steps.topup.title": "Aggiungi fondi di prova",
   "landing.steps.topup.body": "Ricarica il tuo wallet con una carta di prova Stripe.",
   "landing.steps.trade.title": "Inizia a fare trading",
-  "landing.steps.trade.body": "Acquista e vendi monete e guarda crescere il tuo portfolio.",
+  "landing.steps.trade.body": "Acquista e vendi monete e segui l'andamento del tuo portfolio.",
   "landing.demoTitle": "Una demo, non un vero exchange",
-  "landing.demoBody": "GprFlow è un'app dimostrativa creata per un portfolio: i pagamenti funzionano in modalità test di Stripe e non è possibile fare trading con denaro reale né eseguire prelievi reali."
+  "landing.demoBody": "GprFlow è un'app dimostrativa creata per un portfolio: i pagamenti funzionano in modalità test di Stripe e non è possibile fare trading con denaro reale né eseguire prelievi reali.",
+  "auth.layout.headline": "Fai pratica con il trading di criptovalute in una demo.",
+  "auth.layout.highlight1": "Dati di mercato e grafici live",
+  "wallet.dialogs.withdraw.description": "Prelievo simulato: viene accreditato sul tuo conto demo dopo l'approvazione, nessun pagamento reale.",
+  "paymentDetails.dialogDescription": "Dove vengono accreditati i prelievi simulati. Solo demo: non inserire dati bancari o di carte reali."
 }

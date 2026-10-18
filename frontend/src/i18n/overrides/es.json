@@ -9,7 +9,7 @@
   "otp.sendTo": "Le enviaremos un código de {{length}} dígitos a",
   "withdrawals.emptyTitle": "Sin retiradas",
   "admin.accepted": "Retirada aceptada",
-  "paymentDetails.dialogDescription": "Dónde se abonan las retiradas.",
+  "paymentDetails.dialogDescription": "Dónde se abonan las retiradas simuladas. Solo es una demo: no introduzca datos bancarios ni de tarjeta reales.",
   "stock.order": "Orden",
   "stock.orderSymbol": "Orden de {{symbol}}",
   "trade.orderType": "Tipo de orden",

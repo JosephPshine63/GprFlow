@@ -88,7 +88,7 @@
       },
       "trade": {
         "title": "Start trading",
-        "body": "Buy and sell coins and watch your portfolio grow."
+        "body": "Buy and sell coins and track how your portfolio performs."
       }
     },
     "demoTitle": "A demo, not a real exchange",
@@ -109,8 +109,8 @@
   },
   "auth": {
     "layout": {
-      "headline": "Grow your crypto portfolio.",
-      "highlight1": "Real-time markets and charts",
+      "headline": "Practice crypto trading in a demo.",
+      "highlight1": "Live market data and charts",
       "highlight2": "Instant buy and sell orders",
       "highlight3": "Two-step verification on your account"
     },
@@ -342,7 +342,7 @@
       },
       "withdraw": {
         "title": "Request a withdrawal",
-        "description": "The withdrawal is credited to your account after approval."
+        "description": "Simulated withdrawal: it is credited to your demo account after approval, no real payout."
       },
       "transfer": {
         "title": "Transfer to another wallet",
@@ -438,7 +438,7 @@
     "emptyTitle": "No method linked",
     "emptyBody": "Add a bank account or a card to be able to request withdrawals.",
     "add": "Add payment details",
-    "dialogDescription": "Where withdrawals are credited.",
+    "dialogDescription": "Where simulated withdrawals are credited. Demo only: do not enter real bank or card details.",
     "saved": "Payment details saved",
     "payoutMethod": "Payout method",
     "cardHolder": "Card holder",

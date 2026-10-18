@@ -88,7 +88,7 @@
       },
       "trade": {
         "title": "Inizia a fare trading",
-        "body": "Acquista e vendi monete e guarda crescere il tuo portfolio."
+        "body": "Acquista e vendi monete e segui l'andamento del tuo portfolio."
       }
     },
     "demoTitle": "Una demo, non un vero exchange",
@@ -109,8 +109,8 @@
   },
   "auth": {
     "layout": {
-      "headline": "Fai crescere il tuo portafoglio crypto.",
-      "highlight1": "Mercati e grafici in tempo reale",
+      "headline": "Fai pratica con il trading di criptovalute in una demo.",
+      "highlight1": "Dati di mercato e grafici live",
       "highlight2": "Ordini di acquisto e vendita immediati",
       "highlight3": "Verifica in due passaggi sul tuo account"
     },
@@ -342,7 +342,7 @@
       },
       "withdraw": {
         "title": "Richiedi un prelievo",
-        "description": "Il prelievo viene accreditato sul tuo conto dopo l'approvazione."
+        "description": "Prelievo simulato: viene accreditato sul tuo conto demo dopo l'approvazione, nessun pagamento reale."
       },
       "transfer": {
         "title": "Trasferisci a un altro wallet",
@@ -438,7 +438,7 @@
     "emptyTitle": "Nessun metodo collegato",
     "emptyBody": "Aggiungi un conto bancario o una carta per poter richiedere i prelievi.",
     "add": "Aggiungi dati di pagamento",
-    "dialogDescription": "Dove vengono accreditati i prelievi.",
+    "dialogDescription": "Dove vengono accreditati i prelievi simulati. Solo demo: non inserire dati bancari o di carte reali.",
     "saved": "Dati di pagamento salvati",
     "payoutMethod": "Metodo di payout",
     "cardHolder": "Intestatario della carta",
