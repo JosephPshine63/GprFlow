@@ -73,8 +73,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      # Rolls the code back to the previous commit if the build or the gateway
-      # health check fails. Schema changes made by ddl-auto=update are not undone.
+      # Rolls the code back to the previous commit if the build fails, a container never
+      # turns healthy, or the gateway/frontend check fails. Schema changes made by
+      # ddl-auto=update are not undone.
       - name: Deploy over SSH
         run: |
           ssh -o StrictHostKeyChecking=accept-new gpr-server@gpr-server '
@@ -82,13 +83,12 @@ jobs:
             cd ~/Applications/GprFlow
             PREV=$(git rev-parse HEAD)
             git pull --ff-only
-            if ! docker compose up --build -d; then
+            if ! docker compose up --build -d --wait --wait-timeout 300; then
               git reset --hard "$PREV"
               docker compose up --build -d
               exit 1
             fi
-            sleep 40
-            if ! curl -fsS http://localhost:8087/ >/dev/null; then
+            if ! curl -fsS http://localhost:8087/ >/dev/null || ! curl -fsS http://localhost:5173/ >/dev/null; then
               git reset --hard "$PREV"
               docker compose up --build -d
               exit 1

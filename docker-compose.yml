@@ -1,8 +1,24 @@
+# unrotated json logs eventually fill the disk and take the whole stack down
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+# TCP probe on the service port: the temurin JRE image has bash but no curl, and
+# no service ships actuator. Tomcat/Netty bind the port only once the context is up.
+x-java-healthcheck: &java-healthcheck
+  interval: 10s
+  timeout: 3s
+  retries: 5
+  start_period: 90s
+
 services:
   db:
     image: postgres:15
     container_name: gprflow-postgres
     restart: always
+    logging: *logging
     environment:
       POSTGRES_DB: ${DB_NAME:-gprflow}
       POSTGRES_USER: ${DB_USERNAME:-postgres}
@@ -25,6 +41,10 @@ services:
       context: ./backend/monolith
     container_name: gprflow-app
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5454"]
     # Kept published on 5454 for direct debug access. Auth/User/Verification/
     # Watchlist/PaymentDetails all live in auth-service/user-service now (Fase 7-8);
     # HomeController is the only thing left here, no DB needed.
@@ -36,6 +56,10 @@ services:
       context: ./backend/coin-service
     container_name: gprflow-coin-service
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5455"]
     depends_on:
       db:
         condition: service_healthy
@@ -55,6 +79,10 @@ services:
       context: ./backend/chatbot-service
     container_name: gprflow-chatbot-service
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5456"]
     environment:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-your gemini api key}
     # No published port: reachable only via the gateway.
@@ -64,8 +92,14 @@ services:
       context: ./backend/ledger-service
     container_name: gprflow-ledger-service
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5457"]
     depends_on:
       db:
+        condition: service_healthy
+      coin-service:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
@@ -83,8 +117,15 @@ services:
       context: ./backend/auth-service
     container_name: gprflow-auth-service
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5458"]
     depends_on:
       db:
+        condition: service_healthy
+      # the admin seed creates its profile in user-service on first boot and is not retried
+      user-service:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
@@ -106,8 +147,14 @@ services:
       context: ./backend/user-service
     container_name: gprflow-user-service
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/5459"]
     depends_on:
       db:
+        condition: service_healthy
+      coin-service:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
@@ -123,13 +170,23 @@ services:
       context: ./backend/gateway
     container_name: gprflow-gateway
     restart: always
+    logging: *logging
+    healthcheck:
+      <<: *java-healthcheck
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/8080"]
     depends_on:
-      - app
-      - coin-service
-      - chatbot-service
-      - ledger-service
-      - auth-service
-      - user-service
+      app:
+        condition: service_healthy
+      coin-service:
+        condition: service_healthy
+      chatbot-service:
+        condition: service_healthy
+      ledger-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
     environment:
       MONOLITH_URL: http://app:5454
       COIN_SERVICE_URL: http://coin-service:5455
@@ -148,25 +205,40 @@ services:
       context: ./frontend
     container_name: gprflow-frontend
     restart: always
+    logging: *logging
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
     depends_on:
-      - gateway
+      gateway:
+        condition: service_healthy
     environment:
       API_BASE_URL: ${API_BASE_URL:-http://localhost:8087}
-      STRIPE_TEST_MODE: ${STRIPE_TEST_MODE:-false}
+      # the public site is a demo and its copy promises Stripe test cards
+      STRIPE_TEST_MODE: ${STRIPE_TEST_MODE:-true}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-1x00000000000000000000AA}
     ports:
       - "5173:80"
 
   cloudflared:
-    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2026.9.1
     container_name: gprflow-cloudflared
     restart: always
-    command: tunnel run
+    logging: *logging
+    command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN}
+    # Open the tunnel only once the origin answers, so Cloudflare never routes to a
+    # half-started stack. No healthcheck of its own: the image is distroless, and
+    # cloudflared reconnects by itself or exits (and gets restarted) on fatal errors.
     depends_on:
-      - frontend
-      - gateway
+      frontend:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
     # No published ports: outbound-only connection to Cloudflare's edge.
     # Ingress rules (app.gprflow.trade -> frontend:80, api.gprflow.trade -> gateway:8080)
     # are configured on the tunnel itself via the Cloudflare dashboard/CLI, not here.
