@@ -61,6 +61,7 @@ function AppRoutes() {
     );
   }
 
+  // nginx.conf whitelists these paths; any other URL is served with a 404 status
   if (!user) {
     return (
       <Routes key={i18n.language}>
