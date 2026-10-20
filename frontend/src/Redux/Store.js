@@ -8,6 +8,7 @@ import assetReducer from "./Assets/Reducer";
 import watchlistReducer from "./Watchlist/Reducer";
 import withdrawalReducer from "./Withdrawal/Reducer";
 import chatBotReducer from "./Chat/Reducer";
+import statsReducer from "./Stats/Reducer";
 
 const rootReducers=combineReducers({
 
@@ -19,6 +20,7 @@ const rootReducers=combineReducers({
     watchlist:watchlistReducer,
     withdrawal:withdrawalReducer,
     chatBot:chatBotReducer,
+    stats:statsReducer,
 
 });
 

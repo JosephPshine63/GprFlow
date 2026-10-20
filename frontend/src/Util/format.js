@@ -63,3 +63,13 @@ export const formatPercent = (v) => {
   if (!isNum(v)) return "-";
   return `${v >= 0 ? "+" : ""}${percent().format(v)}%`;
 };
+
+// Axis label for a stats bucket ("2026-10-05"): day and month, or month and year for monthly buckets.
+export const formatBucketLabel = (v, bucket) => {
+  if (!v) return "";
+  const date = new Date(v);
+  if (Number.isNaN(date.getTime())) return "";
+  const options =
+    bucket === "MONTH" ? { month: "short", year: "2-digit" } : { day: "numeric", month: "short" };
+  return date.toLocaleDateString(currentLocale(), { ...options, timeZone: "UTC" });
+};

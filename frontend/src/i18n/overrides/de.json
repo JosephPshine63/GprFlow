@@ -30,5 +30,12 @@
   "landing.features.trading.body": "Platzieren Sie Aufträge über Ihr Guthaben und sehen Sie jeden Trade in Ihrem Verlauf.",
   "landing.features.wallet.title": "Wallet",
   "landing.demoBody": "GprFlow ist eine Demo-App, die für ein Portfolio entwickelt wurde: Die Zahlungen laufen im Stripe-Testmodus, und Sie können weder mit echtem Geld handeln noch echte Auszahlungen vornehmen.",
-  "landing.steps.trade.body": "Kaufen und verkaufen Sie Kryptowährungen und verfolgen Sie die Entwicklung Ihres Portfolios."
+  "landing.steps.trade.body": "Kaufen und verkaufen Sie Kryptowährungen und verfolgen Sie die Entwicklung Ihres Portfolios.",
+  "stats.trades": "Aufträge",
+  "stats.tradesSplit": "{{buys}} Kauf- und {{sells}} Verkaufsaufträge",
+  "stats.tradingVolume": "Auftragsvolumen",
+  "stats.noActivityBody": "Wählen Sie einen längeren Zeitraum oder schauen Sie nach Ihrem nächsten Auftrag oder Ihrer nächsten Einzahlung wieder vorbei.",
+  "stats.periods.90d": "Letzte 90 Tage",
+  "stats.walletFlows": "Wallet-Bewegungen",
+  "stats.noActivityTitle": "Keine Aktivität in diesem Zeitraum"
 }

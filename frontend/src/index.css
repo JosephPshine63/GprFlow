@@ -37,6 +37,14 @@
     --down: 1 77% 55%;
     --warning: 36 71% 42%;
 
+    /* categorical series; green and red stay reserved for up/down */
+    --chart-1: 239 52% 38%;
+    --chart-2: 190 80% 34%;
+    --chart-3: 36 71% 42%;
+    --chart-4: 280 45% 50%;
+    --chart-5: 330 60% 46%;
+    --chart-6: 240 15% 62%;
+
     --grad-start: 239 52% 38%;
     --grad-end: 238 65% 65%;
 
@@ -76,6 +84,13 @@
     --up: 145 63% 49%;
     --down: 0 91% 71%;
     --warning: 44 92% 51%;
+
+    --chart-1: 238 65% 65%;
+    --chart-2: 190 70% 50%;
+    --chart-3: 44 92% 51%;
+    --chart-4: 280 60% 72%;
+    --chart-5: 330 70% 66%;
+    --chart-6: 240 16% 45%;
   }
 }
 

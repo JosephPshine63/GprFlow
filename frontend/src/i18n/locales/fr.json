@@ -11,6 +11,7 @@
   "nav": {
     "home": "Accueil",
     "portfolio": "Portfolio",
+    "stats": "Statistiques",
     "watchlist": "Liste de surveillance",
     "activity": "Activité",
     "wallet": "Portefeuille",
@@ -583,5 +584,40 @@
     "user": "Utilisateur",
     "amount": "Montant",
     "status": "Statut"
+  },
+  "stats": {
+    "title": "Statistiques",
+    "subtitle": "État de votre compte : avoirs, transactions et mouvements sur votre portefeuille.",
+    "period": "Période",
+    "periods": {
+      "7d": "7 derniers jours",
+      "30d": "30 derniers jours",
+      "90d": "90 derniers jours",
+      "all": "Depuis toujours"
+    },
+    "portfolioValue": "Valeur du portefeuille",
+    "balance": "Solde du portefeuille",
+    "unrealizedPnl": "Plus-values/moins-values latentes",
+    "realizedPnl": "Plus-values/moins-values réalisées",
+    "trades": "Ordres",
+    "tradesSplit": "{{buys}} ordres d'achat et {{sells}} ordres de vente",
+    "allocation": "Répartition du portefeuille",
+    "allocationHint": "Part de chaque cryptomonnaie dans votre portefeuille aux cours actuels",
+    "pnlByAsset": "Résultat par actif",
+    "pnlByAssetHint": "Plus-value ou moins-value latente par rapport à votre prix d'achat moyen",
+    "tradingVolume": "Volume des ordres",
+    "walletFlows": "Mouvements de portefeuille",
+    "realizedPnlOverTime": "Plus-values/moins-values réalisées au fil du temps",
+    "realizedPnlHint": "Bénéfice ou perte cumulé(e) résultant de vos ventes au cours de la période sélectionnée",
+    "buys": "Ordres d'achat",
+    "sells": "Ordres de vente",
+    "deposits": "Dépôts",
+    "withdrawals": "Retraits",
+    "transfersOut": "Virements effectués",
+    "total": "Total",
+    "other": "Autres",
+    "noActivityTitle": "Rien sur cette période",
+    "noActivityBody": "Choisissez une période plus longue, ou revenez après votre prochain ordre ou dépôt.",
+    "loadFailed": "Impossible de charger vos statistiques"
   }
 }

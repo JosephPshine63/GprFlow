@@ -11,6 +11,7 @@
   "nav": {
     "home": "Home",
     "portfolio": "Portfolio",
+    "stats": "Statistiche",
     "watchlist": "Watchlist",
     "activity": "Attività",
     "wallet": "Wallet",
@@ -583,5 +584,40 @@
     "user": "Utente",
     "amount": "Importo",
     "status": "Stato"
+  },
+  "stats": {
+    "title": "Statistiche",
+    "subtitle": "Come sta andando il tuo account: asset, ordini e movimenti del wallet.",
+    "period": "Periodo",
+    "periods": {
+      "7d": "Ultimi 7 giorni",
+      "30d": "Ultimi 30 giorni",
+      "90d": "Ultimi 90 giorni",
+      "all": "Da sempre"
+    },
+    "portfolioValue": "Valore del portfolio",
+    "balance": "Saldo del wallet",
+    "unrealizedPnl": "Profitto/Perdita non realizzato",
+    "realizedPnl": "Profitto/Perdita realizzato",
+    "trades": "Ordini",
+    "tradesSplit": "{{buys}} di acquisto e {{sells}} di vendita",
+    "allocation": "Composizione del portfolio",
+    "allocationHint": "Peso di ogni moneta sui tuoi asset ai prezzi attuali",
+    "pnlByAsset": "Profitto/Perdita per asset",
+    "pnlByAssetHint": "Profitto o perdita non realizzato rispetto al tuo prezzo medio di acquisto",
+    "tradingVolume": "Volume degli ordini",
+    "walletFlows": "Movimenti del wallet",
+    "realizedPnlOverTime": "Profitto/Perdita realizzato nel tempo",
+    "realizedPnlHint": "Profitto o perdita cumulato delle tue vendite nel periodo selezionato",
+    "buys": "Acquisti",
+    "sells": "Vendite",
+    "deposits": "Depositi",
+    "withdrawals": "Prelievi",
+    "transfersOut": "Trasferimenti inviati",
+    "total": "Totale",
+    "other": "Altro",
+    "noActivityTitle": "Nessun movimento in questo periodo",
+    "noActivityBody": "Scegli un periodo più lungo, oppure torna dopo il tuo prossimo ordine o deposito.",
+    "loadFailed": "Impossibile caricare le tue statistiche"
   }
 }

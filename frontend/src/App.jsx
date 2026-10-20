@@ -23,6 +23,7 @@ import PaymentSuccess from "./pages/Wallet/PaymentSuccess";
 import PaymentCancel from "./pages/Wallet/PaymentCancel";
 import WithdrawalAdmin from "./Admin/Withdrawal/WithdrawalAdmin";
 import Activity from "./pages/Activity/Activity";
+import Stats from "./pages/Stats/Stats";
 import SearchCoin from "./pages/Search/Search";
 import DemoBanner from "./components/custome/DemoBanner";
 import { Toaster } from "./components/ui/toaster";
@@ -92,6 +93,7 @@ function AppRoutes() {
         <Route element={<Home />} path="/" />
         <Route element={<Portfolio />} path="/portfolio" />
         <Route element={<Activity />} path="/activity" />
+        <Route element={<Stats />} path="/stats" />
         <Route element={<Wallet />} path="/wallet" />
         <Route element={<Withdrawal />} path="/withdrawal" />
         <Route element={<PaymentDetails />} path="/payment-details" />

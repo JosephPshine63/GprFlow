@@ -24,5 +24,9 @@
   "landing.features.wallet.title": "Wallet",
   "landing.features.wallet.body": "Recargue su cuenta con una tarjeta de prueba, retire fondos y realice transferencias a otros usuarios.",
   "landing.demoTitle": "Una demo, no un exchange real",
-  "landing.demoBody": "GprFlow es una aplicación de demostración creada para un portfolio: los pagos funcionan en modo de prueba de Stripe y no es posible operar con dinero real ni hacer retiradas reales."
+  "landing.demoBody": "GprFlow es una aplicación de demostración creada para un portfolio: los pagos funcionan en modo de prueba de Stripe y no es posible operar con dinero real ni hacer retiradas reales.",
+  "stats.trades": "Órdenes",
+  "stats.tradingVolume": "Volumen de órdenes",
+  "stats.noActivityBody": "Elija un periodo más largo o vuelva después de su próxima orden o depósito.",
+  "stats.periods.all": "Desde siempre"
 }

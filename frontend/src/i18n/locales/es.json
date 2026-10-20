@@ -11,6 +11,7 @@
   "nav": {
     "home": "Inicio",
     "portfolio": "Cartera",
+    "stats": "Estadísticas",
     "watchlist": "Lista de seguimiento",
     "activity": "Actividad",
     "wallet": "Monedero",
@@ -583,5 +584,40 @@
     "user": "Usuario",
     "amount": "Importe",
     "status": "Estado"
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "subtitle": "Situación de su cuenta: carteras, operaciones y movimientos en el monedero.",
+    "period": "Período",
+    "periods": {
+      "7d": "Últimos 7 días",
+      "30d": "Últimos 30 días",
+      "90d": "Últimos 90 días",
+      "all": "Desde siempre"
+    },
+    "portfolioValue": "Valor de la cartera",
+    "balance": "Saldo de la cartera",
+    "unrealizedPnl": "Ganancias o pérdidas no realizadas",
+    "realizedPnl": "Ganancias o pérdidas realizadas",
+    "trades": "Órdenes",
+    "tradesSplit": "{{buys}} órdenes de compra y {{sells}} órdenes de venta",
+    "allocation": "Asignación de la cartera",
+    "allocationHint": "Porcentaje que representa cada moneda en su cartera a los precios actuales",
+    "pnlByAsset": "Resultados por activo",
+    "pnlByAssetHint": "Ganancias o pérdidas no realizadas con respecto a su precio medio de compra",
+    "tradingVolume": "Volumen de órdenes",
+    "walletFlows": "Movimientos de la cartera",
+    "realizedPnlOverTime": "Ganancias o pérdidas realizadas a lo largo del tiempo",
+    "realizedPnlHint": "Beneficios o pérdidas acumuladas de sus ventas en el periodo seleccionado",
+    "buys": "Órdenes de compra",
+    "sells": "Órdenes de venta",
+    "deposits": "Depósitos",
+    "withdrawals": "Retiradas",
+    "transfersOut": "Transferencias enviadas",
+    "total": "Total",
+    "other": "Otros",
+    "noActivityTitle": "No hay nada en este periodo",
+    "noActivityBody": "Elija un periodo más largo o vuelva después de su próxima orden o depósito.",
+    "loadFailed": "No se han podido cargar sus estadísticas"
   }
 }

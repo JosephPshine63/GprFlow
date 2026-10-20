@@ -1,5 +1,6 @@
 import {
   Activity,
+  BarChart3,
   Banknote,
   Bookmark,
   Home,
@@ -13,6 +14,7 @@ import {
 export const navItems = [
   { labelKey: "nav.home", path: "/", icon: Home },
   { labelKey: "nav.portfolio", path: "/portfolio", icon: PieChart },
+  { labelKey: "nav.stats", path: "/stats", icon: BarChart3 },
   { labelKey: "nav.watchlist", path: "/watchlist", icon: Bookmark },
   { labelKey: "nav.activity", path: "/activity", icon: Activity },
   { labelKey: "nav.wallet", path: "/wallet", icon: Wallet },

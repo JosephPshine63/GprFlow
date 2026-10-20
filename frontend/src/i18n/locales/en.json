@@ -11,6 +11,7 @@
   "nav": {
     "home": "Home",
     "portfolio": "Portfolio",
+    "stats": "Statistics",
     "watchlist": "Watchlist",
     "activity": "Activity",
     "wallet": "Wallet",
@@ -583,5 +584,40 @@
     "user": "User",
     "amount": "Amount",
     "status": "Status"
+  },
+  "stats": {
+    "title": "Statistics",
+    "subtitle": "How your account is doing: holdings, trading and wallet movements.",
+    "period": "Period",
+    "periods": {
+      "7d": "Last 7 days",
+      "30d": "Last 30 days",
+      "90d": "Last 90 days",
+      "all": "All time"
+    },
+    "portfolioValue": "Portfolio value",
+    "balance": "Wallet balance",
+    "unrealizedPnl": "Unrealized profit/loss",
+    "realizedPnl": "Realized profit/loss",
+    "trades": "Orders",
+    "tradesSplit": "{{buys}} buy and {{sells}} sell orders",
+    "allocation": "Portfolio allocation",
+    "allocationHint": "Share of each coin in your holdings at current prices",
+    "pnlByAsset": "Profit/loss by asset",
+    "pnlByAssetHint": "Unrealized profit or loss against your average buy price",
+    "tradingVolume": "Order volume",
+    "walletFlows": "Wallet movements",
+    "realizedPnlOverTime": "Realized profit/loss over time",
+    "realizedPnlHint": "Cumulative profit or loss from your sales in the selected period",
+    "buys": "Buy orders",
+    "sells": "Sell orders",
+    "deposits": "Deposits",
+    "withdrawals": "Withdrawals",
+    "transfersOut": "Transfers sent",
+    "total": "Total",
+    "other": "Other",
+    "noActivityTitle": "Nothing in this period",
+    "noActivityBody": "Pick a longer period, or come back after your next order or deposit.",
+    "loadFailed": "Could not load your statistics"
   }
 }

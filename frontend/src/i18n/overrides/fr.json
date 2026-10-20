@@ -19,5 +19,11 @@
   "landing.features.wallet.body": "Rechargez votre compte avec une carte de test, effectuez des retraits et transférez des fonds à d'autres utilisateurs.",
   "landing.demoTitle": "Une démo, pas une véritable plateforme d'échange",
   "landing.demoBody": "GprFlow est une application de démonstration créée pour un portfolio : les paiements fonctionnent en mode test Stripe et il est impossible de trader avec de l'argent réel ou d'effectuer de vrais retraits.",
-  "paymentDetails.dialogDescription": "Où les retraits simulés sont crédités. Démo uniquement : ne saisissez pas de vraies coordonnées bancaires ou de carte."
+  "paymentDetails.dialogDescription": "Où les retraits simulés sont crédités. Démo uniquement : ne saisissez pas de vraies coordonnées bancaires ou de carte.",
+  "stats.trades": "Ordres",
+  "stats.tradesSplit": "{{buys}} ordres d'achat et {{sells}} ordres de vente",
+  "stats.tradingVolume": "Volume des ordres",
+  "stats.noActivityBody": "Choisissez une période plus longue, ou revenez après votre prochain ordre ou dépôt.",
+  "stats.periods.30d": "30 derniers jours",
+  "stats.noActivityTitle": "Rien sur cette période"
 }

@@ -11,6 +11,7 @@
   "nav": {
     "home": "Startseite",
     "portfolio": "Portfolio",
+    "stats": "Statistiken",
     "watchlist": "Beobachtungsliste",
     "activity": "Aktivität",
     "wallet": "Wallet",
@@ -583,5 +584,40 @@
     "user": "Benutzer",
     "amount": "Betrag",
     "status": "Status"
+  },
+  "stats": {
+    "title": "Statistiken",
+    "subtitle": "Ein Überblick über Ihr Konto: Bestände, Handelsaktivitäten und Bewegungen in Ihrer Wallet.",
+    "period": "Zeitraum",
+    "periods": {
+      "7d": "Letzte 7 Tage",
+      "30d": "Letzte 30 Tage",
+      "90d": "Letzte 90 Tage",
+      "all": "Seit jeher"
+    },
+    "portfolioValue": "Portfoliowert",
+    "balance": "Guthaben auf dem Wallet",
+    "unrealizedPnl": "Nicht realisierter Gewinn/Verlust",
+    "realizedPnl": "Realisierter Gewinn/Verlust",
+    "trades": "Aufträge",
+    "tradesSplit": "{{buys}} Kauf- und {{sells}} Verkaufsaufträge",
+    "allocation": "Portfolioaufteilung",
+    "allocationHint": "Anteil der einzelnen Coins an Ihrem Portfolio zu aktuellen Kursen",
+    "pnlByAsset": "Gewinn/Verlust nach Vermögenswerten",
+    "pnlByAssetHint": "Nicht realisierter Gewinn oder Verlust im Vergleich zu Ihrem durchschnittlichen Kaufpreis",
+    "tradingVolume": "Auftragsvolumen",
+    "walletFlows": "Wallet-Bewegungen",
+    "realizedPnlOverTime": "Im Zeitverlauf realisierter Gewinn/Verlust",
+    "realizedPnlHint": "Kumulierter Gewinn oder Verlust aus Ihren Verkäufen im ausgewählten Zeitraum",
+    "buys": "Kaufaufträge",
+    "sells": "Verkaufsaufträge",
+    "deposits": "Einlagen",
+    "withdrawals": "Auszahlungen",
+    "transfersOut": "Gesendete Überweisungen",
+    "total": "Gesamt",
+    "other": "Sonstiges",
+    "noActivityTitle": "Keine Aktivität in diesem Zeitraum",
+    "noActivityBody": "Wählen Sie einen längeren Zeitraum oder schauen Sie nach Ihrem nächsten Auftrag oder Ihrer nächsten Einzahlung wieder vorbei.",
+    "loadFailed": "Ihre Statistiken konnten nicht geladen werden"
   }
 }
