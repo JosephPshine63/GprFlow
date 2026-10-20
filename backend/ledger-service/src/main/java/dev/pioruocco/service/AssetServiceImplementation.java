@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 @Service
@@ -59,6 +61,29 @@ public class AssetServiceImplementation implements AssetService {
         oldAsset.setQuantity(quantity + oldAsset.getQuantity());
 
         return assetRepository.save(oldAsset);
+    }
+
+    // Keeps buyPrice as the quantity-weighted average, otherwise P/L on a re-bought coin
+    // is measured against the first purchase only.
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Asset addToAsset(Long assetId, double quantity, double price) throws Exception {
+        Asset asset = getAssetById(assetId);
+
+        BigDecimal oldQty = BigDecimal.valueOf(asset.getQuantity());
+        BigDecimal addedQty = BigDecimal.valueOf(quantity);
+        BigDecimal newQty = oldQty.add(addedQty);
+        if (newQty.signum() <= 0) {
+            throw new Exception("quantity should be > 0");
+        }
+
+        BigDecimal cost = oldQty.multiply(BigDecimal.valueOf(asset.getBuyPrice()))
+                .add(addedQty.multiply(BigDecimal.valueOf(price)));
+
+        asset.setQuantity(newQty.doubleValue());
+        asset.setBuyPrice(cost.divide(newQty, MathContext.DECIMAL64).doubleValue());
+
+        return assetRepository.save(asset);
     }
 
     @Override

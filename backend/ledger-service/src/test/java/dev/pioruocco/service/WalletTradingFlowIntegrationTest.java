@@ -80,6 +80,19 @@ class WalletTradingFlowIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void buyAsset_again_averagesBuyPrice() throws Exception {
+        orderService.processOrder(coin, 2.0, OrderType.BUY, userId);
+
+        coin.setCurrentPrice(200.0);
+        orderService.processOrder(coin, 2.0, OrderType.BUY, userId);
+
+        Asset asset = assetService.findAssetByUserIdAndCoinId(userId, coin.getId());
+        assertEquals(4.0, asset.getQuantity());
+        // (2 * 100 + 2 * 200) / 4
+        assertEquals(150.0, asset.getBuyPrice());
+    }
+
+    @Test
     void sellAsset_dustResidual_deletesAsset() throws Exception {
         orderService.processOrder(coin, 2.0, OrderType.BUY, userId);
 

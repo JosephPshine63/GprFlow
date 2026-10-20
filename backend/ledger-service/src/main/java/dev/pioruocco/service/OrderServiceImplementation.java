@@ -136,8 +136,8 @@ public class OrderServiceImplementation implements OrderService {
                     orderItem.getQuantity()
             );
         } else {
-            assetService.updateAsset(
-                    oldAsset.getId(), quantity
+            assetService.addToAsset(
+                    oldAsset.getId(), quantity, buyPrice
             );
         }
 
