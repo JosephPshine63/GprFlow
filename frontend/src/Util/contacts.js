@@ -9,6 +9,6 @@ export const DEVELOPER = {
       url: "https://www.linkedin.com/in/giuseppe-pio-ruocco-7b4367267/",
     },
     { key: "email", label: "Email", url: "mailto:dev.pioruocco@gmail.com" },
-    { key: "portfolio", label: "Portfolio", url: "https://josephpshine63.github.io/portfolio/" },
+    { key: "portfolio", label: "Portfolio", url: "https://gprdev.com/" },
   ],
 };

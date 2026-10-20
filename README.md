@@ -447,4 +447,4 @@ frontend test suite; CI runs `npm run lint:emoji` and `npm run build`.
 
 ## Author
 
-**Giuseppe Pio Ruocco** — [GitHub](https://github.com/JosephPshine63) · [LinkedIn](https://www.linkedin.com/in/giuseppe-pio-ruocco-7b4367267/) · [Portfolio](https://josephpshine63.github.io/portfolio/) · dev.pioruocco@gmail.com
+**Giuseppe Pio Ruocco** — [GitHub](https://github.com/JosephPshine63) · [LinkedIn](https://www.linkedin.com/in/giuseppe-pio-ruocco-7b4367267/) · [Portfolio](https://gprdev.com/) · dev.pioruocco@gmail.com
