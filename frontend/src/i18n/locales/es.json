@@ -74,7 +74,7 @@
       },
       "security": {
         "title": "Seguridad de la cuenta",
-        "body": "Verificación en dos pasos por correo electrónico y protección contra bots al registrarse."
+        "body": "Contraseñas cifradas con BCrypt, una cookie de sesión «HttpOnly» y protección contra bots al registrarse."
       }
     },
     "stepsTitle": "Cómo funciona",
@@ -113,7 +113,7 @@
       "headline": "Practique el trading de criptomonedas en una cuenta de demostración.",
       "highlight1": "Datos de mercado en tiempo real y gráficos",
       "highlight2": "Órdenes de compra y venta inmediatas",
-      "highlight3": "Verificación en dos pasos en su cuenta"
+      "highlight3": "Sesiones seguras y protección contra bots al registrarse"
     },
     "login": {
       "title": "Bienvenido de nuevo",
@@ -142,7 +142,8 @@
     "forgot": {
       "title": "Recupere su contraseña",
       "subtitle": "Le enviaremos por correo electrónico un código para restablecerlo.",
-      "submit": "Enviar código"
+      "submit": "Enviar código",
+      "unavailable": "La recuperación de la contraseña no está disponible en esta versión de demostración, ya que la aplicación no envía correos electrónicos."
     },
     "reset": {
       "title": "Restablezca su contraseña",
@@ -504,6 +505,7 @@
       "role": "Función"
     },
     "security": "Seguridad",
+    "emailUnavailable": "Esta versión de demostración no envía correos electrónicos, por lo que las funciones que requieren un código por correo electrónico están desactivadas: la verificación en dos pasos, la verificación de la cuenta y el cambio de contraseña.",
     "twoFactorOn": "2FA en",
     "twoFactorOff": "2FA apagado",
     "twoFactorOnBody": "Al iniciar sesión, también le solicitamos un código que se le envía por correo electrónico.",

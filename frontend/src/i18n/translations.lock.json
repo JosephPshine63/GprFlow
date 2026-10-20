@@ -40,7 +40,7 @@
     "auth.layout.headline": "e442ae7371fc",
     "auth.layout.highlight1": "78abc57c2b68",
     "auth.layout.highlight2": "fb5b05d0ed76",
-    "auth.layout.highlight3": "1c2d7cb62c7f",
+    "auth.layout.highlight3": "f2855a0c7df2",
     "auth.login.title": "b807833efc65",
     "auth.login.subtitle": "3d225a4fdd13",
     "auth.login.submit": "ada2e9e96fa9",
@@ -419,7 +419,7 @@
     "landing.features.assistant.title": "fc7ba35433ce",
     "landing.features.assistant.body": "1e78b08bd6ea",
     "landing.features.security.title": "0afc739d8f3d",
-    "landing.features.security.body": "9be137163414",
+    "landing.features.security.body": "8153a31d336f",
     "landing.stepsTitle": "1dd6a17cb403",
     "landing.steps.signup.title": "3f4f547d7364",
     "landing.steps.signup.body": "3658473b6d5d",
@@ -460,7 +460,9 @@
     "stats.other": "6e6a6f2086bb",
     "stats.noActivityTitle": "18329831cefd",
     "stats.noActivityBody": "553bdc7304ad",
-    "stats.loadFailed": "4ce996dc9793"
+    "stats.loadFailed": "4ce996dc9793",
+    "auth.forgot.unavailable": "281aa34d2bd3",
+    "profile.emailUnavailable": "c3b4a8013558"
   },
   "fr": {
     "language.change": "789b14dfa8cb",
@@ -503,7 +505,7 @@
     "auth.layout.headline": "bb169193c281",
     "auth.layout.highlight1": "78abc57c2b68",
     "auth.layout.highlight2": "fb5b05d0ed76",
-    "auth.layout.highlight3": "1c2d7cb62c7f",
+    "auth.layout.highlight3": "f2855a0c7df2",
     "auth.login.title": "b807833efc65",
     "auth.login.subtitle": "3d225a4fdd13",
     "auth.login.submit": "ada2e9e96fa9",
@@ -882,7 +884,7 @@
     "landing.features.assistant.title": "fc7ba35433ce",
     "landing.features.assistant.body": "1e78b08bd6ea",
     "landing.features.security.title": "0afc739d8f3d",
-    "landing.features.security.body": "9be137163414",
+    "landing.features.security.body": "8153a31d336f",
     "landing.stepsTitle": "1dd6a17cb403",
     "landing.steps.signup.title": "3f4f547d7364",
     "landing.steps.signup.body": "3658473b6d5d",
@@ -923,7 +925,9 @@
     "stats.other": "6e6a6f2086bb",
     "stats.noActivityTitle": "18329831cefd",
     "stats.noActivityBody": "b2b6f19159b9",
-    "stats.loadFailed": "4ce996dc9793"
+    "stats.loadFailed": "4ce996dc9793",
+    "auth.forgot.unavailable": "281aa34d2bd3",
+    "profile.emailUnavailable": "c3b4a8013558"
   },
   "de": {
     "language.change": "789b14dfa8cb",
@@ -966,7 +970,7 @@
     "auth.layout.headline": "e442ae7371fc",
     "auth.layout.highlight1": "78abc57c2b68",
     "auth.layout.highlight2": "fb5b05d0ed76",
-    "auth.layout.highlight3": "1c2d7cb62c7f",
+    "auth.layout.highlight3": "f2855a0c7df2",
     "auth.login.title": "b807833efc65",
     "auth.login.subtitle": "3d225a4fdd13",
     "auth.login.submit": "ada2e9e96fa9",
@@ -1345,7 +1349,7 @@
     "landing.features.assistant.title": "fc7ba35433ce",
     "landing.features.assistant.body": "1e78b08bd6ea",
     "landing.features.security.title": "0afc739d8f3d",
-    "landing.features.security.body": "9be137163414",
+    "landing.features.security.body": "8153a31d336f",
     "landing.stepsTitle": "1dd6a17cb403",
     "landing.steps.signup.title": "3f4f547d7364",
     "landing.steps.signup.body": "3658473b6d5d",
@@ -1386,7 +1390,9 @@
     "stats.other": "6e6a6f2086bb",
     "stats.noActivityTitle": "18329831cefd",
     "stats.noActivityBody": "b2b6f19159b9",
-    "stats.loadFailed": "4ce996dc9793"
+    "stats.loadFailed": "4ce996dc9793",
+    "auth.forgot.unavailable": "281aa34d2bd3",
+    "profile.emailUnavailable": "c3b4a8013558"
   },
   "es": {
     "language.change": "789b14dfa8cb",
@@ -1429,7 +1435,7 @@
     "auth.layout.headline": "e442ae7371fc",
     "auth.layout.highlight1": "78abc57c2b68",
     "auth.layout.highlight2": "fb5b05d0ed76",
-    "auth.layout.highlight3": "1c2d7cb62c7f",
+    "auth.layout.highlight3": "f2855a0c7df2",
     "auth.login.title": "b807833efc65",
     "auth.login.subtitle": "3d225a4fdd13",
     "auth.login.submit": "ada2e9e96fa9",
@@ -1808,7 +1814,7 @@
     "landing.features.assistant.title": "fc7ba35433ce",
     "landing.features.assistant.body": "1e78b08bd6ea",
     "landing.features.security.title": "0afc739d8f3d",
-    "landing.features.security.body": "9be137163414",
+    "landing.features.security.body": "8153a31d336f",
     "landing.stepsTitle": "1dd6a17cb403",
     "landing.steps.signup.title": "3f4f547d7364",
     "landing.steps.signup.body": "3658473b6d5d",
@@ -1849,6 +1855,8 @@
     "stats.other": "6e6a6f2086bb",
     "stats.noActivityTitle": "18329831cefd",
     "stats.noActivityBody": "b2b6f19159b9",
-    "stats.loadFailed": "4ce996dc9793"
+    "stats.loadFailed": "4ce996dc9793",
+    "auth.forgot.unavailable": "281aa34d2bd3",
+    "profile.emailUnavailable": "c3b4a8013558"
   }
 }

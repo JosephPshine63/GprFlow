@@ -2,13 +2,14 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { KeyRound, MailCheck, ShieldCheck } from "lucide-react";
+import { Info, KeyRound, MailCheck, ShieldCheck } from "lucide-react";
 import { enableTwoStepAuthentication, getUser, verifyOtp } from "@/Redux/Auth/Action";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import i18n from "@/i18n";
 import { useToast } from "@/components/ui/use-toast";
 import AppDialog from "@/components/custome/AppDialog";
 import { cn } from "@/lib/utils";
+import { EMAIL_ENABLED } from "@/Util/features";
 import AccountVarificationForm from "./AccountVarificationForm";
 import ChangePasswordForm from "./ChangePasswordForm";
 
@@ -92,6 +93,13 @@ const Profile = () => {
         </dl>
       </section>
 
+      {!EMAIL_ENABLED && (
+        <div className="surface flex gap-3 p-4 text-sm text-muted-foreground">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-warning" strokeWidth={1.75} aria-hidden="true" />
+          <p>{t("profile.emailUnavailable")}</p>
+        </div>
+      )}
+
       <div className="grid gap-4 md:grid-cols-2">
         <Section
           icon={ShieldCheck}
@@ -112,6 +120,7 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={() => setDialog("twoFactor")}
+                disabled={!EMAIL_ENABLED}
                 className="btn-brand h-11 w-full"
               >
                 {t("profile.enableTwoFactor")}
@@ -120,7 +129,8 @@ const Profile = () => {
             <button
               type="button"
               onClick={() => setDialog("password")}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-colors hover:bg-accent"
+              disabled={!EMAIL_ENABLED}
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
             >
               <KeyRound className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               {t("profile.changePassword")}
@@ -146,6 +156,7 @@ const Profile = () => {
             <button
               type="button"
               onClick={() => setDialog("verify")}
+              disabled={!EMAIL_ENABLED}
               className="btn-brand h-11 w-full"
             >
               {t("profile.verifyAccount")}

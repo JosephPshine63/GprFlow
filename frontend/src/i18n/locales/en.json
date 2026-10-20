@@ -74,7 +74,7 @@
       },
       "security": {
         "title": "Account security",
-        "body": "Two-step verification by email and bot protection on sign-up."
+        "body": "Passwords hashed with BCrypt, an HttpOnly session cookie and bot protection on sign-up."
       }
     },
     "stepsTitle": "How it works",
@@ -113,7 +113,7 @@
       "headline": "Practice crypto trading in a demo.",
       "highlight1": "Live market data and charts",
       "highlight2": "Instant buy and sell orders",
-      "highlight3": "Two-step verification on your account"
+      "highlight3": "Secure sessions and bot protection on sign-up"
     },
     "login": {
       "title": "Welcome back",
@@ -142,7 +142,8 @@
     "forgot": {
       "title": "Recover your password",
       "subtitle": "We will email you a code to reset it.",
-      "submit": "Send code"
+      "submit": "Send code",
+      "unavailable": "Password recovery is not available in this demo, because the app does not send emails."
     },
     "reset": {
       "title": "Reset your password",
@@ -504,6 +505,7 @@
       "role": "Role"
     },
     "security": "Security",
+    "emailUnavailable": "This demo does not send emails, so the features that need an email code are turned off: two-step verification, account verification and password change.",
     "twoFactorOn": "2FA on",
     "twoFactorOff": "2FA off",
     "twoFactorOnBody": "At login we also ask for a code sent by email.",

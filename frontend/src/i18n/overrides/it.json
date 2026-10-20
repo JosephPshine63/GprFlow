@@ -55,5 +55,17 @@
   "stats.other": "Altro",
   "stats.noActivityTitle": "Nessun movimento in questo periodo",
   "stats.noActivityBody": "Scegli un periodo più lungo, oppure torna dopo il tuo prossimo ordine o deposito.",
-  "stats.loadFailed": "Impossibile caricare le tue statistiche"
+  "stats.loadFailed": "Impossibile caricare le tue statistiche",
+  "landing": {
+    "features": {
+      "security": {
+        "body": "Password cifrate con BCrypt, cookie di sessione HttpOnly e protezione anti-bot alla registrazione."
+      }
+    }
+  },
+  "auth": {
+    "forgot": {
+      "unavailable": "Il recupero della password non è disponibile in questa demo, perché l’app non invia email."
+    }
+  }
 }

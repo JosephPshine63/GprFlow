@@ -74,7 +74,7 @@
       },
       "security": {
         "title": "Kontosicherheit",
-        "body": "Zweistufige Verifizierung per E-Mail und Schutz vor Bots bei der Registrierung."
+        "body": "Mit BCrypt gehashte Passwörter, ein HttpOnly-Sitzungscookie und Bot-Schutz bei der Registrierung."
       }
     },
     "stepsTitle": "So funktioniert es",
@@ -113,7 +113,7 @@
       "headline": "Üben Sie den Krypto-Handel in einer Demo.",
       "highlight1": "Echtzeit-Marktdaten und Charts",
       "highlight2": "Sofortige Kauf- und Verkaufsaufträge",
-      "highlight3": "Zweistufige Authentifizierung für Ihr Konto"
+      "highlight3": "Sichere Sitzungen und Schutz vor Bots bei der Registrierung"
     },
     "login": {
       "title": "Willkommen zurück",
@@ -142,7 +142,8 @@
     "forgot": {
       "title": "Passwort zurücksetzen",
       "subtitle": "Wir senden Ihnen per E-Mail einen Code zu, mit dem Sie das Passwort zurücksetzen können.",
-      "submit": "Code senden"
+      "submit": "Code senden",
+      "unavailable": "Die Passwortwiederherstellung ist in dieser Demoversion nicht verfügbar, da die App keine E-Mails versendet."
     },
     "reset": {
       "title": "Passwort zurücksetzen",
@@ -504,6 +505,7 @@
       "role": "Rolle"
     },
     "security": "Sicherheit",
+    "emailUnavailable": "In dieser Demo werden keine E-Mails versendet, daher sind die Funktionen, für die ein E-Mail-Code erforderlich ist, deaktiviert: die zweistufige Verifizierung, die Kontobestätigung und die Passwortänderung.",
     "twoFactorOn": "2FA auf",
     "twoFactorOff": "2FA aus",
     "twoFactorOnBody": "Bei der Anmeldung bitten wir Sie außerdem um die Eingabe eines Codes, der Ihnen per E-Mail zugesandt wurde.",

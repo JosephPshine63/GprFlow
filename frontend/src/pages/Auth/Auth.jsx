@@ -5,6 +5,7 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import SignupForm from "./signup/SignupForm";
 import LoginForm from "./login/login";
 import ForgotPasswordForm from "./ForgotPassword";
+import { EMAIL_ENABLED } from "@/Util/features";
 
 const linkClass = "font-semibold text-primary hover:underline";
 
@@ -36,14 +37,14 @@ const Auth = () => {
     return (
       <AuthLayout
         title={t("auth.forgot.title")}
-        subtitle={t("auth.forgot.subtitle")}
+        subtitle={EMAIL_ENABLED ? t("auth.forgot.subtitle") : t("auth.forgot.unavailable")}
         footer={
           <Link to="/signin" className={linkClass}>
             {t("common.backToLogin")}
           </Link>
         }
       >
-        <ForgotPasswordForm />
+        {EMAIL_ENABLED && <ForgotPasswordForm />}
       </AuthLayout>
     );
   }

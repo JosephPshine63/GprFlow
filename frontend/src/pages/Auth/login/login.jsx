@@ -18,6 +18,7 @@ import {
 import AuthError from "@/components/custome/AuthError";
 import SubmitButton from "@/components/custome/SubmitButton";
 import TurnstileWidget from "@/components/custome/TurnstileWidget";
+import { EMAIL_ENABLED } from "@/Util/features";
 
 const formSchema = z.object({
   email: z.string().email("validation.emailInvalid"),
@@ -87,14 +88,16 @@ const LoginForm = ({ error }) => {
             </FormItem>
           )}
         />
-        <div className="text-right">
-          <Link
-            to="/forgot-password"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-          >
-            {t("auth.login.forgot")}
-          </Link>
-        </div>
+        {EMAIL_ENABLED && (
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              {t("auth.login.forgot")}
+            </Link>
+          </div>
+        )}
         <TurnstileWidget ref={widget} onToken={setCaptcha} onError={setCaptchaError} />
         <SubmitButton loading={loading} disabled={!captcha}>{t("auth.login.submit")}</SubmitButton>
       </form>

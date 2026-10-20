@@ -37,5 +37,12 @@
   "stats.noActivityBody": "Wählen Sie einen längeren Zeitraum oder schauen Sie nach Ihrem nächsten Auftrag oder Ihrer nächsten Einzahlung wieder vorbei.",
   "stats.periods.90d": "Letzte 90 Tage",
   "stats.walletFlows": "Wallet-Bewegungen",
-  "stats.noActivityTitle": "Keine Aktivität in diesem Zeitraum"
+  "stats.noActivityTitle": "Keine Aktivität in diesem Zeitraum",
+  "landing": {
+    "features": {
+      "security": {
+        "body": "Mit BCrypt gehashte Passwörter, ein HttpOnly-Sitzungscookie und Bot-Schutz bei der Registrierung."
+      }
+    }
+  }
 }

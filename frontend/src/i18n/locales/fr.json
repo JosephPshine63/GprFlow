@@ -74,7 +74,7 @@
       },
       "security": {
         "title": "Sécurité du compte",
-        "body": "Vérification en deux étapes par e-mail et protection contre les bots lors de l'inscription."
+        "body": "Mots de passe hachés avec BCrypt, un cookie de session « HttpOnly » et une protection contre les robots lors de l'inscription."
       }
     },
     "stepsTitle": "Comment cela fonctionne-t-il ?",
@@ -113,7 +113,7 @@
       "headline": "Entraînez-vous au trading de cryptomonnaies en démo.",
       "highlight1": "Données de marché en temps réel et graphiques",
       "highlight2": "Ordres d'achat et de vente immédiats",
-      "highlight3": "La vérification en deux étapes sur votre compte"
+      "highlight3": "Sécurité des sessions et protection contre les bots lors de l'inscription"
     },
     "login": {
       "title": "Bon retour parmi nous",
@@ -142,7 +142,8 @@
     "forgot": {
       "title": "Récupérer votre mot de passe",
       "subtitle": "Nous vous enverrons par e-mail un code vous permettant de le réinitialiser.",
-      "submit": "Envoyer le code"
+      "submit": "Envoyer le code",
+      "unavailable": "La récupération du mot de passe n'est pas disponible dans cette version de démonstration, car l'application n'envoie pas d'e-mails."
     },
     "reset": {
       "title": "Réinitialiser votre mot de passe",
@@ -504,6 +505,7 @@
       "role": "Fonction"
     },
     "security": "Sécurité",
+    "emailUnavailable": "Cette version de démonstration n'envoie pas d'e-mails ; par conséquent, les fonctionnalités nécessitant un code envoyé par e-mail sont désactivées : la vérification en deux étapes, la vérification du compte et la modification du mot de passe.",
     "twoFactorOn": "2FA sur",
     "twoFactorOff": "2FA désactivé",
     "twoFactorOnBody": "Lors de la connexion, nous vous demandons également un code envoyé par e-mail.",

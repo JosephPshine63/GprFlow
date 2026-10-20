@@ -220,6 +220,8 @@ services:
       # the public site is a demo and its copy promises Stripe test cards
       STRIPE_TEST_MODE: ${STRIPE_TEST_MODE:-true}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-1x00000000000000000000AA}
+      # true only once Resend is configured: the OTP flows are hidden otherwise
+      EMAIL_ENABLED: ${EMAIL_ENABLED:-false}
     ports:
       - "5173:80"
 

@@ -74,7 +74,7 @@
       },
       "security": {
         "title": "Sicurezza dell'account",
-        "body": "Verifica in due passaggi tramite e-mail e protezione dai bot al momento della registrazione."
+        "body": "Password cifrate con BCrypt, cookie di sessione HttpOnly e protezione anti-bot alla registrazione."
       }
     },
     "stepsTitle": "Come funziona",
@@ -113,7 +113,7 @@
       "headline": "Fai pratica con il trading di criptovalute in una demo.",
       "highlight1": "Dati di mercato e grafici live",
       "highlight2": "Ordini di acquisto e vendita immediati",
-      "highlight3": "Verifica in due passaggi sul tuo account"
+      "highlight3": "Sessioni sicure e protezione dai bot al momento della registrazione"
     },
     "login": {
       "title": "Bentornato",
@@ -142,7 +142,8 @@
     "forgot": {
       "title": "Recupera la password",
       "subtitle": "Ti invieremo un codice via email per reimpostarla.",
-      "submit": "Invia codice"
+      "submit": "Invia codice",
+      "unavailable": "Il recupero della password non è disponibile in questa demo, perché l’app non invia email."
     },
     "reset": {
       "title": "Reimposta la password",
@@ -504,6 +505,7 @@
       "role": "Ruolo"
     },
     "security": "Sicurezza",
+    "emailUnavailable": "Questa versione demo non invia e-mail, pertanto le funzionalità che richiedono un codice via e-mail sono disattivate: verifica in due passaggi, verifica dell’account e modifica della password.",
     "twoFactorOn": "2FA attiva",
     "twoFactorOff": "2FA non attiva",
     "twoFactorOnBody": "Al login ti chiediamo anche un codice inviato via email.",
