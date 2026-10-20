@@ -64,6 +64,14 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(athentication);
 
             } catch (Exception e) {
+                // A stale cookie must not lock the user out of /auth/signin and /auth/logout:
+                // outside /api drop it and carry on unauthenticated.
+                if (!request.getRequestURI().startsWith("/api/")) {
+                    response.addHeader("Set-Cookie",
+                            "jwt=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\":\"Invalid or expired token\"}");

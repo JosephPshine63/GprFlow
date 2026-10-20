@@ -1,6 +1,7 @@
 package dev.pioruocco.controller;
 
 
+import dev.pioruocco.config.JwtConstant;
 import dev.pioruocco.config.JwtProvider;
 import dev.pioruocco.exception.UserException;
 import dev.pioruocco.model.TwoFactorOTP;
@@ -53,11 +54,14 @@ public class AuthController {
     private EmailService emailService;
 
 
-    private static final int JWT_COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
+    @Autowired
+    private JwtConstant jwtConstant;
 
+    // The cookie must not outlive the token inside it.
     private void setJwtCookie(HttpServletResponse response, String jwt) {
+        long maxAge = jwtConstant.getJwtExpirationMs() / 1000;
         response.addHeader("Set-Cookie",
-                "jwt=" + jwt + "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=" + JWT_COOKIE_MAX_AGE);
+                "jwt=" + jwt + "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=" + maxAge);
     }
 
     @PostMapping("/signup")
