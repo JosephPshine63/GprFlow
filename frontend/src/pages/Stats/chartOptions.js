@@ -22,6 +22,14 @@ export const baseOptions = (dark) => ({
   tooltip: { theme: dark ? "dark" : "light" },
 });
 
+// Apex ignores tickAmount and hideOverlappingLabels on category axes, so the
+// labels are thinned here: one every `step` buckets, at most `max` of them.
+const sparseLabels = (series, bucket, max) => {
+  const step = Math.max(1, Math.ceil(series.length / max));
+  const index = new Map(series.map((p, i) => [p.date, i]));
+  return (v) => (index.get(v) % step === 0 ? formatBucketLabel(v, bucket) : "");
+};
+
 // Options for the bucketed time series returned by /api/wallet/stats.
 export const timeSeriesOptions = (dark, series, bucket) => {
   const base = baseOptions(dark);
@@ -30,17 +38,21 @@ export const timeSeriesOptions = (dark, series, bucket) => {
     xaxis: {
       type: "category",
       categories: series.map((p) => p.date),
-      tickAmount: Math.min(series.length, 6),
       axisBorder: { show: false },
       axisTicks: { show: false },
       tooltip: { enabled: false },
       labels: {
         rotate: 0,
-        hideOverlappingLabels: true,
         style: { colors: cssColor("muted-foreground") },
-        formatter: (v) => formatBucketLabel(v, bucket),
+        formatter: sparseLabels(series, bucket, 8),
       },
     },
+    responsive: [
+      {
+        breakpoint: 640,
+        options: { xaxis: { labels: { formatter: sparseLabels(series, bucket, 4) } } },
+      },
+    ],
     yaxis: {
       labels: {
         style: { colors: cssColor("muted-foreground") },
