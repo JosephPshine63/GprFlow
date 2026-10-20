@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,6 +81,17 @@ class StatsIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.series", hasSize(7)))
                 .andExpect(jsonPath("$.series[6].date").value(LocalDate.now().toString()))
                 .andExpect(jsonPath("$.series[6].buyVolume").value(0));
+    }
+
+    @Test
+    void userWithoutWallet_getsOneCreated() throws Exception {
+        long newUserId = System.nanoTime();
+
+        mockMvc.perform(get("/api/wallet/stats").param("period", "30d").header("X-User-Id", newUserId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tradeCount").value(0));
+
+        assertNotNull(walletRepository.findByUserId(newUserId));
     }
 
     @Test

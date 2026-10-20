@@ -56,7 +56,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public StatsResponse getUserStats(Long userId, StatsPeriod period) throws WalletException {
         LocalDate today = LocalDate.now();
         LocalDate queryFrom = period.getDays() == null ? EPOCH : today.minusDays(period.getDays() - 1L);
